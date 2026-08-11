@@ -1,15 +1,13 @@
+from .backend import ChemistryBackend
+from .cantera import CanteraBackend
 from .chemistry import Chemistry
 from .nmc import NMC811
-
-from .backend import ChemistryBackend
-from .arrhenius import ArrheniusBackend
-from .cantera import CanteraBackend
-
+from .reaction_backend import ReactionNetworkBackend
 
 __all__ = [
     "Chemistry",
-    "NMC811",
     "ChemistryBackend",
-    "ArrheniusBackend",
+    "NMC811",
     "CanteraBackend",
+    "ReactionNetworkBackend",
 ]
