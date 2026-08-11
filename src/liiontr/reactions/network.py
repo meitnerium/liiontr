@@ -8,7 +8,7 @@ from .reaction import Reaction
 @dataclass(slots=True)
 class ReactionNetwork:
     """
-    Collection of thermal runaway reactions.
+    Collection of chemical reactions.
     """
 
     reactions: list[Reaction] = field(default_factory=list)

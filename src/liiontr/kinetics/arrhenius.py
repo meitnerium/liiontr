@@ -1,39 +1,33 @@
 from __future__ import annotations
 
 import math
+from dataclasses import dataclass
 
-from .reaction import Reaction
+from .model import KineticModel
 
 
 R = 8.314462618
 
 
-def reaction_rate(
-    reaction: Reaction,
-    temperature: float,
-) -> float:
+@dataclass(slots=True)
+class Arrhenius(KineticModel):
     """
-    Arrhenius reaction rate.
-    """
+    Arrhenius kinetic model.
 
-    return reaction.pre_exponential_factor * math.exp(
-        -reaction.activation_energy / (R * temperature)
-    )
-
-
-def heat_generation(
-    reaction: Reaction,
-    temperature: float,
-) -> float:
-    """
-    Heat generation rate [W/kg].
+    rate = A * exp(-Ea / (R * T))
     """
 
-    return (
-        reaction.enthalpy
-        * reaction.mass_fraction
-        * reaction_rate(
-            reaction,
-            temperature,
+    activation_energy: float
+    pre_exponential_factor: float
+
+    def rate(
+        self,
+        temperature: float,
+    ) -> float:
+        """
+        Return the reaction rate at the given temperature.
+        """
+
+        return self.pre_exponential_factor * math.exp(
+            -self.activation_energy / (R * temperature)
         )
-    )

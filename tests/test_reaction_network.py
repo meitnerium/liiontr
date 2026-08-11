@@ -1,3 +1,4 @@
+from liiontr.kinetics import Arrhenius
 from liiontr.reactions import (
     Reaction,
     ReactionNetwork,
@@ -7,8 +8,10 @@ from liiontr.reactions import (
 def test_single_reaction():
     reaction = Reaction(
         name="SEI",
-        activation_energy=120000,
-        pre_exponential_factor=1e8,
+        kinetics=Arrhenius(
+            activation_energy=120000,
+            pre_exponential_factor=1e8,
+        ),
         enthalpy=500000,
     )
 
@@ -23,8 +26,10 @@ def test_network():
     network.add(
         Reaction(
             name="SEI",
-            activation_energy=120000,
-            pre_exponential_factor=1e8,
+            kinetics=Arrhenius(
+                activation_energy=120000,
+                pre_exponential_factor=1e8,
+            ),
             enthalpy=500000,
         )
     )
@@ -32,8 +37,10 @@ def test_network():
     network.add(
         Reaction(
             name="Electrolyte",
-            activation_energy=100000,
-            pre_exponential_factor=1e7,
+            kinetics=Arrhenius(
+                activation_energy=100000,
+                pre_exponential_factor=1e7,
+            ),
             enthalpy=700000,
         )
     )

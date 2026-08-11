@@ -1,7 +1,7 @@
-from .reaction import Reaction
-from .network import ReactionNetwork
+from .arrhenius import Arrhenius
+from .model import KineticModel
 
 __all__ = [
-    "Reaction",
-    "ReactionNetwork",
+    "Arrhenius",
+    "KineticModel",
 ]

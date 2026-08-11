@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
 from liiontr.cells.cell import Cell
-from liiontr.core.problem import Problem
 from liiontr.chemistry import ChemistryBackend
+from liiontr.core.problem import Problem
 
 
 @dataclass(slots=True)
@@ -22,5 +22,3 @@ class ThermalProblem(Problem):
     convection_coefficient: float = 10.0
 
     duration: float = 3600.0
-
-    heat_generation: float = 0.0
