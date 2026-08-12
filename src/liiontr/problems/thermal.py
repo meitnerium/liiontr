@@ -22,3 +22,5 @@ class ThermalProblem(Problem):
     convection_coefficient: float = 10.0
 
     duration: float = 3600.0
+
+    maximum_temperature: float | None = None

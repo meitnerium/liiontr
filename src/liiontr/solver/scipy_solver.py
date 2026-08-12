@@ -1,7 +1,12 @@
-from dataclasses import dataclass
+from __future__ import annotations
 
+from dataclasses import dataclass
+from typing import Any
+
+import numpy as np
 from scipy.integrate import solve_ivp
 
+from liiontr.chemistry import ReactionNetworkBackend
 from liiontr.core.results import Results
 from liiontr.problems.thermal import ThermalProblem
 from liiontr.thermal.lumped import LumpedThermalModel
@@ -9,6 +14,19 @@ from liiontr.thermal.lumped import LumpedThermalModel
 
 @dataclass(slots=True)
 class ScipySolver:
+    """
+    SciPy-based ODE solver.
+
+    BDF is used by default because thermal runaway kinetics
+    can become stiff at elevated temperatures.
+    """
+
+    method: str = "BDF"
+
+    relative_tolerance: float = 1.0e-6
+
+    absolute_tolerance: float = 1.0e-9
+
     def solve(
         self,
         problem: ThermalProblem,
@@ -19,24 +37,104 @@ class ScipySolver:
             ambient_temperature=problem.ambient_temperature,
         )
 
-        def rhs(t, y):
-            if problem.chemistry_backend is None:
+        backend = problem.chemistry_backend
+
+        n_reactions = 0
+
+        if isinstance(
+            backend,
+            ReactionNetworkBackend,
+        ):
+            n_reactions = len(backend.reaction_network.reactions)
+
+        initial_state = [
+            problem.initial_temperature,
+            *([0.0] * n_reactions),
+        ]
+
+        def rhs(
+            time: float,
+            state: np.ndarray,
+        ) -> list[float]:
+            del time
+
+            temperature = float(state[0])
+
+            conversions = [
+                min(
+                    1.0,
+                    max(
+                        0.0,
+                        float(value),
+                    ),
+                )
+                for value in state[1 : 1 + n_reactions]
+            ]
+
+            if backend is None:
                 heat_generation = 0.0
+                progress_rates: list[float] = []
+
+            elif isinstance(
+                backend,
+                ReactionNetworkBackend,
+            ):
+                heat_generation = backend.heat_generation(
+                    temperature=temperature,
+                    conversions=conversions,
+                )
+
+                progress_rates = backend.progress_rates(
+                    temperature=temperature,
+                    conversions=conversions,
+                )
+
             else:
-                heat_generation = problem.chemistry_backend.heat_generation(y[0])
+                heat_generation = backend.heat_generation(temperature)
+
+                progress_rates = []
+
+            temperature_rate = model.temperature_derivative(
+                temperature=temperature,
+                heat_generation=heat_generation,
+            )
 
             return [
-                model.temperature_derivative(
-                    y[0],
-                    heat_generation,
-                )
+                temperature_rate,
+                *progress_rates,
             ]
+
+        events: Any = None
+
+        maximum_temperature = problem.maximum_temperature
+
+        if maximum_temperature is not None:
+
+            def maximum_temperature_event(
+                time: float,
+                state: np.ndarray,
+            ) -> float:
+                del time
+
+                return maximum_temperature - float(state[0])
+
+            maximum_temperature_event.terminal = True  # type: ignore[attr-defined]
+            maximum_temperature_event.direction = -1.0  # type: ignore[attr-defined]
+
+            events = maximum_temperature_event
 
         solution = solve_ivp(
             rhs,
             (0.0, problem.duration),
-            [problem.initial_temperature],
+            initial_state,
+            method=self.method,
+            rtol=self.relative_tolerance,
+            atol=self.absolute_tolerance,
+            events=events,
         )
+
+        if not solution.success:
+            raise RuntimeError(f"ODE integration failed: {solution.message}")
 
         results = Results(
             time=solution.t,
@@ -46,5 +144,17 @@ class ScipySolver:
             "temperature",
             solution.y[0],
         )
+
+        for index in range(n_reactions):
+            conversion = np.clip(
+                solution.y[index + 1],
+                0.0,
+                1.0,
+            )
+
+            results.add_variable(
+                f"conversion_{index}",
+                conversion,
+            )
 
         return results
