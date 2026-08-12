@@ -6,19 +6,19 @@ from liiontr.reactions import Reaction, ReactionNetwork
 from liiontr.solver import ScipySolver
 
 
-def test_thermal_runaway_with_reaction():
+def test_reaction_conversion_is_integrated():
     cell = cell_21700_generic()
 
     network = ReactionNetwork()
 
     network.add(
         Reaction(
-            name="Synthetic exothermic reaction",
+            name="Synthetic reaction",
             kinetics=Arrhenius(
                 activation_energy=80000.0,
-                pre_exponential_factor=1.0e8,
+                pre_exponential_factor=1e5,
             ),
-            enthalpy=5.0e6,
+            enthalpy=500000.0,
         )
     )
 
@@ -31,20 +31,13 @@ def test_thermal_runaway_with_reaction():
         cell=cell,
         chemistry_backend=backend,
         initial_temperature=500.0,
-        duration=100.0,
-        maximum_temperature=1200.0,
+        duration=10.0,
     )
 
     results = ScipySolver().solve(problem)
 
-    temperature = results.get("temperature")
     conversion = results.get("conversion_0")
 
-    assert temperature[-1] > temperature[0]
-
+    assert conversion[0] == 0.0
     assert conversion[-1] > conversion[0]
-
-    assert conversion.min() >= 0.0
-    assert conversion.max() <= 1.0
-
-    assert temperature.max() <= 1200.0 + 1.0e-6
+    assert conversion[-1] <= 1.0

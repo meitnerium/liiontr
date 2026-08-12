@@ -19,8 +19,51 @@ class ReactionNetwork:
     ) -> None:
         self.reactions.append(reaction)
 
+    def progress_rates(
+        self,
+        temperature: float,
+        conversions: list[float],
+    ) -> list[float]:
+        """
+        Return the progress rate of each reaction.
+        """
+
+        if len(conversions) != len(self.reactions):
+            raise ValueError("Number of conversions must match number of reactions.")
+
+        return [
+            reaction.progress_rate(
+                temperature,
+                conversion,
+            )
+            for reaction, conversion in zip(
+                self.reactions,
+                conversions,
+            )
+        ]
+
     def heat_generation(
         self,
         temperature: float,
+        conversions: list[float] | None = None,
     ) -> float:
-        return sum(reaction.heat_generation(temperature) for reaction in self.reactions)
+        """
+        Return total mass-specific heat generation [W/kg].
+        """
+
+        if conversions is None:
+            conversions = [0.0] * len(self.reactions)
+
+        if len(conversions) != len(self.reactions):
+            raise ValueError("Number of conversions must match number of reactions.")
+
+        return sum(
+            reaction.heat_generation(
+                temperature,
+                conversion,
+            )
+            for reaction, conversion in zip(
+                self.reactions,
+                conversions,
+            )
+        )

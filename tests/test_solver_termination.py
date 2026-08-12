@@ -6,14 +6,14 @@ from liiontr.reactions import Reaction, ReactionNetwork
 from liiontr.solver import ScipySolver
 
 
-def test_thermal_runaway_with_reaction():
+def test_solver_stops_at_maximum_temperature():
     cell = cell_21700_generic()
 
     network = ReactionNetwork()
 
     network.add(
         Reaction(
-            name="Synthetic exothermic reaction",
+            name="Synthetic runaway reaction",
             kinetics=Arrhenius(
                 activation_energy=80000.0,
                 pre_exponential_factor=1.0e8,
@@ -32,19 +32,12 @@ def test_thermal_runaway_with_reaction():
         chemistry_backend=backend,
         initial_temperature=500.0,
         duration=100.0,
-        maximum_temperature=1200.0,
+        maximum_temperature=1000.0,
     )
 
     results = ScipySolver().solve(problem)
 
     temperature = results.get("temperature")
-    conversion = results.get("conversion_0")
 
-    assert temperature[-1] > temperature[0]
-
-    assert conversion[-1] > conversion[0]
-
-    assert conversion.min() >= 0.0
-    assert conversion.max() <= 1.0
-
-    assert temperature.max() <= 1200.0 + 1.0e-6
+    assert temperature[-1] <= 1000.0 + 1.0e-6
+    assert temperature[-1] >= 999.0
