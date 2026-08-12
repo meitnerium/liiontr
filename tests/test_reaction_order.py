@@ -1,6 +1,6 @@
 import pytest
 
-from liiontr.kinetics import Arrhenius
+from liiontr.kinetics import Arrhenius, PowerLawProgress
 from liiontr.reactions import Reaction
 
 
@@ -57,11 +57,31 @@ def test_default_reaction_order_is_one():
 
     assert rate == pytest.approx(expected)
 
-    def test_reaction_order_must_be_positive():
-        with pytest.raises(
-            ValueError,
-            match="Reaction order must be greater than zero",
-        ):
-            make_reaction(
-                reaction_order=0.0,
-            )
+
+def test_reaction_order_must_be_positive():
+    with pytest.raises(
+        ValueError,
+        match="Reaction order must be greater than zero",
+    ):
+        make_reaction(
+            reaction_order=0.0,
+        )
+
+
+def test_reaction_order_and_progress_model_cannot_both_be_specified():
+    with pytest.raises(
+        ValueError,
+        match="Specify either reaction_order or progress_model, not both",
+    ):
+        Reaction(
+            name="Synthetic reaction",
+            kinetics=Arrhenius(
+                activation_energy=80000.0,
+                pre_exponential_factor=1.0e5,
+            ),
+            enthalpy=500000.0,
+            reaction_order=2.0,
+            progress_model=PowerLawProgress(
+                order=3.0,
+            ),
+        )

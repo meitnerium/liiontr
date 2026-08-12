@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from liiontr.kinetics.model import KineticModel
+from liiontr.kinetics.progress import PowerLawProgress, ProgressModel
 
 
 @dataclass(slots=True)
@@ -15,18 +16,33 @@ class Reaction:
     kinetics: KineticModel
     enthalpy: float
     mass_fraction: float = 1.0
+
+    # Backward-compatible shortcut for PowerLawProgress.
     reaction_order: float = 1.0
+
+    # Explicit progress model for more general reaction laws.
+    progress_model: ProgressModel | None = None
 
     def __post_init__(self) -> None:
         if self.reaction_order <= 0.0:
             raise ValueError("Reaction order must be greater than zero.")
+
+        if self.progress_model is None:
+            self.progress_model = PowerLawProgress(
+                order=self.reaction_order,
+            )
+
+        elif self.reaction_order != 1.0:
+            raise ValueError(
+                "Specify either reaction_order or progress_model, not both."
+            )
 
     def rate(
         self,
         temperature: float,
     ) -> float:
         """
-        Return the kinetic rate constant.
+        Return the temperature-dependent kinetic rate constant.
         """
 
         return self.kinetics.rate(temperature)
@@ -39,23 +55,15 @@ class Reaction:
         """
         Return the reaction progress rate.
 
-        The reaction follows:
-
-            d(alpha)/dt = k(T) * (1 - alpha)^n
-
-        where alpha is the conversion and n is the
-        reaction order.
+        d(alpha)/dt = k(T) * f(alpha)
         """
 
-        if conversion >= 1.0:
-            return 0.0
+        progress_model = self.progress_model
 
-        if conversion < 0.0:
-            conversion = 0.0
+        if progress_model is None:
+            raise RuntimeError("Reaction progress model is not initialized.")
 
-        remaining_fraction = 1.0 - conversion
-
-        return self.rate(temperature) * remaining_fraction**self.reaction_order
+        return self.rate(temperature) * progress_model.factor(conversion)
 
     def heat_generation(
         self,
