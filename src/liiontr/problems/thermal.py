@@ -17,6 +17,8 @@ class ThermalProblem(Problem):
 
     initial_temperature: float = 298.15
 
+    initial_conversions: list[float] | None = None
+
     ambient_temperature: float = 298.15
 
     convection_coefficient: float = 10.0

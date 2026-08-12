@@ -47,9 +47,26 @@ class ScipySolver:
         ):
             n_reactions = len(backend.reaction_network.reactions)
 
+        if problem.initial_conversions is None:
+            initial_conversions = [0.0] * n_reactions
+
+        else:
+            initial_conversions = list(problem.initial_conversions)
+
+            if len(initial_conversions) != n_reactions:
+                raise ValueError(
+                    "Number of initial conversions must match number of reactions."
+                )
+
+            if any(
+                conversion < 0.0 or conversion > 1.0
+                for conversion in initial_conversions
+            ):
+                raise ValueError("Initial conversions must be between 0 and 1.")
+
         initial_state = [
             problem.initial_temperature,
-            *([0.0] * n_reactions),
+            *initial_conversions,
         ]
 
         def rhs(
