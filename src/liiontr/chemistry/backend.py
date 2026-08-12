@@ -12,9 +12,10 @@ class ChemistryBackend(ABC):
     def heat_generation(
         self,
         temperature: float,
+        conversions: list[float] | None = None,
     ) -> float:
         """
-        Heat generation rate.
+        Return total heat generation rate [W].
         """
 
         raise NotImplementedError

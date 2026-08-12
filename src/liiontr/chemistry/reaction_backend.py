@@ -16,7 +16,7 @@ class ReactionNetworkBackend(ChemistryBackend):
     """
     Chemistry backend based on a thermal reaction network.
 
-    The reaction network returns heat generation per unit mass [W/kg].
+    The reaction network returns mass-specific heat generation [W/kg].
     This backend converts it to total cell heat generation [W].
     """
 
@@ -26,9 +26,21 @@ class ReactionNetworkBackend(ChemistryBackend):
     def heat_generation(
         self,
         temperature: float,
+        conversions: list[float] | None = None,
     ) -> float:
         heat_generation_per_mass = self.reaction_network.heat_generation(
-            temperature
+            temperature=temperature,
+            conversions=conversions,
         )
 
         return heat_generation_per_mass * self.cell.mass
+
+    def progress_rates(
+        self,
+        temperature: float,
+        conversions: list[float],
+    ) -> list[float]:
+        return self.reaction_network.progress_rates(
+            temperature=temperature,
+            conversions=conversions,
+        )

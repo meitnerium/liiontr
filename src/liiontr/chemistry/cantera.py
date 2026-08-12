@@ -17,5 +17,6 @@ class CanteraBackend(ChemistryBackend):
     def heat_generation(
         self,
         temperature: float,
+        conversions: list[float] | None = None,
     ) -> float:
         raise NotImplementedError
