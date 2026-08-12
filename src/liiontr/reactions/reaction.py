@@ -15,6 +15,11 @@ class Reaction:
     kinetics: KineticModel
     enthalpy: float
     mass_fraction: float = 1.0
+    reaction_order: float = 1.0
+
+    def __post_init__(self) -> None:
+        if self.reaction_order <= 0.0:
+            raise ValueError("Reaction order must be greater than zero.")
 
     def rate(
         self,
@@ -34,7 +39,12 @@ class Reaction:
         """
         Return the reaction progress rate.
 
-        The reaction stops once conversion reaches 1.
+        The reaction follows:
+
+            d(alpha)/dt = k(T) * (1 - alpha)^n
+
+        where alpha is the conversion and n is the
+        reaction order.
         """
 
         if conversion >= 1.0:
@@ -43,7 +53,9 @@ class Reaction:
         if conversion < 0.0:
             conversion = 0.0
 
-        return self.rate(temperature) * (1.0 - conversion)
+        remaining_fraction = 1.0 - conversion
+
+        return self.rate(temperature) * remaining_fraction**self.reaction_order
 
     def heat_generation(
         self,
@@ -52,8 +64,6 @@ class Reaction:
     ) -> float:
         """
         Return mass-specific heat generation rate [W/kg].
-
-        The heat release decreases as the reaction is consumed.
         """
 
         return (
