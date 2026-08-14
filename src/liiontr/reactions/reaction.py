@@ -3,7 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from liiontr.kinetics.model import KineticModel
-from liiontr.kinetics.progress import PowerLawProgress, ProgressModel
+from liiontr.kinetics.progress import (
+    PowerLawProgress,
+    ProgressModel,
+)
+
+from .context import ReactionContext
 
 
 @dataclass(slots=True)
@@ -51,11 +56,12 @@ class Reaction:
         self,
         temperature: float,
         conversion: float,
+        context: ReactionContext | None = None,
     ) -> float:
         """
         Return the reaction progress rate.
 
-        d(alpha)/dt = k(T) * f(alpha)
+        d(alpha)/dt = k(T) * f(alpha, context)
         """
 
         progress_model = self.progress_model
@@ -63,12 +69,16 @@ class Reaction:
         if progress_model is None:
             raise RuntimeError("Reaction progress model is not initialized.")
 
-        return self.rate(temperature) * progress_model.factor(conversion)
+        return self.rate(temperature) * progress_model.factor(
+            conversion=conversion,
+            context=context,
+        )
 
     def heat_generation(
         self,
         temperature: float,
         conversion: float = 0.0,
+        context: ReactionContext | None = None,
     ) -> float:
         """
         Return mass-specific heat generation rate [W/kg].
@@ -78,7 +88,8 @@ class Reaction:
             self.enthalpy
             * self.mass_fraction
             * self.progress_rate(
-                temperature,
-                conversion,
+                temperature=temperature,
+                conversion=conversion,
+                context=context,
             )
         )

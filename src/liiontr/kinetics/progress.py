@@ -2,6 +2,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from liiontr.reactions.context import ReactionContext
 
 
 class ProgressModel(ABC):
@@ -13,6 +17,7 @@ class ProgressModel(ABC):
     def factor(
         self,
         conversion: float,
+        context: ReactionContext | None = None,
     ) -> float:
         """
         Return the conversion-dependent reaction factor.
@@ -38,10 +43,16 @@ class PowerLawProgress(ProgressModel):
     def factor(
         self,
         conversion: float,
+        context: ReactionContext | None = None,
     ) -> float:
         """
         Return the reaction progress factor.
+
+        The reaction context is accepted for interface compatibility
+        but is not used by this model.
         """
+
+        del context
 
         if conversion >= 1.0:
             return 0.0
@@ -70,10 +81,16 @@ class AutocatalyticProgress(ProgressModel):
     def factor(
         self,
         conversion: float,
+        context: ReactionContext | None = None,
     ) -> float:
         """
         Return the autocatalytic reaction progress factor.
+
+        The reaction context is accepted for interface compatibility
+        but is not used by this model.
         """
+
+        del context
 
         if conversion <= 0.0:
             return 0.0
