@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from .context import ReactionContext
 from .reaction import Reaction
 
 
@@ -9,6 +10,10 @@ from .reaction import Reaction
 class ReactionNetwork:
     """
     Collection of chemical reactions.
+
+    The network creates a shared ReactionContext from the
+    current reaction conversions so that reactions can depend
+    on the state of other reactions.
     """
 
     reactions: list[Reaction] = field(default_factory=list)
@@ -19,6 +24,39 @@ class ReactionNetwork:
     ) -> None:
         self.reactions.append(reaction)
 
+    def _validate_conversions(
+        self,
+        conversions: list[float],
+    ) -> None:
+        """
+        Validate the number of reaction conversions.
+        """
+
+        if len(conversions) != len(self.reactions):
+            raise ValueError("Number of conversions must match number of reactions.")
+
+    def context(
+        self,
+        conversions: list[float],
+    ) -> ReactionContext:
+        """
+        Build the shared reaction context.
+
+        Reaction conversions are stored by reaction name.
+        """
+
+        self._validate_conversions(conversions)
+
+        return ReactionContext(
+            conversions={
+                reaction.name: float(conversion)
+                for reaction, conversion in zip(
+                    self.reactions,
+                    conversions,
+                )
+            }
+        )
+
     def progress_rates(
         self,
         temperature: float,
@@ -28,13 +66,13 @@ class ReactionNetwork:
         Return the progress rate of each reaction.
         """
 
-        if len(conversions) != len(self.reactions):
-            raise ValueError("Number of conversions must match number of reactions.")
+        context = self.context(conversions)
 
         return [
             reaction.progress_rate(
-                temperature,
-                conversion,
+                temperature=temperature,
+                conversion=conversion,
+                context=context,
             )
             for reaction, conversion in zip(
                 self.reactions,
@@ -52,15 +90,15 @@ class ReactionNetwork:
         """
 
         if conversions is None:
-            conversions = [0.0] * len(self.reactions)
+            conversions = [0.0 for _ in self.reactions]
 
-        if len(conversions) != len(self.reactions):
-            raise ValueError("Number of conversions must match number of reactions.")
+        context = self.context(conversions)
 
         return sum(
             reaction.heat_generation(
-                temperature,
-                conversion,
+                temperature=temperature,
+                conversion=conversion,
+                context=context,
             )
             for reaction, conversion in zip(
                 self.reactions,
