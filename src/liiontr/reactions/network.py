@@ -11,18 +11,49 @@ class ReactionNetwork:
     """
     Collection of chemical reactions.
 
-    The network creates a shared ReactionContext from the
-    current reaction conversions so that reactions can depend
-    on the state of other reactions.
+    Reaction names must be unique because they are used as keys
+    in the shared ReactionContext.
     """
 
     reactions: list[Reaction] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        self._validate_unique_names()
+
+    def _validate_unique_names(self) -> None:
+        """
+        Ensure that all reaction names are unique.
+        """
+
+        names = [
+            reaction.name
+            for reaction in self.reactions
+        ]
+
+        if len(names) != len(set(names)):
+            raise ValueError(
+                "Reaction names must be unique."
+            )
 
     def add(
         self,
         reaction: Reaction,
     ) -> None:
-        self.reactions.append(reaction)
+        """
+        Add a reaction to the network.
+        """
+
+        if any(
+            existing.name == reaction.name
+            for existing in self.reactions
+        ):
+            raise ValueError(
+                "Reaction names must be unique."
+            )
+
+        self.reactions.append(
+            reaction
+        )
 
     def _validate_conversions(
         self,
@@ -33,7 +64,9 @@ class ReactionNetwork:
         """
 
         if len(conversions) != len(self.reactions):
-            raise ValueError("Number of conversions must match number of reactions.")
+            raise ValueError(
+                "Number of conversions must match number of reactions."
+            )
 
     def context(
         self,
@@ -45,7 +78,9 @@ class ReactionNetwork:
         Reaction conversions are stored by reaction name.
         """
 
-        self._validate_conversions(conversions)
+        self._validate_conversions(
+            conversions
+        )
 
         return ReactionContext(
             conversions={
@@ -66,7 +101,9 @@ class ReactionNetwork:
         Return the progress rate of each reaction.
         """
 
-        context = self.context(conversions)
+        context = self.context(
+            conversions
+        )
 
         return [
             reaction.progress_rate(
@@ -90,9 +127,14 @@ class ReactionNetwork:
         """
 
         if conversions is None:
-            conversions = [0.0 for _ in self.reactions]
+            conversions = [
+                0.0
+                for _ in self.reactions
+            ]
 
-        context = self.context(conversions)
+        context = self.context(
+            conversions
+        )
 
         return sum(
             reaction.heat_generation(
