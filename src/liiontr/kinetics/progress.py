@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
@@ -142,3 +143,37 @@ class ThresholdProgress(ProgressModel):
             conversion=conversion,
             context=context,
         )
+
+
+@dataclass(slots=True)
+class ExponentialInhibitionProgress(ProgressModel):
+    """
+    Progress model with exponential inhibition.
+
+    f(alpha, context) =
+        f_base(alpha, context) * exp(-x)
+
+    where x is obtained from a ReactionContext variable.
+    """
+
+    progress_model: ProgressModel
+    variable_name: str
+
+    def factor(
+        self,
+        conversion: float,
+        context: ReactionContext | None = None,
+    ) -> float:
+        """
+        Return the exponentially inhibited progress factor.
+        """
+
+        if context is None:
+            raise ValueError("Reaction context is required.")
+
+        inhibition_variable = context.variable(self.variable_name)
+
+        return self.progress_model.factor(
+            conversion=conversion,
+            context=context,
+        ) * math.exp(-inhibition_variable)
