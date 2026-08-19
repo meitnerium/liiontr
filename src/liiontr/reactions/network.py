@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from .context import ReactionContext
+from .context_variable import ContextVariable
 from .reaction import Reaction
 
 
@@ -13,9 +14,14 @@ class ReactionNetwork:
 
     Reaction names must be unique because they are used as keys
     in the shared ReactionContext.
+
+    Context variables are algebraic quantities derived from the
+    current reaction state.
     """
 
     reactions: list[Reaction] = field(default_factory=list)
+
+    context_variables: dict[str, ContextVariable] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         self._validate_unique_names()
@@ -25,15 +31,10 @@ class ReactionNetwork:
         Ensure that all reaction names are unique.
         """
 
-        names = [
-            reaction.name
-            for reaction in self.reactions
-        ]
+        names = [reaction.name for reaction in self.reactions]
 
         if len(names) != len(set(names)):
-            raise ValueError(
-                "Reaction names must be unique."
-            )
+            raise ValueError("Reaction names must be unique.")
 
     def add(
         self,
@@ -43,17 +44,10 @@ class ReactionNetwork:
         Add a reaction to the network.
         """
 
-        if any(
-            existing.name == reaction.name
-            for existing in self.reactions
-        ):
-            raise ValueError(
-                "Reaction names must be unique."
-            )
+        if any(existing.name == reaction.name for existing in self.reactions):
+            raise ValueError("Reaction names must be unique.")
 
-        self.reactions.append(
-            reaction
-        )
+        self.reactions.append(reaction)
 
     def _validate_conversions(
         self,
@@ -64,9 +58,7 @@ class ReactionNetwork:
         """
 
         if len(conversions) != len(self.reactions):
-            raise ValueError(
-                "Number of conversions must match number of reactions."
-            )
+            raise ValueError("Number of conversions must match number of reactions.")
 
     def context(
         self,
@@ -75,14 +67,14 @@ class ReactionNetwork:
         """
         Build the shared reaction context.
 
-        Reaction conversions are stored by reaction name.
+        The context is first populated with reaction conversions.
+        Derived context variables are then evaluated from the
+        current reaction state.
         """
 
-        self._validate_conversions(
-            conversions
-        )
+        self._validate_conversions(conversions)
 
-        return ReactionContext(
+        context = ReactionContext(
             conversions={
                 reaction.name: float(conversion)
                 for reaction, conversion in zip(
@@ -91,6 +83,11 @@ class ReactionNetwork:
                 )
             }
         )
+
+        for name, variable in self.context_variables.items():
+            context.variables[name] = variable.evaluate(context)
+
+        return context
 
     def progress_rates(
         self,
@@ -101,9 +98,7 @@ class ReactionNetwork:
         Return the progress rate of each reaction.
         """
 
-        context = self.context(
-            conversions
-        )
+        context = self.context(conversions)
 
         return [
             reaction.progress_rate(
@@ -127,14 +122,9 @@ class ReactionNetwork:
         """
 
         if conversions is None:
-            conversions = [
-                0.0
-                for _ in self.reactions
-            ]
+            conversions = [0.0 for _ in self.reactions]
 
-        context = self.context(
-            conversions
-        )
+        context = self.context(conversions)
 
         return sum(
             reaction.heat_generation(
