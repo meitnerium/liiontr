@@ -102,3 +102,43 @@ class AutocatalyticProgress(ProgressModel):
             conversion**self.autocatalytic_order
             * (1.0 - conversion) ** self.remaining_order
         )
+
+
+@dataclass(slots=True)
+class ThresholdProgress(ProgressModel):
+    """
+    Progress model activated by the state of another reaction.
+
+    The wrapped progress model is active only when the remaining
+    fraction of the specified reaction is below a threshold.
+    """
+
+    progress_model: ProgressModel
+    reaction_name: str
+    remaining_below: float
+
+    def __post_init__(self) -> None:
+        if not 0.0 <= self.remaining_below <= 1.0:
+            raise ValueError("Remaining fraction threshold must be between 0 and 1.")
+
+    def factor(
+        self,
+        conversion: float,
+        context: ReactionContext | None = None,
+    ) -> float:
+        """
+        Return the wrapped progress factor when the threshold is met.
+        """
+
+        if context is None:
+            raise ValueError("Reaction context is required.")
+
+        remaining_fraction = context.remaining_fraction(self.reaction_name)
+
+        if remaining_fraction >= self.remaining_below:
+            return 0.0
+
+        return self.progress_model.factor(
+            conversion=conversion,
+            context=context,
+        )

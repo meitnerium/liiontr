@@ -4,6 +4,7 @@ from .progress import (
     AutocatalyticProgress,
     PowerLawProgress,
     ProgressModel,
+    ThresholdProgress,
 )
 
 __all__ = [
@@ -12,4 +13,5 @@ __all__ = [
     "KineticModel",
     "PowerLawProgress",
     "ProgressModel",
+    "ThresholdProgress",
 ]
