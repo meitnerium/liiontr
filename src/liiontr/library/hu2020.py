@@ -1,12 +1,21 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from liiontr.kinetics import (
     ExponentialInhibitionProgress,
     PowerLawProgress,
     ThresholdProgress,
 )
+from liiontr.reactions import (
+    ReactionNetwork,
+    RemainingFractionRatioVariable,
+)
 
 from .reactions import VolumetricReactionParameters
+
+if TYPE_CHECKING:
+    from liiontr.cells.cell import Cell
 
 
 HU2020_REFERENCE = "Hu et al., ACS Omega (2020), DOI: 10.1021/acsomega.0c01862"
@@ -133,9 +142,6 @@ def hu2020_anode_progress_model() -> ThresholdProgress:
 
     The reaction is active only when the remaining SEI
     fraction is below 0.10.
-
-    The variable ``sei_thickness_ratio`` must be supplied
-    through the ReactionContext by the reaction network.
     """
 
     return ThresholdProgress(
@@ -147,4 +153,67 @@ def hu2020_anode_progress_model() -> ThresholdProgress:
         ),
         reaction_name="SEI decomposition",
         remaining_below=0.10,
+    )
+
+
+def hu2020_initial_conversions() -> list[float]:
+    """
+    Return initial reaction conversions for the Hu 2020 network.
+
+    Reaction ordering:
+
+        0: SEI decomposition
+        1: Anode-electrolyte
+    """
+
+    sei_parameters = hu2020_sei_decomposition()
+    anode_parameters = hu2020_anode_electrolyte()
+
+    return [
+        sei_parameters.initial_conversion,
+        anode_parameters.initial_conversion,
+    ]
+
+
+def hu2020_reaction_network(
+    cell: Cell,
+) -> ReactionNetwork:
+    """
+    Build the Hu 2020 SEI + anode reaction network.
+
+    The SEI thickness ratio is treated as an algebraic variable:
+
+        sei_thickness_ratio
+            = current_SEI_remaining
+            / reference_SEI_remaining
+
+    with a reference remaining SEI fraction of 0.15.
+    """
+
+    sei_parameters = hu2020_sei_decomposition()
+
+    sei_reaction = sei_parameters.build(
+        cell=cell,
+    )
+
+    anode_parameters = hu2020_anode_electrolyte()
+
+    anode_reaction = anode_parameters.build(
+        cell=cell,
+        progress_model=hu2020_anode_progress_model(),
+    )
+
+    return ReactionNetwork(
+        reactions=[
+            sei_reaction,
+            anode_reaction,
+        ],
+        context_variables={
+            "sei_thickness_ratio": RemainingFractionRatioVariable(
+                reaction_name="SEI decomposition",
+                reference_remaining_fraction=(
+                    sei_parameters.initial_remaining_fraction
+                ),
+            )
+        },
     )
