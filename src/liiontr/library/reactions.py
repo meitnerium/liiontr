@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from liiontr.kinetics import Arrhenius
+from liiontr.kinetics import Arrhenius, KineticModel, ProgressModel
 from liiontr.reactions import Reaction
 
 if TYPE_CHECKING:
@@ -168,18 +168,136 @@ class VolumetricReactionParameters:
     def build(
         self,
         cell: Cell,
+        progress_model: ProgressModel | None = None,
     ) -> Reaction:
         """
         Construct a Reaction for the specified cell.
+
+        If no explicit progress model is supplied, the configured
+        reaction order is used to construct the default power-law
+        progress model.
         """
+
+        kinetics = Arrhenius(
+            activation_energy=self.activation_energy,
+            pre_exponential_factor=self.pre_exponential_factor,
+        )
+
+        mass_fraction = self.mass_fraction(cell)
+
+        if progress_model is None:
+            return Reaction(
+                name=self.name,
+                kinetics=kinetics,
+                enthalpy=self.enthalpy,
+                mass_fraction=mass_fraction,
+                reaction_order=self.reaction_order,
+            )
 
         return Reaction(
             name=self.name,
-            kinetics=Arrhenius(
+            kinetics=kinetics,
+            enthalpy=self.enthalpy,
+            mass_fraction=mass_fraction,
+            progress_model=progress_model,
+        )
+
+
+@dataclass(slots=True, frozen=True)
+class VolumetricConversionReactionParameters:
+    """
+    Volumetric reaction parameters with a directly specified
+    initial conversion.
+
+    This representation is intended for literature models where
+    the reaction state is reported directly as alpha rather than
+    as a remaining reactant fraction.
+    """
+
+    name: str
+
+    activation_energy: float
+    pre_exponential_factor: float
+
+    enthalpy: float
+
+    specific_content: float
+
+    initial_conversion: float = 0.0
+    reaction_order: float = 1.0
+
+    reference: str | None = None
+
+    def __post_init__(self) -> None:
+        if self.activation_energy <= 0.0:
+            raise ValueError("Activation energy must be greater than zero.")
+
+        if self.pre_exponential_factor <= 0.0:
+            raise ValueError("Pre-exponential factor must be greater than zero.")
+
+        if self.specific_content <= 0.0:
+            raise ValueError("Specific content must be greater than zero.")
+
+        if not 0.0 <= self.initial_conversion <= 1.0:
+            raise ValueError("Initial conversion must be between 0 and 1.")
+
+        if self.reaction_order <= 0.0:
+            raise ValueError("Reaction order must be greater than zero.")
+
+    def mass_fraction(
+        self,
+        cell: Cell,
+    ) -> float:
+        """
+        Convert volumetric reactant content to cell mass fraction.
+        """
+
+        cell_density = cell.material.density(298.15)
+
+        mass_fraction = self.specific_content / cell_density
+
+        if mass_fraction > 1.0:
+            raise ValueError("Volumetric reactant content exceeds total cell mass.")
+
+        return mass_fraction
+
+    def build(
+        self,
+        cell: Cell,
+        progress_model: ProgressModel | None = None,
+        kinetics: KineticModel | None = None,
+    ) -> Reaction:
+        """
+        Construct a Reaction for the specified cell.
+
+        If no explicit kinetic model is supplied, an Arrhenius model
+        is constructed from the stored kinetic parameters.
+
+        If no explicit progress model is supplied, the configured
+        reaction order is used.
+        """
+
+        if kinetics is None:
+            kinetics = Arrhenius(
                 activation_energy=self.activation_energy,
                 pre_exponential_factor=self.pre_exponential_factor,
-            ),
+            )
+
+        mass_fraction = self.mass_fraction(cell)
+
+        if progress_model is None:
+            return Reaction(
+                name=self.name,
+                kinetics=kinetics,
+                enthalpy=self.enthalpy,
+                mass_fraction=mass_fraction,
+                reaction_order=self.reaction_order,
+            )
+
+        return Reaction(
+            name=self.name,
+            kinetics=kinetics,
             enthalpy=self.enthalpy,
-            mass_fraction=self.mass_fraction(cell),
-            reaction_order=self.reaction_order,
+            mass_fraction=mass_fraction,
+            progress_model=progress_model,
         )
