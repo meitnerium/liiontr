@@ -34,8 +34,6 @@ class LinearConversionVariable(ContextVariable):
     The relation is:
 
         x = x_ref + slope * (alpha - alpha_ref)
-
-    where alpha is the conversion of the specified reaction.
     """
 
     reaction_name: str
@@ -62,3 +60,39 @@ class LinearConversionVariable(ContextVariable):
         return self.reference_value + self.slope * (
             conversion - self.reference_conversion
         )
+
+
+@dataclass(slots=True, frozen=True)
+class RemainingFractionRatioVariable(ContextVariable):
+    """
+    Ratio of the current remaining fraction to a reference value.
+
+    The relation is:
+
+        x = (1 - alpha) / c_ref
+
+    where alpha is the reaction conversion and c_ref is the
+    reference remaining fraction.
+    """
+
+    reaction_name: str
+
+    reference_remaining_fraction: float
+
+    def __post_init__(self) -> None:
+        if not (0.0 < self.reference_remaining_fraction <= 1.0):
+            raise ValueError(
+                "Reference remaining fraction must be greater than 0 and at most 1."
+            )
+
+    def evaluate(
+        self,
+        context: ReactionContext,
+    ) -> float:
+        """
+        Evaluate the remaining-fraction ratio.
+        """
+
+        remaining_fraction = context.remaining_fraction(self.reaction_name)
+
+        return remaining_fraction / self.reference_remaining_fraction
