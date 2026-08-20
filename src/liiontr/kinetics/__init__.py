@@ -7,6 +7,7 @@ from .progress import (
     ProgressModel,
     ThresholdProgress,
 )
+from .threshold import TemperatureThresholdKinetics
 
 __all__ = [
     "Arrhenius",
@@ -15,5 +16,6 @@ __all__ = [
     "KineticModel",
     "PowerLawProgress",
     "ProgressModel",
+    "TemperatureThresholdKinetics",
     "ThresholdProgress",
 ]
