@@ -19,9 +19,7 @@ def integrate_trapezoidal(
     """
 
     return sum(
-        0.5
-        * (value_0 + value_1)
-        * (time_1 - time_0)
+        0.5 * (value_0 + value_1) * (time_1 - time_0)
         for time_0, time_1, value_0, value_1 in zip(
             time[:-1],
             time[1:],
@@ -55,43 +53,39 @@ def main() -> None:
         maximum_temperature=1200.0,
     )
 
-    results = ScipySolver().solve(
-        problem
-    )
+    results = ScipySolver().solve(problem)
 
-    temperature = results.get(
-        "temperature"
-    )
+    temperature = results.get("temperature")
+    sei_conversion = results.get("conversion_0")
+    anode_conversion = results.get("conversion_1")
+    cathode_conversion = results.get("conversion_2")
+    electrolyte_conversion = results.get("conversion_3")
 
-    sei_conversion = results.get(
-        "conversion_0"
-    )
+    if temperature is None:
+        raise RuntimeError("Temperature results are missing.")
 
-    anode_conversion = results.get(
-        "conversion_1"
-    )
+    if sei_conversion is None:
+        raise RuntimeError("SEI conversion results are missing.")
 
-    cathode_conversion = results.get(
-        "conversion_2"
-    )
+    if anode_conversion is None:
+        raise RuntimeError("Anode conversion results are missing.")
 
-    electrolyte_conversion = results.get(
-        "conversion_3"
-    )
+    if cathode_conversion is None:
+        raise RuntimeError("Cathode conversion results are missing.")
 
-    reaction_names = [
-        reaction.name
-        for reaction in network.reactions
-    ]
+    if electrolyte_conversion is None:
+        raise RuntimeError("Electrolyte conversion results are missing.")
 
-    heat_history = {
-        name: []
-        for name in reaction_names
-    }
+    if results.time is None:
+        raise RuntimeError("Simulation time results are missing.")
 
-    for index, current_temperature in enumerate(
-        temperature
-    ):
+    time = [float(value) for value in results.time]
+
+    reaction_names = [reaction.name for reaction in network.reactions]
+
+    heat_history: dict[str, list[float]] = {name: [] for name in reaction_names}
+
+    for index, current_temperature in enumerate(temperature):
         conversions = [
             float(sei_conversion[index]),
             float(anode_conversion[index]),
@@ -99,49 +93,27 @@ def main() -> None:
             float(electrolyte_conversion[index]),
         ]
 
-        heat = network.heat_generation_by_reaction(
+        heat_breakdown = network.heat_generation_by_reaction(
             temperature=float(current_temperature),
             conversions=conversions,
         )
 
         for name in reaction_names:
-            heat_history[name].append(
-                heat[name]
-            )
-
-    time = [
-        float(value)
-        for value in results.time
-    ]
+            heat_history[name].append(heat_breakdown[name])
 
     print()
     print("Hu 2020 thermal runaway simulation")
     print("----------------------------------")
 
-    print(
-        f"Simulation time: "
-        f"{results.time[-1]:.6g} s"
-    )
+    print(f"Simulation time: {time[-1]:.6g} s")
 
-    print(
-        f"Temperature: "
-        f"{temperature[0]:.3f} -> "
-        f"{temperature[-1]:.3f} K"
-    )
+    print(f"Temperature: {temperature[0]:.3f} -> {temperature[-1]:.3f} K")
 
     print()
 
-    print(
-        f"SEI conversion: "
-        f"{sei_conversion[0]:.6f} -> "
-        f"{sei_conversion[-1]:.6f}"
-    )
+    print(f"SEI conversion: {sei_conversion[0]:.6f} -> {sei_conversion[-1]:.6f}")
 
-    print(
-        f"Anode conversion: "
-        f"{anode_conversion[0]:.6f} -> "
-        f"{anode_conversion[-1]:.6f}"
-    )
+    print(f"Anode conversion: {anode_conversion[0]:.6f} -> {anode_conversion[-1]:.6f}")
 
     print(
         f"Cathode conversion: "
@@ -162,15 +134,13 @@ def main() -> None:
     total_energy = 0.0
 
     for name in reaction_names:
-        heat = heat_history[name]
+        heat_values = heat_history[name]
 
-        peak_heat = max(
-            heat
-        )
+        peak_heat = max(heat_values)
 
         energy = integrate_trapezoidal(
             time=time,
-            values=heat,
+            values=heat_values,
         )
 
         total_energy += energy
@@ -178,28 +148,17 @@ def main() -> None:
         print()
         print(name)
 
-        print(
-            f"  Peak heat generation: "
-            f"{peak_heat:.3f} W/kg"
-        )
+        print(f"  Peak heat generation: {peak_heat:.3f} W/kg")
 
-        print(
-            f"  Released energy: "
-            f"{energy / 1000.0:.3f} kJ/kg"
-        )
-
-    print()
-    print(
-        f"Total reaction energy: "
-        f"{total_energy / 1000.0:.3f} kJ/kg"
-    )
+        print(f"  Released energy: {energy / 1000.0:.3f} kJ/kg")
 
     print()
 
-    print(
-        f"Number of solver points: "
-        f"{len(results.time)}"
-    )
+    print(f"Total reaction energy: {total_energy / 1000.0:.3f} kJ/kg")
+
+    print()
+
+    print(f"Number of solver points: {len(time)}")
 
 
 if __name__ == "__main__":
