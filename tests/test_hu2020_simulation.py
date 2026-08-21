@@ -41,11 +41,15 @@ def test_hu2020_network_runs_in_thermal_solver():
 
     anode_conversion = results.get("conversion_1")
 
+    cathode_conversion = results.get("conversion_2")
+
     assert temperature[0] == pytest.approx(450.0)
 
     assert sei_conversion[0] == pytest.approx(0.85)
 
     assert anode_conversion[0] == pytest.approx(0.25)
+
+    assert cathode_conversion[0] == pytest.approx(0.04)
 
     assert temperature[-1] > temperature[0]
 
@@ -53,8 +57,13 @@ def test_hu2020_network_runs_in_thermal_solver():
 
     assert anode_conversion[-1] > anode_conversion[0]
 
+    assert cathode_conversion[-1] > cathode_conversion[0]
+
     assert sei_conversion.min() >= 0.0
     assert sei_conversion.max() <= 1.0
 
     assert anode_conversion.min() >= 0.0
     assert anode_conversion.max() <= 1.0
+
+    assert cathode_conversion.min() >= 0.0
+    assert cathode_conversion.max() <= 1.0
