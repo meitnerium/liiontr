@@ -169,6 +169,7 @@ def hu2020_initial_conversions() -> list[float]:
 
         0: SEI decomposition
         1: Anode-electrolyte
+        2: Cathode decomposition
     """
 
     sei_parameters = hu2020_sei_decomposition()
@@ -177,6 +178,7 @@ def hu2020_initial_conversions() -> list[float]:
     return [
         sei_parameters.initial_conversion,
         anode_parameters.initial_conversion,
+        hu2020_cathode_initial_conversion(),
     ]
 
 
@@ -184,15 +186,19 @@ def hu2020_reaction_network(
     cell: Cell,
 ) -> ReactionNetwork:
     """
-    Build the Hu 2020 SEI + anode reaction network.
+    Build the Hu 2020 SEI, anode, and cathode reaction network.
+
+    Reaction ordering:
+
+        0: SEI decomposition
+        1: Anode-electrolyte
+        2: Cathode decomposition
 
     The SEI thickness ratio is treated as an algebraic variable:
 
         sei_thickness_ratio
             = current_SEI_remaining
             / reference_SEI_remaining
-
-    with a reference remaining SEI fraction of 0.15.
     """
 
     sei_parameters = hu2020_sei_decomposition()
@@ -208,10 +214,15 @@ def hu2020_reaction_network(
         progress_model=hu2020_anode_progress_model(),
     )
 
+    cathode_reaction = hu2020_cathode_decomposition(
+        cell=cell,
+    )
+
     return ReactionNetwork(
         reactions=[
             sei_reaction,
             anode_reaction,
+            cathode_reaction,
         ],
         context_variables={
             "sei_thickness_ratio": RemainingFractionRatioVariable(

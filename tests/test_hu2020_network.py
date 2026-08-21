@@ -5,20 +5,39 @@ from liiontr.library.hu2020 import (
     hu2020_initial_conversions,
     hu2020_reaction_network,
 )
-from liiontr.reactions import RemainingFractionRatioVariable
+from liiontr.reactions import (
+    MultiChannelReaction,
+    RemainingFractionRatioVariable,
+)
 
 
-def test_hu2020_reaction_network_contains_sei_and_anode():
+def test_hu2020_reaction_network_contains_three_reactions():
     cell = cell_21700_generic()
 
     network = hu2020_reaction_network(
         cell=cell,
     )
 
-    assert len(network.reactions) == 2
+    assert len(network.reactions) == 3
 
     assert network.reactions[0].name == "SEI decomposition"
     assert network.reactions[1].name == "Anode-electrolyte"
+    assert network.reactions[2].name == "Cathode decomposition"
+
+
+def test_hu2020_cathode_is_multichannel():
+    cell = cell_21700_generic()
+
+    network = hu2020_reaction_network(
+        cell=cell,
+    )
+
+    cathode = network.reactions[2]
+
+    assert isinstance(
+        cathode,
+        MultiChannelReaction,
+    )
 
 
 def test_hu2020_network_defines_sei_thickness_ratio():
@@ -47,6 +66,7 @@ def test_hu2020_initial_conversions():
         [
             0.85,
             0.25,
+            0.04,
         ]
     )
 
