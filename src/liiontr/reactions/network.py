@@ -137,3 +137,34 @@ class ReactionNetwork:
                 conversions,
             )
         )
+
+    def heat_generation_by_reaction(
+        self,
+        temperature: float,
+        conversions: list[float] | None = None,
+    ) -> dict[str, float]:
+        """
+        Return heat generation for each reaction.
+
+        Values are expressed in W/kg of total cell mass.
+        """
+
+        if conversions is None:
+            conversions = [0.0 for _ in self.reactions]
+
+        context = self.context(
+            conversions=conversions,
+        )
+
+        return {
+            reaction.name: reaction.heat_generation(
+                temperature=temperature,
+                conversion=conversion,
+                context=context,
+            )
+            for reaction, conversion in zip(
+                self.reactions,
+                conversions,
+                strict=True,
+            )
+        }
