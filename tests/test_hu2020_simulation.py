@@ -43,6 +43,8 @@ def test_hu2020_network_runs_in_thermal_solver():
 
     cathode_conversion = results.get("conversion_2")
 
+    electrolyte_conversion = results.get("conversion_3")
+
     assert temperature[0] == pytest.approx(450.0)
 
     assert sei_conversion[0] == pytest.approx(0.85)
@@ -50,6 +52,8 @@ def test_hu2020_network_runs_in_thermal_solver():
     assert anode_conversion[0] == pytest.approx(0.25)
 
     assert cathode_conversion[0] == pytest.approx(0.04)
+
+    assert electrolyte_conversion[0] == pytest.approx(0.0)
 
     assert temperature[-1] > temperature[0]
 
@@ -67,3 +71,44 @@ def test_hu2020_network_runs_in_thermal_solver():
 
     assert cathode_conversion.min() >= 0.0
     assert cathode_conversion.max() <= 1.0
+
+    assert electrolyte_conversion.min() >= 0.0
+    assert electrolyte_conversion.max() <= 1.0
+
+
+def test_hu2020_electrolyte_remains_inactive_below_threshold():
+    cell = cell_21700_generic()
+
+    network = hu2020_reaction_network(
+        cell=cell,
+    )
+
+    conversions = hu2020_initial_conversions()
+
+    rates = network.progress_rates(
+        temperature=470.0,
+        conversions=conversions,
+    )
+
+    electrolyte_rate = rates[3]
+
+    assert electrolyte_rate == pytest.approx(0.0)
+
+
+def test_hu2020_electrolyte_is_active_above_threshold():
+    cell = cell_21700_generic()
+
+    network = hu2020_reaction_network(
+        cell=cell,
+    )
+
+    conversions = hu2020_initial_conversions()
+
+    rates = network.progress_rates(
+        temperature=480.0,
+        conversions=conversions,
+    )
+
+    electrolyte_rate = rates[3]
+
+    assert electrolyte_rate > 0.0
