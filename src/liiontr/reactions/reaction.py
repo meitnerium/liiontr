@@ -22,10 +22,8 @@ class Reaction:
     enthalpy: float
     mass_fraction: float = 1.0
 
-    # Backward-compatible shortcut for PowerLawProgress.
     reaction_order: float = 1.0
 
-    # Explicit progress model for more general reaction laws.
     progress_model: ProgressModel | None = None
 
     def __post_init__(self) -> None:

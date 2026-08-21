@@ -4,22 +4,22 @@ from dataclasses import dataclass, field
 
 from .context import ReactionContext
 from .context_variable import ContextVariable
-from .reaction import Reaction
+from .model import ReactionModel
 
 
 @dataclass(slots=True)
 class ReactionNetwork:
     """
-    Collection of chemical reactions.
+    Collection of chemical reaction models.
 
     Reaction names must be unique because they are used as keys
     in the shared ReactionContext.
 
-    Context variables are algebraic quantities derived from the
-    current reaction state.
+    Both simple reactions and multichannel reactions can be used
+    as long as they implement the ReactionModel protocol.
     """
 
-    reactions: list[Reaction] = field(default_factory=list)
+    reactions: list[ReactionModel] = field(default_factory=list)
 
     context_variables: dict[str, ContextVariable] = field(default_factory=dict)
 
@@ -38,10 +38,10 @@ class ReactionNetwork:
 
     def add(
         self,
-        reaction: Reaction,
+        reaction: ReactionModel,
     ) -> None:
         """
-        Add a reaction to the network.
+        Add a reaction model to the network.
         """
 
         if any(existing.name == reaction.name for existing in self.reactions):

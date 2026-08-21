@@ -4,6 +4,7 @@ from .context_variable import (
     LinearConversionVariable,
     RemainingFractionRatioVariable,
 )
+from .model import ReactionModel
 from .multichannel import (
     MultiChannelReaction,
     ReactionChannel,
@@ -18,6 +19,7 @@ __all__ = [
     "Reaction",
     "ReactionChannel",
     "ReactionContext",
+    "ReactionModel",
     "ReactionNetwork",
     "RemainingFractionRatioVariable",
 ]

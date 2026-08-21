@@ -5,6 +5,7 @@ from liiontr.reactions import (
 )
 import pytest
 
+
 def test_single_reaction():
     reaction = Reaction(
         name="SEI",
@@ -115,6 +116,7 @@ def test_heat_generation_decreases_with_conversion():
     assert q_initial > q_half > q_complete
     assert q_complete == 0.0
 
+
 def test_reaction_names_must_be_unique():
     network = ReactionNetwork()
 
@@ -136,17 +138,14 @@ def test_reaction_names_must_be_unique():
         enthalpy=300000.0,
     )
 
-    network.add(
-        reaction_1
-    )
+    network.add(reaction_1)
 
     with pytest.raises(
         ValueError,
         match="Reaction names must be unique",
     ):
-        network.add(
-            reaction_2
-        )
+        network.add(reaction_2)
+
 
 def test_duplicate_reaction_names_are_rejected_at_construction():
     reaction_1 = Reaction(

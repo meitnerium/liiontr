@@ -9,6 +9,7 @@ from .hu2020 import (
 )
 from .reactions import (
     ReactionParameters,
+    VolumetricConversionReactionParameters,
     VolumetricReactionParameters,
 )
 
@@ -22,4 +23,5 @@ __all__ = [
     "hu2020_initial_conversions",
     "hu2020_reaction_network",
     "hu2020_sei_decomposition",
+    "VolumetricConversionReactionParameters",
 ]
