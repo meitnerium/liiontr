@@ -171,15 +171,18 @@ def hu2020_initial_conversions() -> list[float]:
         0: SEI decomposition
         1: Anode-electrolyte
         2: Cathode decomposition
+        3: Electrolyte decomposition
     """
 
     sei_parameters = hu2020_sei_decomposition()
     anode_parameters = hu2020_anode_electrolyte()
+    electrolyte_parameters = hu2020_electrolyte_decomposition()
 
     return [
         sei_parameters.initial_conversion,
         anode_parameters.initial_conversion,
         hu2020_cathode_initial_conversion(),
+        electrolyte_parameters.initial_conversion,
     ]
 
 
@@ -187,19 +190,14 @@ def hu2020_reaction_network(
     cell: Cell,
 ) -> ReactionNetwork:
     """
-    Build the Hu 2020 SEI, anode, and cathode reaction network.
+    Build the Hu 2020 thermal runaway reaction network.
 
     Reaction ordering:
 
         0: SEI decomposition
         1: Anode-electrolyte
         2: Cathode decomposition
-
-    The SEI thickness ratio is treated as an algebraic variable:
-
-        sei_thickness_ratio
-            = current_SEI_remaining
-            / reference_SEI_remaining
+        3: Electrolyte decomposition
     """
 
     sei_parameters = hu2020_sei_decomposition()
@@ -219,11 +217,16 @@ def hu2020_reaction_network(
         cell=cell,
     )
 
+    electrolyte_reaction = hu2020_electrolyte_reaction(
+        cell=cell,
+    )
+
     return ReactionNetwork(
         reactions=[
             sei_reaction,
             anode_reaction,
             cathode_reaction,
+            electrolyte_reaction,
         ],
         context_variables={
             "sei_thickness_ratio": RemainingFractionRatioVariable(

@@ -11,18 +11,19 @@ from liiontr.reactions import (
 )
 
 
-def test_hu2020_reaction_network_contains_three_reactions():
+def test_hu2020_reaction_network_contains_four_reactions():
     cell = cell_21700_generic()
 
     network = hu2020_reaction_network(
         cell=cell,
     )
 
-    assert len(network.reactions) == 3
+    assert len(network.reactions) == 4
 
     assert network.reactions[0].name == "SEI decomposition"
     assert network.reactions[1].name == "Anode-electrolyte"
     assert network.reactions[2].name == "Cathode decomposition"
+    assert network.reactions[3].name == "Electrolyte decomposition"
 
 
 def test_hu2020_cathode_is_multichannel():
@@ -67,6 +68,7 @@ def test_hu2020_initial_conversions():
             0.85,
             0.25,
             0.04,
+            0.00,
         ]
     )
 
