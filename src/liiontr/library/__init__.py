@@ -8,6 +8,8 @@ from .hu2020 import (
     hu2020_sei_decomposition,
     hu2020_cathode_decomposition,
     hu2020_cathode_initial_conversion,
+    hu2020_electrolyte_decomposition,
+    hu2020_electrolyte_reaction,
 )
 from .reactions import (
     ReactionParameters,
@@ -28,4 +30,6 @@ __all__ = [
     "VolumetricConversionReactionParameters",
     "hu2020_cathode_decomposition",
     "hu2020_cathode_initial_conversion",
+    "hu2020_electrolyte_decomposition",
+    "hu2020_electrolyte_reaction",
 ]

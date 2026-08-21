@@ -12,6 +12,7 @@ from liiontr.kinetics import (
 )
 from liiontr.reactions import (
     MultiChannelReaction,
+    Reaction,
     ReactionChannel,
     ReactionNetwork,
     RemainingFractionRatioVariable,
@@ -330,4 +331,83 @@ def hu2020_cathode_decomposition(
             autocatalytic_order=1.0,
             remaining_order=1.0,
         ),
+    )
+
+
+def hu2020_electrolyte_decomposition() -> VolumetricReactionParameters:
+    """
+    Return the electrolyte decomposition parameters
+    reported by Hu et al. (2020).
+
+    Original reported parameters
+    ----------------------------
+    A:
+        5.14e25 1/s
+
+    Ea:
+        2.74e5 J/mol
+
+    H:
+        155 J/g
+
+    We:
+        4.069e5 g/m3
+
+    Initial remaining fraction:
+        1.0
+
+    Reaction order:
+        1.0
+
+    LiionTR unit conversions
+    ------------------------
+    H:
+        155 J/g -> 155000 J/kg
+
+    We:
+        4.069e5 g/m3 -> 406.9 kg/m3
+
+    Initial conversion:
+
+        alpha_initial = 1 - 1.0 = 0.0
+
+    The temperature threshold is applied separately by
+    hu2020_electrolyte_reaction().
+    """
+
+    return VolumetricReactionParameters(
+        name="Electrolyte decomposition",
+        activation_energy=2.74e5,
+        pre_exponential_factor=5.14e25,
+        enthalpy=155000.0,
+        specific_content=406.9,
+        initial_remaining_fraction=1.0,
+        reaction_order=1.0,
+        reference=HU2020_REFERENCE,
+    )
+
+
+def hu2020_electrolyte_reaction(
+    cell: Cell,
+) -> Reaction:
+    """
+    Build the Hu 2020 electrolyte decomposition reaction.
+
+    The reaction is active only at temperatures greater than
+    or equal to 473.15 K.
+    """
+
+    parameters = hu2020_electrolyte_decomposition()
+
+    kinetics = TemperatureThresholdKinetics(
+        kinetics=Arrhenius(
+            activation_energy=parameters.activation_energy,
+            pre_exponential_factor=parameters.pre_exponential_factor,
+        ),
+        minimum_temperature=473.15,
+    )
+
+    return parameters.build(
+        cell=cell,
+        kinetics=kinetics,
     )
