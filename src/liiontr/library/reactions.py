@@ -3,8 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from liiontr.kinetics import Arrhenius, KineticModel, ProgressModel
-from liiontr.reactions import Reaction
+from liiontr.kinetics import (
+    Arrhenius,
+    KineticModel,
+    ProgressModel,
+)
+from liiontr.reactions.reaction import Reaction
 
 if TYPE_CHECKING:
     from liiontr.cells.cell import Cell
@@ -14,26 +18,6 @@ if TYPE_CHECKING:
 class ReactionParameters:
     """
     Parameter set used to construct a thermal runaway reaction.
-
-    Conventions
-    -----------
-    activation_energy:
-        Activation energy [J/mol].
-
-    pre_exponential_factor:
-        Arrhenius pre-exponential factor [1/s].
-
-    enthalpy:
-        Specific heat released by the reaction [J/kg].
-
-    mass_fraction:
-        Fraction of the total cell mass participating in the reaction.
-
-    reaction_order:
-        Order of the power-law progress model.
-
-    reference:
-        Literature or calibration source for the parameter set.
     """
 
     name: str
@@ -61,20 +45,34 @@ class ReactionParameters:
         if self.reaction_order <= 0.0:
             raise ValueError("Reaction order must be greater than zero.")
 
-    def build(self) -> Reaction:
+    def build(
+        self,
+        progress_model: ProgressModel | None = None,
+    ) -> Reaction:
         """
         Construct a Reaction from this parameter set.
         """
 
+        kinetics = Arrhenius(
+            activation_energy=self.activation_energy,
+            pre_exponential_factor=self.pre_exponential_factor,
+        )
+
+        if progress_model is None:
+            return Reaction(
+                name=self.name,
+                kinetics=kinetics,
+                enthalpy=self.enthalpy,
+                mass_fraction=self.mass_fraction,
+                reaction_order=self.reaction_order,
+            )
+
         return Reaction(
             name=self.name,
-            kinetics=Arrhenius(
-                activation_energy=self.activation_energy,
-                pre_exponential_factor=self.pre_exponential_factor,
-            ),
+            kinetics=kinetics,
             enthalpy=self.enthalpy,
             mass_fraction=self.mass_fraction,
-            reaction_order=self.reaction_order,
+            progress_model=progress_model,
         )
 
 
@@ -83,29 +81,12 @@ class VolumetricReactionParameters:
     """
     Reaction parameters reported using reactant content per cell volume.
 
-    This representation is useful for literature models where the
-    amount of reacting material is given in kg/m3 rather than directly
-    as a fraction of the total cell mass.
+    This representation is intended for models where the literature
+    reports an initial remaining reactant fraction.
 
-    Conventions
-    -----------
-    activation_energy:
-        Activation energy [J/mol].
+    LiionTR converts that quantity to an initial conversion using:
 
-    pre_exponential_factor:
-        Arrhenius pre-exponential factor [1/s].
-
-    enthalpy:
-        Specific heat released by the reacting material [J/kg].
-
-    specific_content:
-        Reacting-material content per unit cell volume [kg/m3].
-
-    initial_remaining_fraction:
-        Initial fraction of reacting material remaining.
-
-    reaction_order:
-        Order of the power-law progress model.
+        alpha_initial = 1 - remaining_fraction
     """
 
     name: str
@@ -141,7 +122,7 @@ class VolumetricReactionParameters:
     @property
     def initial_conversion(self) -> float:
         """
-        Return the initial conversion alpha.
+        Return the initial conversion.
 
         alpha = 1 - remaining_fraction
         """
@@ -169,19 +150,23 @@ class VolumetricReactionParameters:
         self,
         cell: Cell,
         progress_model: ProgressModel | None = None,
+        kinetics: KineticModel | None = None,
     ) -> Reaction:
         """
         Construct a Reaction for the specified cell.
 
+        If no explicit kinetic model is supplied, an Arrhenius model
+        is constructed from the stored kinetic parameters.
+
         If no explicit progress model is supplied, the configured
-        reaction order is used to construct the default power-law
-        progress model.
+        reaction order is used.
         """
 
-        kinetics = Arrhenius(
-            activation_energy=self.activation_energy,
-            pre_exponential_factor=self.pre_exponential_factor,
-        )
+        if kinetics is None:
+            kinetics = Arrhenius(
+                activation_energy=self.activation_energy,
+                pre_exponential_factor=self.pre_exponential_factor,
+            )
 
         mass_fraction = self.mass_fraction(cell)
 
