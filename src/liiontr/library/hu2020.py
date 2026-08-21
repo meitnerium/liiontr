@@ -3,11 +3,16 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from liiontr.kinetics import (
+    Arrhenius,
+    AutocatalyticProgress,
     ExponentialInhibitionProgress,
     PowerLawProgress,
+    TemperatureThresholdKinetics,
     ThresholdProgress,
 )
 from liiontr.reactions import (
+    MultiChannelReaction,
+    ReactionChannel,
     ReactionNetwork,
     RemainingFractionRatioVariable,
 )
@@ -216,4 +221,102 @@ def hu2020_reaction_network(
                 ),
             )
         },
+    )
+
+
+def hu2020_cathode_initial_conversion() -> float:
+    """
+    Return the initial cathode reaction conversion reported
+    by Hu et al. (2020).
+    """
+
+    return 0.04
+
+
+def hu2020_cathode_decomposition(
+    cell: Cell,
+) -> MultiChannelReaction:
+    """
+    Build the Hu 2020 cathode decomposition reaction.
+
+    The cathode is represented by two parallel kinetic channels
+    sharing a single reaction conversion alpha.
+
+    Both channels are active only at temperatures greater than
+    or equal to 393.15 K.
+
+    Reported cathode content:
+
+        Wp = 1.221e6 g/m3
+           = 1221 kg/m3
+
+    Channel 1
+    ---------
+    A:
+        1.75e9 1/s
+
+    Ea:
+        1.1495e5 J/mol
+
+    H:
+        77 J/g
+        = 77000 J/kg
+
+    Channel 2
+    ---------
+    A:
+        1.077e12 1/s
+
+    Ea:
+        1.5888e5 J/mol
+
+    H:
+        84 J/g
+        = 84000 J/kg
+
+    Progress law
+    ------------
+    f(alpha) = alpha * (1 - alpha)
+    """
+
+    cell_density = cell.material.density(298.15)
+
+    mass_fraction = 1221.0 / cell_density
+
+    if mass_fraction > 1.0:
+        raise ValueError("Cathode volumetric content exceeds total cell mass.")
+
+    channel_1 = ReactionChannel(
+        kinetics=TemperatureThresholdKinetics(
+            kinetics=Arrhenius(
+                activation_energy=1.1495e5,
+                pre_exponential_factor=1.75e9,
+            ),
+            minimum_temperature=393.15,
+        ),
+        enthalpy=77000.0,
+    )
+
+    channel_2 = ReactionChannel(
+        kinetics=TemperatureThresholdKinetics(
+            kinetics=Arrhenius(
+                activation_energy=1.5888e5,
+                pre_exponential_factor=1.077e12,
+            ),
+            minimum_temperature=393.15,
+        ),
+        enthalpy=84000.0,
+    )
+
+    return MultiChannelReaction(
+        name="Cathode decomposition",
+        channels=[
+            channel_1,
+            channel_2,
+        ],
+        mass_fraction=mass_fraction,
+        progress_model=AutocatalyticProgress(
+            autocatalytic_order=1.0,
+            remaining_order=1.0,
+        ),
     )
