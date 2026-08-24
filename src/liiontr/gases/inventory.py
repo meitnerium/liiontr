@@ -82,3 +82,35 @@ class GasInventory:
         return sum(
             self.moles_of(species.name) * species.molar_mass for species in self.species
         )
+
+    def mole_fraction(
+        self,
+        name: str,
+    ) -> float:
+        """
+        Return the mole fraction of one gas species.
+        """
+
+        amount = self.moles_of(name)
+
+        total = self.total_moles
+
+        if total == 0.0:
+            return 0.0
+
+        return amount / total
+
+    @property
+    def mean_molar_mass(self) -> float:
+        """
+        Return the mole-weighted mean molar mass in kg/mol.
+        """
+
+        total = self.total_moles
+
+        if total == 0.0:
+            raise ValueError(
+                "Cannot compute mean molar mass of an empty gas inventory."
+            )
+
+        return self.total_mass / total

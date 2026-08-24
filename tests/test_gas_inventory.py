@@ -125,3 +125,79 @@ def test_inventory_rejects_negative_moles():
                 "CO2": -1.0,
             },
         )
+
+
+def test_inventory_computes_mole_fraction():
+    inventory = GasInventory(
+        species=[
+            GasSpecies(
+                name="CO2",
+                molar_mass=44.0e-3,
+            ),
+            GasSpecies(
+                name="H2",
+                molar_mass=2.0e-3,
+            ),
+        ],
+        moles={
+            "CO2": 2.0,
+            "H2": 3.0,
+        },
+    )
+
+    assert inventory.mole_fraction("CO2") == pytest.approx(2.0 / 5.0)
+
+    assert inventory.mole_fraction("H2") == pytest.approx(3.0 / 5.0)
+
+
+def test_inventory_computes_mean_molar_mass():
+    inventory = GasInventory(
+        species=[
+            GasSpecies(
+                name="CO2",
+                molar_mass=44.0e-3,
+            ),
+            GasSpecies(
+                name="H2",
+                molar_mass=2.0e-3,
+            ),
+        ],
+        moles={
+            "CO2": 2.0,
+            "H2": 3.0,
+        },
+    )
+
+    expected = ((2.0 * 44.0e-3) + (3.0 * 2.0e-3)) / 5.0
+
+    assert inventory.mean_molar_mass == pytest.approx(expected)
+
+
+def test_empty_inventory_has_no_mean_molar_mass():
+    inventory = GasInventory(
+        species=[
+            GasSpecies(
+                name="CO2",
+                molar_mass=44.0e-3,
+            ),
+        ]
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="empty gas inventory",
+    ):
+        _ = inventory.mean_molar_mass
+
+
+def test_empty_inventory_has_zero_mole_fraction():
+    inventory = GasInventory(
+        species=[
+            GasSpecies(
+                name="CO2",
+                molar_mass=44.0e-3,
+            ),
+        ]
+    )
+
+    assert inventory.mole_fraction("CO2") == pytest.approx(0.0)
