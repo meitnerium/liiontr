@@ -43,17 +43,11 @@ def test_mixture_vent_distributes_flow_by_mole_fraction():
         temperature=600.0,
     )
 
-    total_rate = sum(
-        rates.values()
-    )
+    total_rate = sum(rates.values())
 
-    assert rates["CO2"] / total_rate == pytest.approx(
-        2.0 / 5.0
-    )
+    assert rates["CO2"] / total_rate == pytest.approx(2.0 / 5.0)
 
-    assert rates["H2"] / total_rate == pytest.approx(
-        3.0 / 5.0
-    )
+    assert rates["H2"] / total_rate == pytest.approx(3.0 / 5.0)
 
 
 def test_species_rates_sum_to_total_molar_flow():
@@ -94,11 +88,7 @@ def test_species_rates_sum_to_total_molar_flow():
         temperature=600.0,
     )
 
-    assert sum(
-        rates.values()
-    ) == pytest.approx(
-        total_rate
-    )
+    assert sum(rates.values()) == pytest.approx(total_rate)
 
 
 def test_species_rates_preserve_mass_flow():
@@ -135,15 +125,10 @@ def test_species_rates_preserve_mass_flow():
         temperature=600.0,
     )
 
-    species_by_name = {
-        species.name: species
-        for species in inventory.species
-    }
+    species_by_name = {species.name: species for species in inventory.species}
 
     mass_flow_from_species = sum(
-        rate
-        * species_by_name[name].molar_mass
-        for name, rate in rates.items()
+        rate * species_by_name[name].molar_mass for name, rate in rates.items()
     )
 
     expected_mass_flow = flow_model.mass_flow_rate(
@@ -153,9 +138,7 @@ def test_species_rates_preserve_mass_flow():
         molar_mass=inventory.mean_molar_mass,
     )
 
-    assert mass_flow_from_species == pytest.approx(
-        expected_mass_flow
-    )
+    assert mass_flow_from_species == pytest.approx(expected_mass_flow)
 
 
 def test_empty_inventory_has_zero_vent_flow():
@@ -188,9 +171,7 @@ def test_empty_inventory_has_zero_vent_flow():
         inventory=inventory,
         upstream_pressure=2.0e6,
         temperature=600.0,
-    ) == pytest.approx(
-        0.0
-    )
+    ) == pytest.approx(0.0)
 
 
 def test_no_flow_at_ambient_pressure():
@@ -219,6 +200,4 @@ def test_no_flow_at_ambient_pressure():
         temperature=400.0,
     )
 
-    assert rates["N2"] == pytest.approx(
-        0.0
-    )
+    assert rates["N2"] == pytest.approx(0.0)

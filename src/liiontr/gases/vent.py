@@ -7,6 +7,7 @@ from .ideal import GAS_CONSTANT
 
 from .inventory import GasInventory
 
+
 @dataclass(slots=True, frozen=True)
 class CompressibleVentFlowModel:
     """
@@ -188,9 +189,7 @@ class MixtureVentFlowModel:
 
     def __post_init__(self) -> None:
         if self.downstream_pressure < 0.0:
-            raise ValueError(
-                "Downstream pressure must not be negative."
-            )
+            raise ValueError("Downstream pressure must not be negative.")
 
     def total_molar_flow_rate(
         self,
@@ -223,25 +222,15 @@ class MixtureVentFlowModel:
         """
 
         if inventory.total_moles == 0.0:
-            return {
-                species.name: 0.0
-                for species in inventory.species
-            }
+            return {species.name: 0.0 for species in inventory.species}
 
-        total_flow_rate = (
-            self.total_molar_flow_rate(
-                inventory=inventory,
-                upstream_pressure=upstream_pressure,
-                temperature=temperature,
-            )
+        total_flow_rate = self.total_molar_flow_rate(
+            inventory=inventory,
+            upstream_pressure=upstream_pressure,
+            temperature=temperature,
         )
 
         return {
-            species.name: (
-                inventory.mole_fraction(
-                    species.name
-                )
-                * total_flow_rate
-            )
+            species.name: (inventory.mole_fraction(species.name) * total_flow_rate)
             for species in inventory.species
         }
