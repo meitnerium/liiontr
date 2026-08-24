@@ -73,7 +73,14 @@ class ScipySolver:
         if maximum_pressure is not None and pressure_model is None:
             raise ValueError("Maximum pressure requires a pressure model.")
 
+        initial_gas_inventory = problem.initial_gas_inventory
+
         gas_species_names: list[str] = []
+
+        if initial_gas_inventory is not None:
+            gas_species_names.extend(
+                species.name for species in initial_gas_inventory.species
+            )
 
         if gas_generation_model is not None:
             if not isinstance(
@@ -92,9 +99,17 @@ class ScipySolver:
                     "chemistry backend."
                 )
 
-            gas_species_names = gas_generation_model.species_names
+            for species_name in gas_generation_model.species_names:
+                if species_name not in gas_species_names:
+                    gas_species_names.append(species_name)
 
-        initial_gas_moles = [0.0 for _ in gas_species_names]
+        if initial_gas_inventory is None:
+            initial_gas_moles = [0.0 for _ in gas_species_names]
+        else:
+            initial_gas_moles = [
+                initial_gas_inventory.moles_of(species_name)
+                for species_name in gas_species_names
+            ]
 
         initial_state = [
             problem.initial_temperature,
@@ -117,11 +132,17 @@ class ScipySolver:
 
             temperature = float(state[0])
 
-            generated_moles = sum(max(float(value), 0.0) for value in state[gas_start:])
+            gas_moles = sum(max(float(value), 0.0) for value in state[gas_start:])
+
+            if initial_gas_inventory is not None:
+                return pressure_model.pressure_from_total_moles(
+                    temperature=temperature,
+                    total_moles=gas_moles,
+                )
 
             return pressure_model.pressure(
                 temperature=temperature,
-                generated_moles=generated_moles,
+                generated_moles=gas_moles,
             )
 
         def rhs(
@@ -264,35 +285,46 @@ class ScipySolver:
                 conversion,
             )
 
-            gas_arrays = []
+        gas_arrays: list[np.ndarray] = []
 
-            for index, species_name in enumerate(gas_species_names):
-                gas_values = solution.y[gas_start + index].clip(min=0.0)
+        for index, species_name in enumerate(gas_species_names):
+            gas_values = np.clip(
+                solution.y[gas_start + index],
+                0.0,
+                None,
+            )
 
-                gas_arrays.append(gas_values)
+            gas_arrays.append(gas_values)
 
-                results.add_variable(
-                    f"gas_{species_name}",
-                    gas_values,
+            results.add_variable(
+                f"gas_{species_name}",
+                gas_values,
+            )
+
+        if pressure_model is not None:
+            pressure_values: list[float] = []
+
+            for time_index, temperature in enumerate(solution.y[0]):
+                total_state_gas_moles = sum(
+                    float(gas_values[time_index]) for gas_values in gas_arrays
                 )
 
-                if pressure_model is not None:
-                    pressure_values = []
-
-                    for time_index, temperature in enumerate(solution.y[0]):
-                        generated_moles = sum(
-                            float(gas_values[time_index]) for gas_values in gas_arrays
-                        )
-
-                        pressure_values.append(
-                            pressure_model.pressure(
-                                temperature=float(temperature),
-                                generated_moles=generated_moles,
-                            )
-                        )
-
-                    results.add_variable(
-                        "pressure",
-                        pressure_values,
+                if initial_gas_inventory is not None:
+                    current_pressure = pressure_model.pressure_from_total_moles(
+                        temperature=float(temperature),
+                        total_moles=(total_state_gas_moles),
                     )
+                else:
+                    current_pressure = pressure_model.pressure(
+                        temperature=float(temperature),
+                        generated_moles=(total_state_gas_moles),
+                    )
+
+                pressure_values.append(current_pressure)
+
+            results.add_variable(
+                "pressure",
+                pressure_values,
+            )
+
         return results

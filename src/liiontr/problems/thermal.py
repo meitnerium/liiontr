@@ -6,6 +6,7 @@ from liiontr.core.problem import Problem
 
 from liiontr.gases import (
     GasGenerationModel,
+    GasInventory,
     IdealGasPressureModel,
 )
 
@@ -37,3 +38,5 @@ class ThermalProblem(Problem):
     pressure_model: IdealGasPressureModel | None = None
 
     maximum_pressure: float | None = None
+
+    initial_gas_inventory: GasInventory | None = None
