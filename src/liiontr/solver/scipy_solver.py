@@ -68,6 +68,11 @@ class ScipySolver:
 
         pressure_model = problem.pressure_model
 
+        maximum_pressure = problem.maximum_pressure
+
+        if maximum_pressure is not None and pressure_model is None:
+            raise ValueError("Maximum pressure requires a pressure model.")
+
         gas_species_names: list[str] = []
 
         if gas_generation_model is not None:
@@ -103,6 +108,21 @@ class ScipySolver:
         conversion_end = conversion_start + reaction_count
 
         gas_start = conversion_end
+
+        def pressure_from_state(
+            state: np.ndarray,
+        ) -> float:
+            if pressure_model is None:
+                raise RuntimeError("Pressure model is not configured.")
+
+            temperature = float(state[0])
+
+            generated_moles = sum(max(float(value), 0.0) for value in state[gas_start:])
+
+            return pressure_model.pressure(
+                temperature=temperature,
+                generated_moles=generated_moles,
+            )
 
         def rhs(
             time: float,
@@ -171,13 +191,13 @@ class ScipySolver:
                 *gas_rates,
             ]
 
-        events: Any = None
+        events: list[Any] = []
 
         maximum_temperature = problem.maximum_temperature
 
         if maximum_temperature is not None:
 
-            def maximum_temperature_event(
+            def temperature_event(
                 time: float,
                 state: np.ndarray,
             ) -> float:
@@ -185,19 +205,39 @@ class ScipySolver:
 
                 return maximum_temperature - float(state[0])
 
-            maximum_temperature_event.terminal = True  # type: ignore[attr-defined]
-            maximum_temperature_event.direction = -1.0  # type: ignore[attr-defined]
+            temperature_event.terminal = True  # type: ignore[attr-defined]
+            temperature_event.direction = -1.0  # type: ignore[attr-defined]
 
-            events = maximum_temperature_event
+            events.append(temperature_event)
+
+        maximum_pressure = problem.maximum_pressure
+
+        if maximum_pressure is not None:
+
+            def pressure_event(
+                time: float,
+                state: np.ndarray,
+            ) -> float:
+                del time
+
+                return maximum_pressure - pressure_from_state(state)
+
+            pressure_event.terminal = True  # type: ignore[attr-defined]
+            pressure_event.direction = -1.0  # type: ignore[attr-defined]
+
+            events.append(pressure_event)
 
         solution = solve_ivp(
             rhs,
-            (0.0, problem.duration),
+            (
+                0.0,
+                problem.duration,
+            ),
             initial_state,
             method=self.method,
             rtol=self.relative_tolerance,
             atol=self.absolute_tolerance,
-            events=events,
+            events=events or None,
         )
 
         if not solution.success:
