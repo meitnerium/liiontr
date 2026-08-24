@@ -15,6 +15,7 @@ class ReactionModel(Protocol):
     """
 
     name: str
+    mass_fraction: float
 
     def progress_rate(
         self,
