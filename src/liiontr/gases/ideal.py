@@ -64,7 +64,10 @@ class IdealGasPressureModel:
         generated_moles: float = 0.0,
     ) -> float:
         """
-        Return the absolute internal pressure in Pa.
+        Return absolute internal pressure in Pa.
+
+        The initial gas inventory is combined with the amount
+        of gas generated since the initial state.
 
         Parameters
         ----------
@@ -75,12 +78,36 @@ class IdealGasPressureModel:
             Additional gas generated since the initial state, in mol.
         """
 
-        if temperature <= 0.0:
-            raise ValueError("Temperature must be greater than zero.")
-
         if generated_moles < 0.0:
             raise ValueError("Generated moles must not be negative.")
 
-        total_moles = self.initial_moles + generated_moles
+        return self.pressure_from_total_moles(
+            temperature=temperature,
+            total_moles=(self.initial_moles + generated_moles),
+        )
+
+    def pressure_from_total_moles(
+        self,
+        temperature: float,
+        total_moles: float,
+    ) -> float:
+        """
+        Return absolute pressure from the total gas amount.
+
+        Parameters
+        ----------
+        temperature:
+            Gas temperature in K.
+
+        total_moles:
+            Total amount of gas currently contained in the
+            free volume, in mol.
+        """
+
+        if temperature <= 0.0:
+            raise ValueError("Temperature must be greater than zero.")
+
+        if total_moles < 0.0:
+            raise ValueError("Total moles must not be negative.")
 
         return total_moles * GAS_CONSTANT * temperature / self.free_volume
