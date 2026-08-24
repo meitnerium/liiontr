@@ -181,3 +181,55 @@ def test_duplicate_reaction_yields_are_rejected():
                 ),
             ],
         )
+
+def test_gas_generation_model_has_deterministic_species_order():
+    reaction_1 = Reaction(
+        name="Reaction 1",
+        kinetics=Arrhenius(
+            activation_energy=80000.0,
+            pre_exponential_factor=1.0e5,
+        ),
+        enthalpy=200000.0,
+    )
+
+    reaction_2 = Reaction(
+        name="Reaction 2",
+        kinetics=Arrhenius(
+            activation_energy=90000.0,
+            pre_exponential_factor=2.0e5,
+        ),
+        enthalpy=300000.0,
+    )
+
+    network = ReactionNetwork(
+        reactions=[
+            reaction_1,
+            reaction_2,
+        ]
+    )
+
+    model = GasGenerationModel(
+        reaction_network=network,
+        gas_yields=[
+            ReactionGasYield(
+                reaction_name="Reaction 1",
+                species_yields={
+                    "CO2": 1.0,
+                    "H2": 2.0,
+                },
+            ),
+            ReactionGasYield(
+                reaction_name="Reaction 2",
+                species_yields={
+                    "H2": 1.0,
+                    "CO": 3.0,
+                },
+            ),
+        ],
+    )
+
+    assert model.species_names == [
+        "CO2",
+        "H2",
+        "CO",
+    ]
