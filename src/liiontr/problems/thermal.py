@@ -4,6 +4,11 @@ from liiontr.cells.cell import Cell
 from liiontr.chemistry import ChemistryBackend
 from liiontr.core.problem import Problem
 
+from liiontr.gases import (
+    GasGenerationModel,
+    IdealGasPressureModel,
+)
+
 
 @dataclass(slots=True)
 class ThermalProblem(Problem):
@@ -26,3 +31,7 @@ class ThermalProblem(Problem):
     duration: float = 3600.0
 
     maximum_temperature: float | None = None
+
+    gas_generation_model: GasGenerationModel | None = None
+
+    pressure_model: IdealGasPressureModel | None = None
