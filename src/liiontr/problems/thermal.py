@@ -8,6 +8,7 @@ from liiontr.gases import (
     GasGenerationModel,
     GasInventory,
     IdealGasPressureModel,
+    MixtureVentFlowModel,
 )
 
 
@@ -40,3 +41,6 @@ class ThermalProblem(Problem):
     maximum_pressure: float | None = None
 
     initial_gas_inventory: GasInventory | None = None
+
+    vent_model: MixtureVentFlowModel | None = None
+    vent_open_pressure: float | None = None

@@ -111,6 +111,24 @@ class ScipySolver:
                 for species_name in gas_species_names
             ]
 
+        vent_model = problem.vent_model
+        vent_open_pressure = problem.vent_open_pressure
+
+        if vent_model is not None:
+            if vent_open_pressure is None:
+                raise ValueError("Vent model requires a vent opening pressure.")
+
+            if pressure_model is None:
+                raise ValueError("Vent model requires a pressure model.")
+
+            if initial_gas_inventory is None:
+                raise ValueError(
+                    "Vent model requires an explicit initial gas inventory."
+                )
+
+        if vent_open_pressure is not None and vent_model is None:
+            raise ValueError("Vent opening pressure requires a vent model.")
+
         initial_state = [
             problem.initial_temperature,
             *initial_conversions,
