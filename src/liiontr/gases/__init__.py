@@ -7,7 +7,10 @@ from .inventory import (
     GasInventory,
     GasSpecies,
 )
-from .vent import CompressibleVentFlowModel
+from .vent import (
+    CompressibleVentFlowModel,
+    MixtureVentFlowModel,
+)
 from .yield_model import ReactionGasYield
 
 __all__ = [
@@ -18,4 +21,5 @@ __all__ = [
     "GasSpecies",
     "IdealGasPressureModel",
     "ReactionGasYield",
+    "MixtureVentFlowModel",
 ]

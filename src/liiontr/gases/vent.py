@@ -5,6 +5,7 @@ from math import sqrt
 
 from .ideal import GAS_CONSTANT
 
+from .inventory import GasInventory
 
 @dataclass(slots=True, frozen=True)
 class CompressibleVentFlowModel:
@@ -167,3 +168,80 @@ class CompressibleVentFlowModel:
         )
 
         return mass_flow / molar_mass
+
+
+@dataclass(slots=True, frozen=True)
+class MixtureVentFlowModel:
+    """
+    Vent flow model for a gas mixture.
+
+    Total compressible flow is calculated using the
+    mole-weighted mean molar mass of the mixture.
+
+    The total molar flow is then distributed among
+    species according to their mole fractions.
+    """
+
+    flow_model: CompressibleVentFlowModel
+
+    downstream_pressure: float = 101325.0
+
+    def __post_init__(self) -> None:
+        if self.downstream_pressure < 0.0:
+            raise ValueError(
+                "Downstream pressure must not be negative."
+            )
+
+    def total_molar_flow_rate(
+        self,
+        inventory: GasInventory,
+        upstream_pressure: float,
+        temperature: float,
+    ) -> float:
+        """
+        Return total vent molar flow rate in mol/s.
+        """
+
+        if inventory.total_moles == 0.0:
+            return 0.0
+
+        return self.flow_model.molar_flow_rate(
+            upstream_pressure=upstream_pressure,
+            downstream_pressure=self.downstream_pressure,
+            temperature=temperature,
+            molar_mass=inventory.mean_molar_mass,
+        )
+
+    def species_molar_flow_rates(
+        self,
+        inventory: GasInventory,
+        upstream_pressure: float,
+        temperature: float,
+    ) -> dict[str, float]:
+        """
+        Return vent molar flow rate for each gas species.
+        """
+
+        if inventory.total_moles == 0.0:
+            return {
+                species.name: 0.0
+                for species in inventory.species
+            }
+
+        total_flow_rate = (
+            self.total_molar_flow_rate(
+                inventory=inventory,
+                upstream_pressure=upstream_pressure,
+                temperature=temperature,
+            )
+        )
+
+        return {
+            species.name: (
+                inventory.mole_fraction(
+                    species.name
+                )
+                * total_flow_rate
+            )
+            for species in inventory.species
+        }
