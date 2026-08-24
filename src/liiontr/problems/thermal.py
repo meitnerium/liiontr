@@ -36,5 +36,4 @@ class ThermalProblem(Problem):
 
     pressure_model: IdealGasPressureModel | None = None
 
-    maximum_temperature: float | None = None
     maximum_pressure: float | None = None
