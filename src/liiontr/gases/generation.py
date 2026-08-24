@@ -109,3 +109,74 @@ class GasGenerationModel:
                 )
 
         return total_rates
+
+    def generated_moles(
+        self,
+        initial_conversions: list[float],
+        conversions: list[float],
+        cell_mass: float,
+    ) -> dict[str, float]:
+        """
+        Return cumulative gas generation by species in mol.
+
+        Gas generation is calculated from the reaction
+        conversion change:
+
+            n_i =
+                Y_i
+                * m_cell
+                * w_reaction
+                * (alpha - alpha_initial)
+        """
+
+        if cell_mass <= 0.0:
+            raise ValueError("Cell mass must be greater than zero.")
+
+        reaction_count = len(self.reaction_network.reactions)
+
+        if len(initial_conversions) != reaction_count:
+            raise ValueError(
+                "Number of initial conversions must match number of reactions."
+            )
+
+        if len(conversions) != reaction_count:
+            raise ValueError("Number of conversions must match number of reactions.")
+
+        yields_by_reaction = {
+            gas_yield.reaction_name: gas_yield for gas_yield in self.gas_yields
+        }
+
+        generated: dict[str, float] = {}
+
+        for (
+            reaction,
+            initial_conversion,
+            conversion,
+        ) in zip(
+            self.reaction_network.reactions,
+            initial_conversions,
+            conversions,
+            strict=True,
+        ):
+            gas_yield = yields_by_reaction.get(reaction.name)
+
+            if gas_yield is None:
+                continue
+
+            conversion_change = conversion - initial_conversion
+
+            if conversion_change < 0.0:
+                raise ValueError("Reaction conversion must not decrease.")
+
+            reacted_mass = cell_mass * reaction.mass_fraction * conversion_change
+
+            for species_name, species_yield in gas_yield.species_yields.items():
+                generated[species_name] = (
+                    generated.get(
+                        species_name,
+                        0.0,
+                    )
+                    + species_yield * reacted_mass
+                )
+
+        return generated
