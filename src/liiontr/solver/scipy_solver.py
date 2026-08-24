@@ -64,10 +64,45 @@ class ScipySolver:
             ):
                 raise ValueError("Initial conversions must be between 0 and 1.")
 
+        gas_generation_model = problem.gas_generation_model
+
+        pressure_model = problem.pressure_model
+
+        gas_species_names: list[str] = []
+
+        if gas_generation_model is not None:
+            if not isinstance(
+                problem.chemistry_backend,
+                ReactionNetworkBackend,
+            ):
+                raise ValueError("Gas generation requires a ReactionNetworkBackend.")
+
+            if (
+                gas_generation_model.reaction_network
+                is not problem.chemistry_backend.reaction_network
+            ):
+                raise ValueError(
+                    "Gas generation model must use the "
+                    "same reaction network as the "
+                    "chemistry backend."
+                )
+
+            gas_species_names = gas_generation_model.species_names
+
+        initial_gas_moles = [0.0 for _ in gas_species_names]
+
         initial_state = [
             problem.initial_temperature,
             *initial_conversions,
+            *initial_gas_moles,
         ]
+
+        reaction_count = len(initial_conversions)
+
+        conversion_start = 1
+        conversion_end = conversion_start + reaction_count
+
+        gas_start = conversion_end
 
         def rhs(
             time: float,
@@ -79,13 +114,10 @@ class ScipySolver:
 
             conversions = [
                 min(
+                    max(float(value), 0.0),
                     1.0,
-                    max(
-                        0.0,
-                        float(value),
-                    ),
                 )
-                for value in state[1 : 1 + n_reactions]
+                for value in state[conversion_start:conversion_end]
             ]
 
             if backend is None:
@@ -116,9 +148,27 @@ class ScipySolver:
                 heat_generation=heat_generation,
             )
 
+            gas_rates: list[float] = []
+
+            if gas_generation_model is not None:
+                generation_rates = gas_generation_model.generation_rates(
+                    temperature=temperature,
+                    conversions=conversions,
+                    cell_mass=problem.cell.mass,
+                )
+
+                gas_rates = [
+                    generation_rates.get(
+                        species_name,
+                        0.0,
+                    )
+                    for species_name in gas_species_names
+                ]
+
             return [
                 temperature_rate,
                 *progress_rates,
+                *gas_rates,
             ]
 
         events: Any = None
@@ -174,4 +224,35 @@ class ScipySolver:
                 conversion,
             )
 
+            gas_arrays = []
+
+            for index, species_name in enumerate(gas_species_names):
+                gas_values = solution.y[gas_start + index].clip(min=0.0)
+
+                gas_arrays.append(gas_values)
+
+                results.add_variable(
+                    f"gas_{species_name}",
+                    gas_values,
+                )
+
+                if pressure_model is not None:
+                    pressure_values = []
+
+                    for time_index, temperature in enumerate(solution.y[0]):
+                        generated_moles = sum(
+                            float(gas_values[time_index]) for gas_values in gas_arrays
+                        )
+
+                        pressure_values.append(
+                            pressure_model.pressure(
+                                temperature=float(temperature),
+                                generated_moles=generated_moles,
+                            )
+                        )
+
+                    results.add_variable(
+                        "pressure",
+                        pressure_values,
+                    )
         return results

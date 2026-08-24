@@ -182,6 +182,7 @@ def test_duplicate_reaction_yields_are_rejected():
             ],
         )
 
+
 def test_gas_generation_model_has_deterministic_species_order():
     reaction_1 = Reaction(
         name="Reaction 1",

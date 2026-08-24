@@ -32,9 +32,7 @@ class GasGenerationModel:
         for gas_yield in self.gas_yields:
             for species_name in gas_yield.species_yields:
                 if species_name not in names:
-                    names.append(
-                        species_name
-                    )
+                    names.append(species_name)
 
         return names
 
