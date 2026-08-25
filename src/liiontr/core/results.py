@@ -1,3 +1,5 @@
+"""Simulation result containers and result access utilities."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

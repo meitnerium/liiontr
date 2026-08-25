@@ -1,3 +1,5 @@
+"""Vector field representations for LiionTR models."""
+
 from .field import Field
 
 

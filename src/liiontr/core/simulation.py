@@ -1,3 +1,5 @@
+"""High-level simulation orchestration."""
+
 from dataclasses import dataclass
 
 from .problem import Problem

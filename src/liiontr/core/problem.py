@@ -1,3 +1,5 @@
+"""Base problem definitions for LiionTR simulations."""
+
 from __future__ import annotations
 from .domain import Domain
 from abc import ABC  # , abstractmethod

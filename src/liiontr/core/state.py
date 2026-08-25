@@ -1,3 +1,5 @@
+"""Simulation state containers and state access utilities."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

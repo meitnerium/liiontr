@@ -1,3 +1,5 @@
+"""Physical and numerical parameter representations."""
+
 from dataclasses import dataclass
 
 

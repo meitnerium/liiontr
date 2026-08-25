@@ -1,3 +1,5 @@
+"""Computational domain definitions used by LiionTR models."""
+
 from __future__ import annotations
 
 from abc import ABC

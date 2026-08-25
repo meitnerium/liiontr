@@ -1,3 +1,5 @@
+"""Abstract battery interfaces for LiionTR simulations."""
+
 from abc import ABC
 
 

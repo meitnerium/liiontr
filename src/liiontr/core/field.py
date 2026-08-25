@@ -1,3 +1,5 @@
+"""Base field representations defined over computational domains."""
+
 from __future__ import annotations
 
 from abc import ABC

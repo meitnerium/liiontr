@@ -1,3 +1,5 @@
+"""Core abstractions and data structures used throughout LiionTR."""
+
 from .problem import Problem
 from .results import Results
 from .simulation import Simulation
