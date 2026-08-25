@@ -1,3 +1,5 @@
+"""Gas species definitions and gas-mixture inventories."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -21,20 +23,20 @@ class GasSpecies:
     molar_mass: float
 
     def __post_init__(self) -> None:
+        """Validate the gas species definition."""
         if self.molar_mass <= 0.0:
             raise ValueError("Molar mass must be greater than zero.")
 
 
 @dataclass(slots=True)
 class GasInventory:
-    """
-    Gas composition represented by species mole amounts.
-    """
+    """Gas composition represented by species mole amounts."""
 
     species: list[GasSpecies]
     moles: dict[str, float] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        """Validate gas species and mole amounts."""
         names = [species.name for species in self.species]
 
         if len(names) != len(set(names)):
@@ -53,10 +55,7 @@ class GasInventory:
         self,
         name: str,
     ) -> float:
-        """
-        Return the mole amount of one species.
-        """
-
+        """Return the mole amount of one species."""
         if name not in {species.name for species in self.species}:
             raise KeyError(f"Unknown gas species: {name}")
 
@@ -67,18 +66,12 @@ class GasInventory:
 
     @property
     def total_moles(self) -> float:
-        """
-        Return the total gas amount in mol.
-        """
-
+        """Return the total gas amount in mol."""
         return sum(self.moles_of(species.name) for species in self.species)
 
     @property
     def total_mass(self) -> float:
-        """
-        Return total gas mass in kg.
-        """
-
+        """Return total gas mass in kg."""
         return sum(
             self.moles_of(species.name) * species.molar_mass for species in self.species
         )
@@ -87,10 +80,7 @@ class GasInventory:
         self,
         name: str,
     ) -> float:
-        """
-        Return the mole fraction of one gas species.
-        """
-
+        """Return the mole fraction of one gas species."""
         amount = self.moles_of(name)
 
         total = self.total_moles
@@ -102,10 +92,7 @@ class GasInventory:
 
     @property
     def mean_molar_mass(self) -> float:
-        """
-        Return the mole-weighted mean molar mass in kg/mol.
-        """
-
+        """Return the mole-weighted mean molar mass in kg/mol."""
         total = self.total_moles
 
         if total == 0.0:

@@ -1,3 +1,5 @@
+"""Gas-generation models coupled to thermal reaction networks."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -26,7 +28,6 @@ class GasGenerationModel:
         Species are ordered by first appearance in the configured
         reaction gas yields.
         """
-
         names: list[str] = []
 
         for gas_yield in self.gas_yields:
@@ -37,6 +38,7 @@ class GasGenerationModel:
         return names
 
     def __post_init__(self) -> None:
+        """Validate the configured reaction gas yields."""
         yield_names = [gas_yield.reaction_name for gas_yield in self.gas_yields]
 
         if len(yield_names) != len(set(yield_names)):
@@ -68,7 +70,6 @@ class GasGenerationModel:
         cell_mass:
             Total cell mass in kg.
         """
-
         if cell_mass <= 0.0:
             raise ValueError("Cell mass must be greater than zero.")
 
@@ -128,7 +129,6 @@ class GasGenerationModel:
                 * w_reaction
                 * (alpha - alpha_initial)
         """
-
         if cell_mass <= 0.0:
             raise ValueError("Cell mass must be greater than zero.")
 

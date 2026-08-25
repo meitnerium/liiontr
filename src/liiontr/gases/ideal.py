@@ -1,3 +1,5 @@
+"""Ideal-gas pressure models for battery free volumes."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -33,6 +35,7 @@ class IdealGasPressureModel:
     initial_temperature: float = 298.15
 
     def __post_init__(self) -> None:
+        """Validate the ideal-gas pressure model parameters."""
         if self.free_volume <= 0.0:
             raise ValueError("Free volume must be greater than zero.")
 
@@ -44,14 +47,14 @@ class IdealGasPressureModel:
 
     @property
     def initial_moles(self) -> float:
+        r"""Return the initial amount of gas in the free volume.
+
+        The initial gas amount follows the ideal-gas relation
+
+        .. math::
+
+            n_0 = \frac{P_0 V}{R T_0}.
         """
-        Return the initial amount of gas in the free volume.
-
-        Uses:
-
-            n = P V / (R T)
-        """
-
         return (
             self.initial_pressure
             * self.free_volume
@@ -63,8 +66,7 @@ class IdealGasPressureModel:
         temperature: float,
         generated_moles: float = 0.0,
     ) -> float:
-        """
-        Return absolute internal pressure in Pa.
+        """Return absolute internal pressure in Pa.
 
         The initial gas inventory is combined with the amount
         of gas generated since the initial state.
@@ -77,7 +79,6 @@ class IdealGasPressureModel:
         generated_moles:
             Additional gas generated since the initial state, in mol.
         """
-
         if generated_moles < 0.0:
             raise ValueError("Generated moles must not be negative.")
 
@@ -91,8 +92,7 @@ class IdealGasPressureModel:
         temperature: float,
         total_moles: float,
     ) -> float:
-        """
-        Return absolute pressure from the total gas amount.
+        """Return absolute pressure from the total gas amount.
 
         Parameters
         ----------
@@ -103,7 +103,6 @@ class IdealGasPressureModel:
             Total amount of gas currently contained in the
             free volume, in mol.
         """
-
         if temperature <= 0.0:
             raise ValueError("Temperature must be greater than zero.")
 

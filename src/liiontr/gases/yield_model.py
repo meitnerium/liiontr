@@ -1,3 +1,5 @@
+"""Empirical gas yields associated with thermal reactions."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -21,6 +23,7 @@ class ReactionGasYield:
     species_yields: dict[str, float]
 
     def __post_init__(self) -> None:
+        """Validate the reaction gas-yield definition."""
         if not self.reaction_name:
             raise ValueError("Reaction name must not be empty.")
 
@@ -35,10 +38,7 @@ class ReactionGasYield:
         self,
         species_name: str,
     ) -> float:
-        """
-        Return a species yield in mol/kg reacted material.
-        """
-
+        """Return a species yield in mol/kg reacted material."""
         return self.species_yields.get(
             species_name,
             0.0,
@@ -50,15 +50,13 @@ class ReactionGasYield:
         reaction_mass_fraction: float,
         progress_rate: float,
     ) -> dict[str, float]:
-        """
-        Return gas generation rates in mol/s.
+        r"""Return gas generation rates in mol/s.
 
         The reacted material rate is:
 
             dm_reacted/dt =
                 m_cell * w_reaction * d(alpha)/dt
         """
-
         if cell_mass <= 0.0:
             raise ValueError("Cell mass must be greater than zero.")
 

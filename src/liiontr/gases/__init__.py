@@ -1,3 +1,5 @@
+"""Gas generation, inventory, pressure, and venting models."""
+
 from .generation import GasGenerationModel
 from .ideal import (
     GAS_CONSTANT,
