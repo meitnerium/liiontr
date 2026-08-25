@@ -1,3 +1,5 @@
+"""SciPy-based numerical integration for LiionTR thermal problems."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -32,6 +34,46 @@ class ScipySolver:
         self,
         problem: ThermalProblem,
     ) -> Results:
+        """Solve a lumped thermal-runaway problem using SciPy.
+
+        The solver integrates the cell temperature, reaction conversions,
+        and gas-species mole amounts. When a vent model is configured,
+        integration is split into a closed phase and an irreversibly open
+        venting phase.
+
+        Parameters
+        ----------
+        problem : ThermalProblem
+            Thermal-runaway problem defining the cell, chemistry, thermal
+            boundary conditions, gas models, pressure limits, and venting
+            configuration.
+
+        Returns
+        -------
+        Results
+            Time-dependent simulation results containing temperature,
+            reaction conversions, gas amounts, pressure, and vent state
+            when applicable.
+
+        Raises
+        ------
+        ValueError
+            If the problem configuration is inconsistent.
+        RuntimeError
+            If numerical integration fails or a required model is missing.
+
+        Notes
+        -----
+        The state vector is organized as
+
+        ``[T, alpha_0, ..., alpha_n, n_gas_0, ..., n_gas_m]``,
+
+        where ``T`` is the cell temperature in K, ``alpha`` values are
+        dimensionless reaction conversions, and gas amounts are in mol.
+
+        The default BDF integration method is suitable for the stiff
+        kinetics commonly encountered during thermal runaway.
+        """
         model = LumpedThermalModel(
             cell=problem.cell,
             convection_coefficient=problem.convection_coefficient,
@@ -166,6 +208,7 @@ class ScipySolver:
         def pressure_from_state(
             state: np.ndarray,
         ) -> float:
+            """Return the internal gas pressure for an ODE state in Pa."""
             if pressure_model is None:
                 raise RuntimeError("Pressure model is not configured.")
 
@@ -197,6 +240,7 @@ class ScipySolver:
             list[float],
             list[float],
         ]:
+            """Return thermal, reaction-progress, and gas-generation rates."""
             temperature = float(state[0])
 
             conversions = [
@@ -265,6 +309,7 @@ class ScipySolver:
             time: float,
             state: np.ndarray,
         ) -> list[float]:
+            """Return ODE rates while the cell vent remains closed."""
             del time
 
             (
@@ -283,6 +328,7 @@ class ScipySolver:
             time: float,
             state: np.ndarray,
         ) -> list[float]:
+            """Return ODE rates after irreversible vent opening."""
             del time
 
             if vent_model is None:
@@ -344,6 +390,7 @@ class ScipySolver:
         def add_temperature_event(
             events: list[Any],
         ) -> None:
+            """Add the configured maximum-temperature termination event."""
             maximum_temperature = problem.maximum_temperature
 
             if maximum_temperature is None:
@@ -353,6 +400,7 @@ class ScipySolver:
                 time: float,
                 state: np.ndarray,
             ) -> float:
+                """Return the maximum-temperature event residual."""
                 del time
 
                 return maximum_temperature - float(state[0])
@@ -365,6 +413,7 @@ class ScipySolver:
         def add_maximum_pressure_event(
             events: list[Any],
         ) -> None:
+            """Add the configured maximum-pressure termination event."""
             if maximum_pressure is None:
                 return
 
@@ -372,6 +421,7 @@ class ScipySolver:
                 time: float,
                 state: np.ndarray,
             ) -> float:
+                """Return the maximum-pressure event residual."""
                 del time
 
                 return maximum_pressure - pressure_from_state(state)
@@ -407,6 +457,7 @@ class ScipySolver:
                     time: float,
                     state: np.ndarray,
                 ) -> float:
+                    """Return the vent-opening pressure event residual."""
                     del time
 
                     return vent_open_pressure - pressure_from_state(state)
