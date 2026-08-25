@@ -1,3 +1,5 @@
+"""Battery cell abstractions and concrete cell models."""
+
 from .cell import Cell
 from .cylindrical import CylindricalCell
 

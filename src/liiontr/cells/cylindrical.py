@@ -1,3 +1,5 @@
+"""Cylindrical lithium-ion battery cell models."""
+
 from dataclasses import dataclass
 
 from .cell import Cell
@@ -5,6 +7,4 @@ from .cell import Cell
 
 @dataclass(slots=True)
 class CylindricalCell(Cell):
-    """
-    Cylindrical Li-ion cell.
-    """
+    """Represent a cylindrical lithium-ion battery cell."""
