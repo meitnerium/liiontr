@@ -22,8 +22,8 @@ class ReactionContext:
     variables: dict[str, float] = field(default_factory=dict)
 
     def conversion(
-            self,
-            reaction_name: str,
+        self,
+        reaction_name: str,
     ) -> float:
         """Return the conversion of a named reaction."""
         if reaction_name not in self.conversions:
@@ -32,17 +32,15 @@ class ReactionContext:
         return self.conversions[reaction_name]
 
     def remaining_fraction(
-            self,
-            reaction_name: str,
+        self,
+        reaction_name: str,
     ) -> float:
         """Return the remaining fraction of a named reaction."""
-        return 1.0 - self.conversion(
-            reaction_name
-        )
+        return 1.0 - self.conversion(reaction_name)
 
     def variable(
-            self,
-            name: str,
+        self,
+        name: str,
     ) -> float:
         """Return an additional reaction state variable."""
         if name not in self.variables:

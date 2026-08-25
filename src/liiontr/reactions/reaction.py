@@ -29,9 +29,7 @@ class Reaction:
     def __post_init__(self) -> None:
         """Validate the reaction definition."""
         if self.reaction_order <= 0.0:
-            raise ValueError(
-                "Reaction order must be greater than zero."
-            )
+            raise ValueError("Reaction order must be greater than zero.")
 
         if self.progress_model is None:
             self.progress_model = PowerLawProgress(

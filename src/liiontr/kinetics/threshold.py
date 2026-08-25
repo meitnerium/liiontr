@@ -22,9 +22,7 @@ class TemperatureThresholdKinetics(KineticModel):
     def __post_init__(self) -> None:
         """Validate the minimum activation temperature."""
         if self.minimum_temperature <= 0.0:
-            raise ValueError(
-                "Minimum temperature must be greater than zero."
-            )
+            raise ValueError("Minimum temperature must be greater than zero.")
 
     def rate(
         self,

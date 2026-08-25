@@ -18,8 +18,8 @@ class ContextVariable(ABC):
 
     @abstractmethod
     def evaluate(
-            self,
-            context: ReactionContext,
+        self,
+        context: ReactionContext,
     ) -> float:
         """Evaluate the variable from the current reaction context."""
         raise NotImplementedError
@@ -45,18 +45,14 @@ class LinearConversionVariable(ContextVariable):
     def __post_init__(self) -> None:
         """Validate the reference reaction conversion."""
         if not 0.0 <= self.reference_conversion <= 1.0:
-            raise ValueError(
-                "Reference conversion must be between 0 and 1."
-            )
+            raise ValueError("Reference conversion must be between 0 and 1.")
 
     def evaluate(
-            self,
-            context: ReactionContext,
+        self,
+        context: ReactionContext,
     ) -> float:
         """Evaluate the derived conversion variable."""
-        conversion = context.conversion(
-            self.reaction_name
-        )
+        conversion = context.conversion(self.reaction_name)
 
         return self.reference_value + self.slope * (
             conversion - self.reference_conversion
@@ -82,25 +78,16 @@ class RemainingFractionRatioVariable(ContextVariable):
 
     def __post_init__(self) -> None:
         """Validate the reference remaining fraction."""
-        if not (
-                0.0
-                < self.reference_remaining_fraction
-                <= 1.0
-        ):
+        if not (0.0 < self.reference_remaining_fraction <= 1.0):
             raise ValueError(
-                "Reference remaining fraction must be "
-                "greater than zero and at most one."
+                "Reference remaining fraction must be greater than 0 and at most 1"
             )
 
     def evaluate(
-            self,
-            context: ReactionContext,
+        self,
+        context: ReactionContext,
     ) -> float:
         """Evaluate the remaining-fraction ratio."""
-        remaining_fraction = (
-            context.remaining_fraction(
-                self.reaction_name
-            )
-        )
+        remaining_fraction = context.remaining_fraction(self.reaction_name)
 
         return remaining_fraction / self.reference_remaining_fraction

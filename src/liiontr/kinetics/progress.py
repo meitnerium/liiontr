@@ -37,9 +37,7 @@ class PowerLawProgress(ProgressModel):
     def __post_init__(self) -> None:
         """Validate the reaction-progress order."""
         if self.order <= 0.0:
-            raise ValueError(
-                "Progress model order must be greater than zero."
-            )
+            raise ValueError("Progress model order must be greater than zero.")
 
     def factor(
         self,
@@ -76,13 +74,8 @@ class AutocatalyticProgress(ProgressModel):
 
     def __post_init__(self) -> None:
         """Validate the autocatalytic reaction orders."""
-        if (
-                self.autocatalytic_order <= 0.0
-                or self.remaining_order <= 0.0
-        ):
-            raise ValueError(
-                "Autocatalytic progress orders must be greater than zero."
-            )
+        if self.autocatalytic_order <= 0.0 or self.remaining_order <= 0.0:
+            raise ValueError("Autocatalytic progress orders must be greater than zero.")
 
     def factor(
         self,
@@ -124,9 +117,7 @@ class ThresholdProgress(ProgressModel):
     def __post_init__(self) -> None:
         """Validate the remaining-fraction activation threshold."""
         if not 0.0 <= self.remaining_below <= 1.0:
-            raise ValueError(
-                "Remaining fraction threshold must be between 0 and 1."
-            )
+            raise ValueError("Remaining fraction threshold must be between 0 and 1.")
 
     def factor(
         self,

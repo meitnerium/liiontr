@@ -53,9 +53,7 @@ class MultiChannelReaction:
     def __post_init__(self) -> None:
         """Validate the multi-channel reaction definition."""
         if not self.channels:
-            raise ValueError(
-                "At least one reaction channel is required."
-            )
+            raise ValueError("At least one reaction channel is required.")
 
         if not 0.0 <= self.mass_fraction <= 1.0:
             raise ValueError("Mass fraction must be between 0 and 1.")
