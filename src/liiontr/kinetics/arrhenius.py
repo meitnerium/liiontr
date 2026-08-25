@@ -1,3 +1,5 @@
+"""Kinetic and reaction-progress models used by LiionTR."""
+
 from __future__ import annotations
 
 import math
@@ -24,10 +26,7 @@ class Arrhenius(KineticModel):
         self,
         temperature: float,
     ) -> float:
-        """
-        Return the reaction rate at the given temperature.
-        """
-
+        """Return the Arrhenius kinetic rate at the given temperature."""
         return self.pre_exponential_factor * math.exp(
             -self.activation_energy / (R * temperature)
         )

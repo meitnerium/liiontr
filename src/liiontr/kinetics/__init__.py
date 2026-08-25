@@ -1,3 +1,5 @@
+"""Kinetic and reaction-progress models used by LiionTR."""
+
 from .arrhenius import Arrhenius
 from .model import KineticModel
 from .progress import (

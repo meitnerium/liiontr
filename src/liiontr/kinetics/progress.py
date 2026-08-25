@@ -1,3 +1,5 @@
+"""Reaction-progress models for thermal runaway kinetics."""
+
 from __future__ import annotations
 
 import math
@@ -10,9 +12,7 @@ if TYPE_CHECKING:
 
 
 class ProgressModel(ABC):
-    """
-    Base class for reaction progress models.
-    """
+    """Base class for reaction progress models."""
 
     @abstractmethod
     def factor(
@@ -20,10 +20,7 @@ class ProgressModel(ABC):
         conversion: float,
         context: ReactionContext | None = None,
     ) -> float:
-        """
-        Return the conversion-dependent reaction factor.
-        """
-
+        """Return the conversion-dependent reaction factor."""
         raise NotImplementedError
 
 
@@ -38,8 +35,11 @@ class PowerLawProgress(ProgressModel):
     order: float = 1.0
 
     def __post_init__(self) -> None:
+        """Validate the reaction-progress order."""
         if self.order <= 0.0:
-            raise ValueError("Progress model order must be greater than zero.")
+            raise ValueError(
+                "Progress model order must be greater than zero."
+            )
 
     def factor(
         self,
@@ -52,7 +52,6 @@ class PowerLawProgress(ProgressModel):
         The reaction context is accepted for interface compatibility
         but is not used by this model.
         """
-
         del context
 
         if conversion >= 1.0:
@@ -76,21 +75,25 @@ class AutocatalyticProgress(ProgressModel):
     remaining_order: float = 1.0
 
     def __post_init__(self) -> None:
-        if self.autocatalytic_order <= 0.0 or self.remaining_order <= 0.0:
-            raise ValueError("Autocatalytic progress orders must be greater than zero.")
+        """Validate the autocatalytic reaction orders."""
+        if (
+                self.autocatalytic_order <= 0.0
+                or self.remaining_order <= 0.0
+        ):
+            raise ValueError(
+                "Autocatalytic progress orders must be greater than zero."
+            )
 
     def factor(
         self,
         conversion: float,
         context: ReactionContext | None = None,
     ) -> float:
-        """
-        Return the autocatalytic reaction progress factor.
+        """Return the reaction progress factor.
 
         The reaction context is accepted for interface compatibility
         but is not used by this model.
         """
-
         del context
 
         if conversion <= 0.0:
@@ -119,18 +122,18 @@ class ThresholdProgress(ProgressModel):
     remaining_below: float
 
     def __post_init__(self) -> None:
+        """Validate the remaining-fraction activation threshold."""
         if not 0.0 <= self.remaining_below <= 1.0:
-            raise ValueError("Remaining fraction threshold must be between 0 and 1.")
+            raise ValueError(
+                "Remaining fraction threshold must be between 0 and 1."
+            )
 
     def factor(
         self,
         conversion: float,
         context: ReactionContext | None = None,
     ) -> float:
-        """
-        Return the wrapped progress factor when the threshold is met.
-        """
-
+        """Return the wrapped progress factor when the threshold is met."""
         if context is None:
             raise ValueError("Reaction context is required.")
 
@@ -164,10 +167,7 @@ class ExponentialInhibitionProgress(ProgressModel):
         conversion: float,
         context: ReactionContext | None = None,
     ) -> float:
-        """
-        Return the exponentially inhibited progress factor.
-        """
-
+        """Return the exponentially inhibited progress factor."""
         if context is None:
             raise ValueError("Reaction context is required.")
 

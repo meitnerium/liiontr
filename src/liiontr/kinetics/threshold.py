@@ -1,3 +1,5 @@
+"""Temperature-threshold wrappers for kinetic models."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -18,8 +20,11 @@ class TemperatureThresholdKinetics(KineticModel):
     minimum_temperature: float
 
     def __post_init__(self) -> None:
+        """Validate the minimum activation temperature."""
         if self.minimum_temperature <= 0.0:
-            raise ValueError("Minimum temperature must be greater than zero.")
+            raise ValueError(
+                "Minimum temperature must be greater than zero."
+            )
 
     def rate(
         self,
@@ -30,7 +35,6 @@ class TemperatureThresholdKinetics(KineticModel):
 
         The rate is zero below the activation threshold.
         """
-
         if temperature < self.minimum_temperature:
             return 0.0
 
