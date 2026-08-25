@@ -1,3 +1,5 @@
+"""Battery chemistry definitions used by LiionTR."""
+
 from __future__ import annotations
 
 from abc import ABC
@@ -6,9 +8,7 @@ from dataclasses import dataclass
 
 @dataclass(slots=True)
 class Chemistry(ABC):
-    """
-    Base class describing a Li-ion chemistry.
-    """
+    """Describe a lithium-ion battery chemistry."""
 
     name: str
 

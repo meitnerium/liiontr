@@ -1,3 +1,5 @@
+"""Chemical models and chemistry backends provided by LiionTR."""
+
 from .backend import ChemistryBackend
 from .cantera import CanteraBackend
 from .chemistry import Chemistry
