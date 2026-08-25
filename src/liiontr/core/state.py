@@ -9,26 +9,62 @@ from .variable import Variable
 
 @dataclass(slots=True)
 class State:
-    """
-    Complete state of the physical system.
+    """Represent the complete state of a physical system.
+
+    Parameters
+    ----------
+    variables : dict[str, Variable]
+        Mapping from variable names to simulation variables.
     """
 
     variables: dict[str, Variable] = field(default_factory=dict)
 
     def add(self, variable: Variable) -> None:
-        """
-        Add a variable to the state.
+        """Add or replace a variable in the state.
+
+        Parameters
+        ----------
+        variable : Variable
+            Variable to store. Its ``name`` attribute is used as the
+            dictionary key.
         """
         self.variables[variable.name] = variable
 
     def get(self, name: str) -> Variable:
-        """
-        Retrieve a variable.
+        """Return a variable by name.
+
+        Parameters
+        ----------
+        name : str
+            Name of the requested variable.
+
+        Returns
+        -------
+        Variable
+            Stored simulation variable.
+
+        Raises
+        ------
+        KeyError
+            If no variable with the requested name exists.
         """
         return self.variables[name]
 
     def __contains__(self, name: str) -> bool:
+        """Return whether a variable is present in the state.
+
+        Parameters
+        ----------
+        name : str
+            Variable name.
+
+        Returns
+        -------
+        bool
+            ``True`` if the variable exists, otherwise ``False``.
+        """
         return name in self.variables
 
     def __len__(self) -> int:
+        """Return the number of variables stored in the state."""
         return len(self.variables)
