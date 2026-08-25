@@ -1,12 +1,12 @@
+"""Abstract interfaces for LiionTR thermal models."""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
 
 class ThermalModel(ABC):
-    """
-    Base class for thermal models.
-    """
+    """Abstract interface for battery thermal models."""
 
     @abstractmethod
     def temperature_derivative(
@@ -14,7 +14,5 @@ class ThermalModel(ABC):
         temperature: float,
         heat_generation: float,
     ) -> float:
-        """
-        Compute dT/dt.
-        """
+        """Return the cell temperature rate in K/s."""
         raise NotImplementedError
