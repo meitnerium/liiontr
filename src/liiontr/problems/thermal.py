@@ -1,3 +1,5 @@
+"""Thermal runaway problem definitions."""
+
 from dataclasses import dataclass
 
 from liiontr.cells.cell import Cell
@@ -14,9 +16,7 @@ from liiontr.gases import (
 
 @dataclass(slots=True)
 class ThermalProblem(Problem):
-    """
-    Lumped thermal problem definition.
-    """
+    """Lumped thermal problem definition."""
 
     cell: Cell
 

@@ -9,16 +9,12 @@ from .results import Results
 
 
 class AbstractSolver(ABC):
-    """
-    Base class for numerical solvers.
-    """
+    """Base class for numerical solvers."""
 
     @abstractmethod
     def solve(
         self,
         problem: Problem,
     ) -> Results:
-        """
-        Solve a physical problem.
-        """
+        """Solve a physical problem."""
         raise NotImplementedError

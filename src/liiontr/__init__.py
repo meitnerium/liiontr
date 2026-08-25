@@ -1,5 +1,4 @@
-"""
-LiionTR
+"""LiionTR.
 
 Research framework for lithium-ion battery thermal runaway.
 """

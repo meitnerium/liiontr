@@ -1,3 +1,5 @@
+"""Reference battery-cell definitions provided by LiionTR."""
+
 from liiontr import (
     CylindricalCell,
     CylindricalGeometry,
@@ -8,13 +10,11 @@ from liiontr import (
 
 
 def cell_21700_generic() -> CylindricalCell:
-    """
-    Generic 21700 NMC811 cell.
+    """Return a generic 21700 NMC811 cell.
 
     Parameters are approximate and intended
     for software testing.
     """
-
     geometry = CylindricalGeometry(
         radius=0.0105,
         height=0.070,

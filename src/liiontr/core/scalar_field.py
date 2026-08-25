@@ -4,6 +4,4 @@ from .field import Field
 
 
 class ScalarField(Field):
-    """
-    Scalar physical field.
-    """
+    """Scalar physical field."""

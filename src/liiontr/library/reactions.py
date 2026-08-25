@@ -1,3 +1,5 @@
+"""Reusable parameter sets for constructing thermal runaway reactions."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -16,9 +18,7 @@ if TYPE_CHECKING:
 
 @dataclass(slots=True, frozen=True)
 class ReactionParameters:
-    """
-    Parameter set used to construct a thermal runaway reaction.
-    """
+    """Parameter set used to construct a thermal runaway reaction."""
 
     name: str
 
@@ -33,6 +33,7 @@ class ReactionParameters:
     reference: str | None = None
 
     def __post_init__(self) -> None:
+        """Validate the reaction parameters."""
         if self.activation_energy <= 0.0:
             raise ValueError("Activation energy must be greater than zero.")
 
@@ -49,10 +50,7 @@ class ReactionParameters:
         self,
         progress_model: ProgressModel | None = None,
     ) -> Reaction:
-        """
-        Construct a Reaction from this parameter set.
-        """
-
+        """Construct a Reaction from this parameter set."""
         kinetics = Arrhenius(
             activation_energy=self.activation_energy,
             pre_exponential_factor=self.pre_exponential_factor,
@@ -78,8 +76,7 @@ class ReactionParameters:
 
 @dataclass(slots=True, frozen=True)
 class VolumetricReactionParameters:
-    """
-    Reaction parameters reported using reactant content per cell volume.
+    """Reaction parameters reported using reactant content per cell volume.
 
     This representation is intended for models where the literature
     reports an initial remaining reactant fraction.
@@ -104,6 +101,7 @@ class VolumetricReactionParameters:
     reference: str | None = None
 
     def __post_init__(self) -> None:
+        """Validate the volumetric reaction parameters."""
         if self.activation_energy <= 0.0:
             raise ValueError("Activation energy must be greater than zero.")
 
@@ -126,17 +124,13 @@ class VolumetricReactionParameters:
 
         alpha = 1 - remaining_fraction
         """
-
         return 1.0 - self.initial_remaining_fraction
 
     def mass_fraction(
         self,
         cell: Cell,
     ) -> float:
-        """
-        Convert volumetric reactant content to cell mass fraction.
-        """
-
+        """Convert volumetric reactant content to cell mass fraction."""
         cell_density = cell.material.density(298.15)
 
         mass_fraction = self.specific_content / cell_density
@@ -161,7 +155,6 @@ class VolumetricReactionParameters:
         If no explicit progress model is supplied, the configured
         reaction order is used.
         """
-
         if kinetics is None:
             kinetics = Arrhenius(
                 activation_energy=self.activation_energy,
@@ -190,9 +183,7 @@ class VolumetricReactionParameters:
 
 @dataclass(slots=True, frozen=True)
 class VolumetricConversionReactionParameters:
-    """
-    Volumetric reaction parameters with a directly specified
-    initial conversion.
+    """Volumetric reaction parameters with a directly specified initial conversion.
 
     This representation is intended for literature models where
     the reaction state is reported directly as alpha rather than
@@ -214,6 +205,7 @@ class VolumetricConversionReactionParameters:
     reference: str | None = None
 
     def __post_init__(self) -> None:
+        """Validate the volumetric conversion parameters."""
         if self.activation_energy <= 0.0:
             raise ValueError("Activation energy must be greater than zero.")
 
@@ -233,10 +225,7 @@ class VolumetricConversionReactionParameters:
         self,
         cell: Cell,
     ) -> float:
-        """
-        Convert volumetric reactant content to cell mass fraction.
-        """
-
+        """Convert volumetric reactant content to cell mass fraction."""
         cell_density = cell.material.density(298.15)
 
         mass_fraction = self.specific_content / cell_density
@@ -261,7 +250,6 @@ class VolumetricConversionReactionParameters:
         If no explicit progress model is supplied, the configured
         reaction order is used.
         """
-
         if kinetics is None:
             kinetics = Arrhenius(
                 activation_energy=self.activation_energy,

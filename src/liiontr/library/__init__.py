@@ -1,3 +1,5 @@
+"""Reference cells and literature-based thermal runaway models."""
+
 from .cells import cell_21700_generic
 from .hu2020 import (
     HU2020_REFERENCE,

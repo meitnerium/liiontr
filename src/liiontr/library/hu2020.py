@@ -1,3 +1,5 @@
+"""Thermal runaway model parameters from Hu et al. (2020)."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -67,7 +69,6 @@ def hu2020_sei_decomposition() -> VolumetricReactionParameters:
 
         alpha_initial = 1 - 0.15 = 0.85
     """
-
     return VolumetricReactionParameters(
         name="SEI decomposition",
         activation_energy=1.3508e5,
@@ -82,8 +83,7 @@ def hu2020_sei_decomposition() -> VolumetricReactionParameters:
 
 def hu2020_anode_electrolyte() -> VolumetricReactionParameters:
     """
-    Return the anode-electrolyte reaction parameters
-    reported by Hu et al. (2020).
+    Return the anode-electrolyte reaction parameters reported by Hu et al. (2020).
 
     Original reported parameters
     ----------------------------
@@ -120,7 +120,6 @@ def hu2020_anode_electrolyte() -> VolumetricReactionParameters:
     The SEI-dependent threshold and exponential inhibition
     are represented separately by hu2020_anode_progress_model().
     """
-
     return VolumetricReactionParameters(
         name="Anode-electrolyte",
         activation_energy=1.3508e5,
@@ -135,8 +134,7 @@ def hu2020_anode_electrolyte() -> VolumetricReactionParameters:
 
 def hu2020_anode_progress_model() -> ThresholdProgress:
     """
-    Return the coupled progress model for the Hu 2020
-    anode-electrolyte reaction.
+    Return the coupled progress model for the Hu 2020 anode-electrolyte reaction.
 
     The base reaction follows:
 
@@ -149,7 +147,6 @@ def hu2020_anode_progress_model() -> ThresholdProgress:
     The reaction is active only when the remaining SEI
     fraction is below 0.10.
     """
-
     return ThresholdProgress(
         progress_model=ExponentialInhibitionProgress(
             progress_model=PowerLawProgress(
@@ -173,7 +170,6 @@ def hu2020_initial_conversions() -> list[float]:
         2: Cathode decomposition
         3: Electrolyte decomposition
     """
-
     sei_parameters = hu2020_sei_decomposition()
     anode_parameters = hu2020_anode_electrolyte()
     electrolyte_parameters = hu2020_electrolyte_decomposition()
@@ -199,7 +195,6 @@ def hu2020_reaction_network(
         2: Cathode decomposition
         3: Electrolyte decomposition
     """
-
     sei_parameters = hu2020_sei_decomposition()
 
     sei_reaction = sei_parameters.build(
@@ -240,11 +235,7 @@ def hu2020_reaction_network(
 
 
 def hu2020_cathode_initial_conversion() -> float:
-    """
-    Return the initial cathode reaction conversion reported
-    by Hu et al. (2020).
-    """
-
+    """Return the initial cathode reaction conversion reported by Hu et al. (2020)."""
     return 0.04
 
 
@@ -293,7 +284,6 @@ def hu2020_cathode_decomposition(
     ------------
     f(alpha) = alpha * (1 - alpha)
     """
-
     cell_density = cell.material.density(298.15)
 
     mass_fraction = 1221.0 / cell_density
@@ -338,9 +328,7 @@ def hu2020_cathode_decomposition(
 
 
 def hu2020_electrolyte_decomposition() -> VolumetricReactionParameters:
-    """
-    Return the electrolyte decomposition parameters
-    reported by Hu et al. (2020).
+    """Return the electrolyte decomposition parameters reported by Hu et al. (2020).
 
     Original reported parameters
     ----------------------------
@@ -377,7 +365,6 @@ def hu2020_electrolyte_decomposition() -> VolumetricReactionParameters:
     The temperature threshold is applied separately by
     hu2020_electrolyte_reaction().
     """
-
     return VolumetricReactionParameters(
         name="Electrolyte decomposition",
         activation_energy=2.74e5,
@@ -399,7 +386,6 @@ def hu2020_electrolyte_reaction(
     The reaction is active only at temperatures greater than
     or equal to 473.15 K.
     """
-
     parameters = hu2020_electrolyte_decomposition()
 
     kinetics = TemperatureThresholdKinetics(
