@@ -52,3 +52,6 @@ target-version = "py312"
 python_version = "3.12"
 
 strict = false
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"

@@ -1,3 +1,12 @@
+"""Compressible gas venting models for battery thermal runaway.
+
+This module provides models for gas discharge through a battery
+safety vent. Both choked and subsonic compressible flow regimes are
+supported for ideal-gas mixtures.
+
+Code written by François Dion (francois.dion@numericatech.ca, Numerica Techologies by LDV)
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -69,8 +78,29 @@ class CompressibleVentFlowModel:
         """
         Return gas mass flow rate through the vent in kg/s.
 
-        Positive flow is defined from the cell toward the environment.
-        Reverse flow is not modeled.
+
+        Parameters
+            ----------
+            upstream_pressure : float
+                Absolute cell internal pressure in Pa.
+            downstream_pressure : float
+                Absolute ambient pressure in Pa.
+            temperature : float
+                Upstream gas temperature in K.
+            molar_mass : float
+                Mean gas molar mass in kg/mol.
+
+            Returns
+            -------
+            float
+                Vent mass flow rate in kg/s.
+
+            Notes
+            -----
+            The flow is treated as choked when the downstream-to-upstream
+            pressure ratio is below the critical pressure ratio.
+
+            Reverse flow into the cell is not modeled.
         """
 
         if upstream_pressure <= 0.0:
