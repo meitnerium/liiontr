@@ -1,3 +1,5 @@
+"""Shared reaction state and context utilities."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -20,36 +22,29 @@ class ReactionContext:
     variables: dict[str, float] = field(default_factory=dict)
 
     def conversion(
-        self,
-        reaction_name: str,
+            self,
+            reaction_name: str,
     ) -> float:
-        """
-        Return the conversion of a named reaction.
-        """
-
+        """Return the conversion of a named reaction."""
         if reaction_name not in self.conversions:
             raise KeyError(f"Unknown reaction conversion: {reaction_name}")
 
         return self.conversions[reaction_name]
 
     def remaining_fraction(
-        self,
-        reaction_name: str,
+            self,
+            reaction_name: str,
     ) -> float:
-        """
-        Return the remaining fraction of a named reaction.
-        """
-
-        return 1.0 - self.conversion(reaction_name)
+        """Return the remaining fraction of a named reaction."""
+        return 1.0 - self.conversion(
+            reaction_name
+        )
 
     def variable(
-        self,
-        name: str,
+            self,
+            name: str,
     ) -> float:
-        """
-        Return an additional reaction state variable.
-        """
-
+        """Return an additional reaction state variable."""
         if name not in self.variables:
             raise KeyError(f"Unknown reaction variable: {name}")
 

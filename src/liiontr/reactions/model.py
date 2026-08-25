@@ -1,3 +1,5 @@
+"""Protocols and interfaces implemented by reaction models."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol
@@ -23,10 +25,7 @@ class ReactionModel(Protocol):
         conversion: float,
         context: ReactionContext | None = None,
     ) -> float:
-        """
-        Return the reaction progress rate.
-        """
-
+        """Return the reaction progress rate."""
         ...
 
     def heat_generation(
@@ -35,8 +34,5 @@ class ReactionModel(Protocol):
         conversion: float = 0.0,
         context: ReactionContext | None = None,
     ) -> float:
-        """
-        Return mass-specific heat generation rate [W/kg].
-        """
-
+        """Return mass-specific heat generation rate in W/kg."""
         ...

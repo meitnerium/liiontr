@@ -1,3 +1,5 @@
+"""Multi-channel thermal runaway reaction models."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -49,8 +51,11 @@ class MultiChannelReaction:
     progress_model: ProgressModel
 
     def __post_init__(self) -> None:
+        """Validate the multi-channel reaction definition."""
         if not self.channels:
-            raise ValueError("At least one reaction channel is required.")
+            raise ValueError(
+                "At least one reaction channel is required."
+            )
 
         if not 0.0 <= self.mass_fraction <= 1.0:
             raise ValueError("Mass fraction must be between 0 and 1.")
@@ -61,10 +66,7 @@ class MultiChannelReaction:
         conversion: float,
         context: ReactionContext | None = None,
     ) -> float:
-        """
-        Return the shared reaction progress rate.
-        """
-
+        """Return the shared reaction progress rate."""
         progress_factor = self.progress_model.factor(
             conversion=conversion,
             context=context,
@@ -82,10 +84,7 @@ class MultiChannelReaction:
         conversion: float = 0.0,
         context: ReactionContext | None = None,
     ) -> float:
-        """
-        Return mass-specific heat generation rate [W/kg].
-        """
-
+        """Return mass-specific heat generation rate in W/kg."""
         progress_factor = self.progress_model.factor(
             conversion=conversion,
             context=context,

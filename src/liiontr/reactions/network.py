@@ -1,3 +1,5 @@
+"""Reaction-network orchestration for coupled thermal reactions."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -24,13 +26,11 @@ class ReactionNetwork:
     context_variables: dict[str, ContextVariable] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        """Validate the initial reaction-network definition."""
         self._validate_unique_names()
 
     def _validate_unique_names(self) -> None:
-        """
-        Ensure that all reaction names are unique.
-        """
-
+        """Ensure that all reaction names are unique."""
         names = [reaction.name for reaction in self.reactions]
 
         if len(names) != len(set(names)):
@@ -40,10 +40,7 @@ class ReactionNetwork:
         self,
         reaction: ReactionModel,
     ) -> None:
-        """
-        Add a reaction model to the network.
-        """
-
+        """Add a reaction model to the network."""
         if any(existing.name == reaction.name for existing in self.reactions):
             raise ValueError("Reaction names must be unique.")
 
@@ -53,10 +50,7 @@ class ReactionNetwork:
         self,
         conversions: list[float],
     ) -> None:
-        """
-        Validate the number of reaction conversions.
-        """
-
+        """Validate the number of reaction conversions."""
         if len(conversions) != len(self.reactions):
             raise ValueError("Number of conversions must match number of reactions.")
 
@@ -64,14 +58,12 @@ class ReactionNetwork:
         self,
         conversions: list[float],
     ) -> ReactionContext:
-        """
-        Build the shared reaction context.
+        """Build the shared reaction context.
 
         The context is first populated with reaction conversions.
         Derived context variables are then evaluated from the
         current reaction state.
         """
-
         self._validate_conversions(conversions)
 
         context = ReactionContext(
@@ -94,10 +86,7 @@ class ReactionNetwork:
         temperature: float,
         conversions: list[float],
     ) -> list[float]:
-        """
-        Return the progress rate of each reaction.
-        """
-
+        """Return the progress rate of each reaction."""
         context = self.context(conversions)
 
         return [
@@ -117,10 +106,7 @@ class ReactionNetwork:
         temperature: float,
         conversions: list[float] | None = None,
     ) -> float:
-        """
-        Return total mass-specific heat generation [W/kg].
-        """
-
+        """Return total mass-specific heat generation in W/kg."""
         if conversions is None:
             conversions = [0.0 for _ in self.reactions]
 
@@ -143,12 +129,10 @@ class ReactionNetwork:
         temperature: float,
         conversions: list[float] | None = None,
     ) -> dict[str, float]:
-        """
-        Return heat generation for each reaction.
+        """Return heat generation for each reaction.
 
         Values are expressed in W/kg of total cell mass.
         """
-
         if conversions is None:
             conversions = [0.0 for _ in self.reactions]
 

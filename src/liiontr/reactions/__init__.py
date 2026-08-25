@@ -1,3 +1,5 @@
+"""Thermal runaway reaction models and reaction networks."""
+
 from .context import ReactionContext
 from .context_variable import (
     ContextVariable,
