@@ -1,12 +1,12 @@
+"""Abstract interfaces for battery geometry models."""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
 
 class Geometry(ABC):
-    """
-    Base class for battery geometries.
-    """
+    """Base class for battery geometries."""
 
     @property
     @abstractmethod
