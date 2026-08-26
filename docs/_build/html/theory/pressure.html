@@ -1,0 +1,488 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gas Pressure Model &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Vent Flow Model" href="venting.html" />
+    <link rel="prev" title="Gas Generation" href="gases.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Physical and Mathematical Theory</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html">Reaction Kinetics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#progress-models">Progress Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html">Reaction Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html">Gas Generation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Gas Pressure Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ideal-gas-equation">Ideal-Gas Equation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#free-volume">Free Volume</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-gas-inventory">Initial Gas Inventory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pressure-from-generated-gas">Pressure from Generated Gas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pressure-from-total-gas-amount">Pressure from Total Gas Amount</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#temperature-coupling">Temperature Coupling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#closed-system-pressure-evolution">Closed-System Pressure Evolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pressure-during-venting">Pressure During Venting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vent-opening-criterion">Vent-Opening Criterion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maximum-pressure-event">Maximum-Pressure Event</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#absolute-pressure">Absolute Pressure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#units">Units</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#current-assumptions">Current Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limitations">Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#future-extensions">Future Extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html">Vent Flow Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html">Hu et al. (2020) Thermal Runaway Model</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Physical and Mathematical Theory</a></li>
+      <li class="breadcrumb-item active">Gas Pressure Model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/pressure.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gas-pressure-model">
+<h1>Gas Pressure Model<a class="headerlink" href="#gas-pressure-model" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>LiionTR currently calculates the internal cell pressure using an
+ideal-gas model.</p>
+<p>The pressure model is coupled to the gas inventory and uses the gas
+temperature, free volume, and total gas amount to determine the
+absolute internal pressure.</p>
+<p>The current formulation is deliberately simple and provides a
+consistent pressure state for vent-opening and pressure-termination
+events.</p>
+</section>
+<section id="ideal-gas-equation">
+<h2>Ideal-Gas Equation<a class="headerlink" href="#ideal-gas-equation" title="Link to this heading"></a></h2>
+<p>The pressure model is based on the ideal-gas relation</p>
+<div class="math notranslate nohighlight">
+\[P V
+=
+n R T,\]</div>
+<p>where</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23.5%" />
+<col style="width: 52.9%" />
+<col style="width: 23.5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>SI unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(P\)</span></p></td>
+<td><p>Absolute gas pressure</p></td>
+<td><p>Pa</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(V\)</span></p></td>
+<td><p>Gas free volume</p></td>
+<td><p>m<sup>3</sup></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(n\)</span></p></td>
+<td><p>Total amount of gas</p></td>
+<td><p>mol</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(R\)</span></p></td>
+<td><p>Universal gas constant</p></td>
+<td><p>J mol<sup>-1</sup> K<sup>-1</sup></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(T\)</span></p></td>
+<td><p>Absolute gas temperature</p></td>
+<td><p>K</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="free-volume">
+<h2>Free Volume<a class="headerlink" href="#free-volume" title="Link to this heading"></a></h2>
+<p>The pressure model uses a prescribed free volume</p>
+<div class="math notranslate nohighlight">
+\[V_{\mathrm{free}}.\]</div>
+<p>This volume represents the region available to the gas phase inside the
+cell or modeled containment volume.</p>
+<p>The current implementation assumes that this free volume remains
+constant during the simulation.</p>
+<p>Thus,</p>
+<div class="math notranslate nohighlight">
+\[V
+=
+V_{\mathrm{free}}.\]</div>
+</section>
+<section id="initial-gas-inventory">
+<h2>Initial Gas Inventory<a class="headerlink" href="#initial-gas-inventory" title="Link to this heading"></a></h2>
+<p>The initial gas amount is determined from the specified initial
+pressure, temperature, and free volume.</p>
+<p>Using the ideal-gas equation,</p>
+<div class="math notranslate nohighlight">
+\[n_0
+=
+\frac{
+    P_0 V_{\mathrm{free}}
+}{
+    R T_0
+},\]</div>
+<p>where <span class="math notranslate nohighlight">\(P_0\)</span> is the initial absolute pressure and <span class="math notranslate nohighlight">\(T_0\)</span> is
+the initial gas temperature.</p>
+<p>This initial inventory may represent air, inert gas, vapor, or another
+effective gas phase depending on the model configuration.</p>
+</section>
+<section id="pressure-from-generated-gas">
+<h2>Pressure from Generated Gas<a class="headerlink" href="#pressure-from-generated-gas" title="Link to this heading"></a></h2>
+<p>For a closed system, the total gas amount may be expressed as</p>
+<div class="math notranslate nohighlight">
+\[n_{\mathrm{tot}}
+=
+n_0
++
+n_{\mathrm{generated}}.\]</div>
+<p>The pressure is then</p>
+<div class="math notranslate nohighlight">
+\[P
+=
+\frac{
+    n_{\mathrm{tot}} R T
+}{
+    V_{\mathrm{free}}
+}.\]</div>
+<p>Substituting the total gas amount gives</p>
+<div class="math notranslate nohighlight">
+\[P
+=
+\frac{
+    \left(
+        n_0 + n_{\mathrm{generated}}
+    \right)
+    R T
+}{
+    V_{\mathrm{free}}
+}.\]</div>
+<p>This formulation allows both gas generation and temperature increase
+to raise the internal pressure.</p>
+</section>
+<section id="pressure-from-total-gas-amount">
+<h2>Pressure from Total Gas Amount<a class="headerlink" href="#pressure-from-total-gas-amount" title="Link to this heading"></a></h2>
+<p>During venting, the gas inventory is no longer equal to the initial
+inventory plus cumulative generation because gas is simultaneously
+removed from the system.</p>
+<p>The solver therefore uses the instantaneous total gas amount,</p>
+<div class="math notranslate nohighlight">
+\[n_{\mathrm{tot}}
+=
+\sum_s n_s,\]</div>
+<p>and evaluates</p>
+<div class="math notranslate nohighlight">
+\[P
+=
+\frac{
+    n_{\mathrm{tot}} R T
+}{
+    V_{\mathrm{free}}
+}.\]</div>
+<p>This formulation is used during the coupled gas-generation and venting
+calculation.</p>
+</section>
+<section id="temperature-coupling">
+<h2>Temperature Coupling<a class="headerlink" href="#temperature-coupling" title="Link to this heading"></a></h2>
+<p>The pressure model currently assumes that the gas temperature is equal
+to the cell temperature,</p>
+<div class="math notranslate nohighlight">
+\[T_{\mathrm{gas}}
+=
+T_{\mathrm{cell}}.\]</div>
+<p>Consequently, internal pressure may rise for two independent reasons:</p>
+<ul class="simple">
+<li><p>the total gas amount increases;</p></li>
+<li><p>the gas temperature increases.</p></li>
+</ul>
+<p>For constant volume and fixed gas amount,</p>
+<div class="math notranslate nohighlight">
+\[P \propto T.\]</div>
+<p>For constant temperature and fixed volume,</p>
+<div class="math notranslate nohighlight">
+\[P \propto n.\]</div>
+</section>
+<section id="closed-system-pressure-evolution">
+<h2>Closed-System Pressure Evolution<a class="headerlink" href="#closed-system-pressure-evolution" title="Link to this heading"></a></h2>
+<p>Before vent opening,</p>
+<div class="math notranslate nohighlight">
+\[\frac{dn_{\mathrm{tot}}}{dt}
+=
+\sum_s
+\dot{n}_{s,\mathrm{gen}}.\]</div>
+<p>The pressure therefore evolves according to both the thermal and gas
+generation states.</p>
+<p>Conceptually,</p>
+<div class="math notranslate nohighlight">
+\[P(t)
+=
+\frac{
+    n_{\mathrm{tot}}(t)
+    R
+    T(t)
+}{
+    V_{\mathrm{free}}
+}.\]</div>
+</section>
+<section id="pressure-during-venting">
+<h2>Pressure During Venting<a class="headerlink" href="#pressure-during-venting" title="Link to this heading"></a></h2>
+<p>After the vent opens, gas generation and discharge occur
+simultaneously.</p>
+<p>For each species,</p>
+<div class="math notranslate nohighlight">
+\[\frac{dn_s}{dt}
+=
+\dot{n}_{s,\mathrm{gen}}
+-
+\dot{n}_{s,\mathrm{vent}}.\]</div>
+<p>The total remaining gas amount is therefore time dependent and may
+either increase or decrease depending on the relative magnitudes of
+generation and discharge.</p>
+<p>The instantaneous pressure continues to follow</p>
+<div class="math notranslate nohighlight">
+\[P
+=
+\frac{
+    n_{\mathrm{tot}} R T
+}{
+    V_{\mathrm{free}}
+}.\]</div>
+</section>
+<section id="vent-opening-criterion">
+<h2>Vent-Opening Criterion<a class="headerlink" href="#vent-opening-criterion" title="Link to this heading"></a></h2>
+<p>The internal pressure may be compared against a prescribed vent-opening
+pressure,</p>
+<div class="math notranslate nohighlight">
+\[P_{\mathrm{vent}}.\]</div>
+<p>The opening event occurs when</p>
+<div class="math notranslate nohighlight">
+\[P
+=
+P_{\mathrm{vent}}.\]</div>
+<p>Before this event, the vent is treated as closed.</p>
+<p>After the event, LiionTR switches permanently to the open-vent
+governing equations.</p>
+</section>
+<section id="maximum-pressure-event">
+<h2>Maximum-Pressure Event<a class="headerlink" href="#maximum-pressure-event" title="Link to this heading"></a></h2>
+<p>A thermal problem may also define a maximum allowable pressure,</p>
+<div class="math notranslate nohighlight">
+\[P_{\mathrm{max}}.\]</div>
+<p>The solver can terminate integration when</p>
+<div class="math notranslate nohighlight">
+\[P
+=
+P_{\mathrm{max}}.\]</div>
+<p>This event is independent of the vent-opening threshold.</p>
+<p>It can therefore be used to represent a numerical safety limit,
+containment failure criterion, or other pressure-based termination
+condition.</p>
+</section>
+<section id="absolute-pressure">
+<h2>Absolute Pressure<a class="headerlink" href="#absolute-pressure" title="Link to this heading"></a></h2>
+<p>All pressures used by the current gas model are absolute pressures.</p>
+<p>This distinction is important for the ideal-gas equation and
+compressible-flow calculations.</p>
+<p>Atmospheric pressure may be represented approximately as</p>
+<div class="math notranslate nohighlight">
+\[P_{\mathrm{atm}}
+\approx
+101325
+\ \mathrm{Pa}.\]</div>
+<p>Gauge pressure is not used internally by the present implementation.</p>
+</section>
+<section id="units">
+<h2>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h2>
+<p>LiionTR uses SI units internally.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 60.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantity</p></th>
+<th class="head"><p>Unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Pressure</p></td>
+<td><p>Pa</p></td>
+</tr>
+<tr class="row-odd"><td><p>Free volume</p></td>
+<td><p>m<sup>3</sup></p></td>
+</tr>
+<tr class="row-even"><td><p>Gas amount</p></td>
+<td><p>mol</p></td>
+</tr>
+<tr class="row-odd"><td><p>Temperature</p></td>
+<td><p>K</p></td>
+</tr>
+<tr class="row-even"><td><p>Universal gas constant</p></td>
+<td><p>J mol<sup>-1</sup> K<sup>-1</sup></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="current-assumptions">
+<h2>Current Assumptions<a class="headerlink" href="#current-assumptions" title="Link to this heading"></a></h2>
+<p>The present pressure model assumes that:</p>
+<ul class="simple">
+<li><p>the gas behaves ideally;</p></li>
+<li><p>the gas phase is spatially uniform;</p></li>
+<li><p>the gas temperature equals the cell temperature;</p></li>
+<li><p>the free volume remains constant;</p></li>
+<li><p>all gas species share a common temperature and pressure;</p></li>
+<li><p>liquid-vapor equilibrium is neglected;</p></li>
+<li><p>condensation is neglected;</p></li>
+<li><p>gas dissolution in condensed phases is neglected;</p></li>
+<li><p>compressibility effects are represented only in the vent-flow model,
+not in the pressure equation itself.</p></li>
+</ul>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h2>
+<p>The ideal-gas approximation is suitable for reduced-order modeling but
+may become inaccurate at elevated pressure, for strongly non-ideal gas
+mixtures, or when condensable species are important.</p>
+<p>A real battery undergoing thermal runaway may also experience changes
+in available free volume because of swelling, separator collapse,
+electrode deformation, liquid displacement, or vent-component motion.</p>
+<p>These effects are not currently represented.</p>
+</section>
+<section id="future-extensions">
+<h2>Future Extensions<a class="headerlink" href="#future-extensions" title="Link to this heading"></a></h2>
+<p>Future pressure-model extensions may include:</p>
+<ul class="simple">
+<li><p>variable free volume;</p></li>
+<li><p>real-gas equations of state;</p></li>
+<li><p>gas-liquid phase equilibrium;</p></li>
+<li><p>vaporization and condensation;</p></li>
+<li><p>pressure-dependent thermodynamic properties;</p></li>
+<li><p>coupling to mechanical deformation;</p></li>
+<li><p>rupture and structural failure models;</p></li>
+<li><p>thermochemical properties supplied directly by Cantera or another
+equilibrium backend.</p></li>
+</ul>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>The ideal-gas pressure model is implemented by</p>
+<p><a class="reference internal" href="../api/gases.html#liiontr.gases.ideal.IdealGasPressureModel" title="liiontr.gases.ideal.IdealGasPressureModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.gases.ideal.IdealGasPressureModel</span></code></a>.</p>
+<p>The gas inventory supplying the total mole amount is represented by</p>
+<p><a class="reference internal" href="../api/gases.html#liiontr.gases.inventory.GasInventory" title="liiontr.gases.inventory.GasInventory"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.gases.inventory.GasInventory</span></code></a>.</p>
+<p>Pressure-based events are handled by</p>
+<p><a class="reference internal" href="../api/solver.html#liiontr.solver.scipy_solver.ScipySolver" title="liiontr.solver.scipy_solver.ScipySolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.solver.scipy_solver.ScipySolver</span></code></a>.</p>
+<p>The pressure model is configured through</p>
+<p><a class="reference internal" href="../api/problems.html#liiontr.problems.thermal.ThermalProblem" title="liiontr.problems.thermal.ThermalProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.problems.thermal.ThermalProblem</span></code></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gases.html" class="btn btn-neutral float-left" title="Gas Generation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="venting.html" class="btn btn-neutral float-right" title="Vent Flow Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

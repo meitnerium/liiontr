@@ -1,0 +1,465 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reaction Kinetics &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reaction Models" href="reactions.html" />
+    <link rel="prev" title="Thermal Model" href="thermal.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Physical and Mathematical Theory</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Model</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Reaction Kinetics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-conversion">Reaction Conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#arrhenius-kinetics">Arrhenius Kinetics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#temperature-threshold-kinetics">Temperature Threshold Kinetics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#progress-models">Progress Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#power-law-progress">Power-Law Progress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autocatalytic-progress">Autocatalytic Progress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#threshold-progress">Threshold Progress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exponential-inhibition">Exponential Inhibition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-context">Reaction Context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linear-conversion-variables">Linear Conversion Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#remaining-fraction-ratio-variables">Remaining-Fraction Ratio Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#separation-of-kinetics-and-progress">Separation of Kinetics and Progress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#units-and-conventions">Units and Conventions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#current-limitations">Current Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html">Reaction Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html">Gas Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html">Gas Pressure Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html">Vent Flow Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html">Hu et al. (2020) Thermal Runaway Model</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Physical and Mathematical Theory</a></li>
+      <li class="breadcrumb-item active">Reaction Kinetics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/kinetics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="reaction-kinetics">
+<h1>Reaction Kinetics<a class="headerlink" href="#reaction-kinetics" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>LiionTR separates reaction kinetics from reaction progress models.</p>
+<p>The kinetic model determines the temperature dependence of a reaction
+rate coefficient, while the progress model determines how the current
+reaction state modifies the effective reaction rate.</p>
+<p>For a generic thermal runaway reaction, LiionTR uses the conceptual form</p>
+<div class="math notranslate nohighlight">
+\[\frac{d\alpha}{dt}
+=
+k(T) f(\alpha, \mathrm{context}),\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha\)</span> is the reaction conversion, <span class="math notranslate nohighlight">\(k(T)\)</span> is the
+temperature-dependent kinetic rate, and <span class="math notranslate nohighlight">\(f\)</span> is a progress
+function that may depend on conversion or on the state of other
+reactions.</p>
+</section>
+<section id="reaction-conversion">
+<h2>Reaction Conversion<a class="headerlink" href="#reaction-conversion" title="Link to this heading"></a></h2>
+<p>Reaction progress is represented using a dimensionless conversion
+variable</p>
+<div class="math notranslate nohighlight">
+\[0 \leq \alpha \leq 1.\]</div>
+<p>The interpretation is:</p>
+<div class="math notranslate nohighlight">
+\[\alpha = 0\]</div>
+<p>for an unreacted state and</p>
+<div class="math notranslate nohighlight">
+\[\alpha = 1\]</div>
+<p>for a fully reacted state.</p>
+<p>The remaining reactant fraction is therefore</p>
+<div class="math notranslate nohighlight">
+\[1 - \alpha.\]</div>
+</section>
+<section id="arrhenius-kinetics">
+<h2>Arrhenius Kinetics<a class="headerlink" href="#arrhenius-kinetics" title="Link to this heading"></a></h2>
+<p>The standard kinetic model in LiionTR is the Arrhenius law</p>
+<div class="math notranslate nohighlight">
+\[k(T)
+=
+A
+\exp\left(
+    -\frac{E_a}{R T}
+\right),\]</div>
+<p>where</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23.5%" />
+<col style="width: 52.9%" />
+<col style="width: 23.5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>SI unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(k(T)\)</span></p></td>
+<td><p>Temperature-dependent kinetic rate</p></td>
+<td><p>depends on kinetic model</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(A\)</span></p></td>
+<td><p>Pre-exponential factor</p></td>
+<td><p>typically s<sup>-1</sup></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(E_a\)</span></p></td>
+<td><p>Activation energy</p></td>
+<td><p>J mol<sup>-1</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(R\)</span></p></td>
+<td><p>Universal gas constant</p></td>
+<td><p>J mol<sup>-1</sup> K<sup>-1</sup></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(T\)</span></p></td>
+<td><p>Absolute temperature</p></td>
+<td><p>K</p></td>
+</tr>
+</tbody>
+</table>
+<p>The Arrhenius law introduces the strong temperature dependence that is
+characteristic of thermal runaway reactions.</p>
+<p>As temperature increases, the exponential term increases rapidly and
+can produce strong positive feedback between heat generation and
+reaction rate.</p>
+</section>
+<section id="temperature-threshold-kinetics">
+<h2>Temperature Threshold Kinetics<a class="headerlink" href="#temperature-threshold-kinetics" title="Link to this heading"></a></h2>
+<p>Some thermal runaway reactions are activated only above a prescribed
+temperature threshold.</p>
+<p>LiionTR provides a threshold kinetic model that returns zero below the
+activation temperature and evaluates an underlying kinetic model above
+the threshold.</p>
+<p>Conceptually,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}k_{\mathrm{threshold}}(T)
+=
+\begin{cases}
+0,
+&amp;
+T &lt; T_{\mathrm{threshold}},
+\\[6pt]
+k(T),
+&amp;
+T \geq T_{\mathrm{threshold}}.
+\end{cases}\end{split}\]</div>
+<p>This representation is useful for empirical literature models where a
+reaction is assumed to begin only after a specified onset temperature.</p>
+</section>
+</section>
+<section id="progress-models">
+<h1>Progress Models<a class="headerlink" href="#progress-models" title="Link to this heading"></a></h1>
+<section id="power-law-progress">
+<h2>Power-Law Progress<a class="headerlink" href="#power-law-progress" title="Link to this heading"></a></h2>
+<p>A basic progress model is based on the remaining reactant fraction,</p>
+<div class="math notranslate nohighlight">
+\[f(\alpha)
+=
+(1-\alpha)^n,\]</div>
+<p>where <span class="math notranslate nohighlight">\(n\)</span> is the reaction order.</p>
+<p>The resulting progress rate is</p>
+<div class="math notranslate nohighlight">
+\[\frac{d\alpha}{dt}
+=
+k(T)(1-\alpha)^n.\]</div>
+<p>For <span class="math notranslate nohighlight">\(n=1\)</span>, this corresponds to a first-order reaction with respect
+to the unreacted fraction.</p>
+</section>
+<section id="autocatalytic-progress">
+<h2>Autocatalytic Progress<a class="headerlink" href="#autocatalytic-progress" title="Link to this heading"></a></h2>
+<p>LiionTR also supports autocatalytic progress laws.</p>
+<p>A generic autocatalytic form may be written as</p>
+<div class="math notranslate nohighlight">
+\[f(\alpha)
+=
+\alpha^m
+(1-\alpha)^n,\]</div>
+<p>where <span class="math notranslate nohighlight">\(m\)</span> controls the dependence on reacted material and
+<span class="math notranslate nohighlight">\(n\)</span> controls depletion of remaining reactant.</p>
+<p>This type of expression can reproduce reaction behavior in which the
+reaction rate initially increases as products or active sites are
+formed, before decreasing as the reactant is depleted.</p>
+</section>
+<section id="threshold-progress">
+<h2>Threshold Progress<a class="headerlink" href="#threshold-progress" title="Link to this heading"></a></h2>
+<p>A progress model can also be conditioned on an external state variable.</p>
+<p>LiionTR uses this mechanism to represent interactions between thermal
+runaway reactions.</p>
+<p>The generic form is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f_{\mathrm{threshold}}
+=
+\begin{cases}
+0,
+&amp;
+x &gt; x_{\mathrm{threshold}},
+\\[6pt]
+f(\alpha),
+&amp;
+x \leq x_{\mathrm{threshold}},
+\end{cases}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(x\)</span> may represent the conversion or remaining fraction of
+another reaction.</p>
+<p>This allows one reaction to activate only after another reaction has
+progressed sufficiently.</p>
+</section>
+<section id="exponential-inhibition">
+<h2>Exponential Inhibition<a class="headerlink" href="#exponential-inhibition" title="Link to this heading"></a></h2>
+<p>LiionTR provides an exponential inhibition model of the form</p>
+<div class="math notranslate nohighlight">
+\[f_{\mathrm{inhibition}}
+=
+f(\alpha)
+\exp(-x),\]</div>
+<p>where <span class="math notranslate nohighlight">\(x\)</span> is a state-dependent inhibition variable.</p>
+<p>The inhibition factor approaches unity as <span class="math notranslate nohighlight">\(x\)</span> approaches zero and
+suppresses reaction progress for larger values of <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<p>This model is particularly useful for thermal runaway mechanisms in
+which a protective layer or remaining material inhibits another
+reaction.</p>
+</section>
+<section id="reaction-context">
+<h2>Reaction Context<a class="headerlink" href="#reaction-context" title="Link to this heading"></a></h2>
+<p>Progress models may depend on quantities other than their own reaction
+conversion.</p>
+<p>LiionTR therefore provides a reaction context that exposes the current
+state of the complete reaction network.</p>
+<p>Context-dependent variables may include:</p>
+<ul class="simple">
+<li><p>the conversion of another reaction;</p></li>
+<li><p>the remaining fraction of another reaction;</p></li>
+<li><p>a normalized or transformed reaction state;</p></li>
+<li><p>quantities derived from multiple reaction states.</p></li>
+</ul>
+<p>This architecture avoids embedding mutable state directly inside
+reaction objects and keeps the numerical solver responsible for the
+actual ODE state vector.</p>
+</section>
+<section id="linear-conversion-variables">
+<h2>Linear Conversion Variables<a class="headerlink" href="#linear-conversion-variables" title="Link to this heading"></a></h2>
+<p>A reaction-context variable may scale another reaction conversion
+relative to a reference conversion.</p>
+<p>Conceptually,</p>
+<div class="math notranslate nohighlight">
+\[x
+=
+\frac{\alpha}{\alpha_{\mathrm{ref}}},\]</div>
+<p>or an equivalent normalized relation depending on the configured
+variable definition.</p>
+<p>These variables are useful when a literature model defines reaction
+coupling in terms of a normalized conversion quantity.</p>
+</section>
+<section id="remaining-fraction-ratio-variables">
+<h2>Remaining-Fraction Ratio Variables<a class="headerlink" href="#remaining-fraction-ratio-variables" title="Link to this heading"></a></h2>
+<p>LiionTR also supports context variables defined from the remaining
+fraction of another reaction.</p>
+<p>The remaining fraction is</p>
+<div class="math notranslate nohighlight">
+\[r
+=
+1-\alpha.\]</div>
+<p>A normalized remaining-fraction quantity may then be constructed using
+a reference value,</p>
+<div class="math notranslate nohighlight">
+\[x
+=
+\frac{r}{r_{\mathrm{ref}}}.\]</div>
+<p>This representation is used by models in which a protective layer or
+reactant inventory controls another reaction rate.</p>
+</section>
+<section id="separation-of-kinetics-and-progress">
+<h2>Separation of Kinetics and Progress<a class="headerlink" href="#separation-of-kinetics-and-progress" title="Link to this heading"></a></h2>
+<p>The separation between kinetic and progress models is intentional.</p>
+<p>The kinetic model answers:</p>
+<blockquote>
+<div><p>How strongly does temperature affect the intrinsic reaction rate?</p>
+</div></blockquote>
+<p>The progress model answers:</p>
+<blockquote>
+<div><p>How does the current physical or chemical state modify that rate?</p>
+</div></blockquote>
+<p>The complete reaction rate is obtained only after combining both
+contributions.</p>
+<p>This design makes it possible to reuse the same Arrhenius kinetics with
+different progress laws and to reproduce complex literature models
+without creating a separate monolithic class for every reaction.</p>
+</section>
+<section id="units-and-conventions">
+<h2>Units and Conventions<a class="headerlink" href="#units-and-conventions" title="Link to this heading"></a></h2>
+<p>LiionTR uses SI units internally.</p>
+<p>Typical kinetic quantities are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 58.3%" />
+<col style="width: 41.7%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantity</p></th>
+<th class="head"><p>Unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Temperature</p></td>
+<td><p>K</p></td>
+</tr>
+<tr class="row-odd"><td><p>Activation energy</p></td>
+<td><p>J mol<sup>-1</sup></p></td>
+</tr>
+<tr class="row-even"><td><p>Pre-exponential factor</p></td>
+<td><p>typically s<sup>-1</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p>Reaction conversion</p></td>
+<td><p>dimensionless</p></td>
+</tr>
+<tr class="row-even"><td><p>Reaction progress rate</p></td>
+<td><p>s<sup>-1</sup></p></td>
+</tr>
+</tbody>
+</table>
+<p>Care is required when importing parameters from literature sources,
+because activation energies, reaction enthalpies, and reactant contents
+are often reported using non-SI units.</p>
+</section>
+<section id="current-limitations">
+<h2>Current Limitations<a class="headerlink" href="#current-limitations" title="Link to this heading"></a></h2>
+<p>The present kinetic framework is primarily intended for reduced-order
+thermal runaway models.</p>
+<p>Current limitations include:</p>
+<ul class="simple">
+<li><p>no uncertainty propagation for kinetic parameters;</p></li>
+<li><p>no automatic parameter estimation from ARC or DSC experiments;</p></li>
+<li><p>no explicit pressure dependence in the standard kinetic models;</p></li>
+<li><p>no transport-limited reaction formulation;</p></li>
+<li><p>no automatic selection of competing kinetic mechanisms;</p></li>
+<li><p>no direct electrochemical state dependence such as local lithium
+concentration or electrode potential.</p></li>
+</ul>
+<p>Future extensions may include parameter calibration, more general
+kinetic laws, uncertainty analysis, and coupling to electrochemical
+models such as PyBaMM.</p>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>The kinetic model interface is defined by</p>
+<p><a class="reference internal" href="../api/kinetics.html#liiontr.kinetics.model.KineticModel" title="liiontr.kinetics.model.KineticModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.kinetics.model.KineticModel</span></code></a>.</p>
+<p>Arrhenius kinetics are implemented by</p>
+<p><a class="reference internal" href="../api/kinetics.html#liiontr.kinetics.arrhenius.Arrhenius" title="liiontr.kinetics.arrhenius.Arrhenius"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.kinetics.arrhenius.Arrhenius</span></code></a>.</p>
+<p>Temperature-threshold kinetics are implemented by</p>
+<p><a class="reference internal" href="../api/kinetics.html#liiontr.kinetics.threshold.TemperatureThresholdKinetics" title="liiontr.kinetics.threshold.TemperatureThresholdKinetics"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.kinetics.threshold.TemperatureThresholdKinetics</span></code></a>.</p>
+<p>Reaction progress models are implemented in</p>
+<p><a class="reference internal" href="../api/kinetics.html#module-liiontr.kinetics.progress" title="liiontr.kinetics.progress"><code class="xref py py-mod docutils literal notranslate"><span class="pre">liiontr.kinetics.progress</span></code></a>.</p>
+<p>Context-dependent reaction state variables are provided by</p>
+<p><a class="reference internal" href="../api/reactions.html#module-liiontr.reactions.context_variable" title="liiontr.reactions.context_variable"><code class="xref py py-mod docutils literal notranslate"><span class="pre">liiontr.reactions.context_variable</span></code></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="thermal.html" class="btn btn-neutral float-left" title="Thermal Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reactions.html" class="btn btn-neutral float-right" title="Reaction Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

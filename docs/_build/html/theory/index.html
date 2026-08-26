@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Physical and Mathematical Theory &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Thermal Model" href="thermal.html" />
+    <link rel="prev" title="Quick Start" href="../quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Physical and Mathematical Theory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html">Reaction Kinetics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#progress-models">Progress Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html">Reaction Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html">Gas Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html">Gas Pressure Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html">Vent Flow Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html">Hu et al. (2020) Thermal Runaway Model</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Physical and Mathematical Theory</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="physical-and-mathematical-theory">
+<h1>Physical and Mathematical Theory<a class="headerlink" href="#physical-and-mathematical-theory" title="Link to this heading"></a></h1>
+<p>This section describes the physical and mathematical models implemented
+in LiionTR.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="thermal.html">Thermal Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#energy-balance">Energy Balance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#definitions">Definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#thermal-capacity">Thermal Capacity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#heat-generation">Heat Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#convective-heat-transfer">Convective Heat Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#lumped-capacitance-assumption">Lumped-Capacitance Assumption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#current-assumptions">Current Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#limitations">Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kinetics.html">Reaction Kinetics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#reaction-conversion">Reaction Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#arrhenius-kinetics">Arrhenius Kinetics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#temperature-threshold-kinetics">Temperature Threshold Kinetics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kinetics.html#progress-models">Progress Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#power-law-progress">Power-Law Progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#autocatalytic-progress">Autocatalytic Progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#threshold-progress">Threshold Progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#exponential-inhibition">Exponential Inhibition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#reaction-context">Reaction Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#linear-conversion-variables">Linear Conversion Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#remaining-fraction-ratio-variables">Remaining-Fraction Ratio Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#separation-of-kinetics-and-progress">Separation of Kinetics and Progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#units-and-conventions">Units and Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#current-limitations">Current Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reactions.html">Reaction Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#reaction-state">Reaction State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#reaction-rate">Reaction Rate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#reaction-enthalpy">Reaction Enthalpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#mass-fraction">Mass Fraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#reaction-context">Reaction Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#context-variables">Context Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#reaction-object">Reaction Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#multi-channel-reactions">Multi-Channel Reactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#shared-conversion">Shared Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#reaction-network">Reaction Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#network-heat-generation">Network Heat Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#reaction-network-backend">Reaction Network Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#state-coupling">State Coupling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#initial-conversions">Initial Conversions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#validation">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#current-assumptions">Current Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#relationship-to-gas-generation">Relationship to Gas Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gases.html">Gas Generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#gas-species">Gas Species</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#gas-inventory">Gas Inventory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#total-gas-mass">Total Gas Mass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#mole-fractions">Mole Fractions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#mean-molar-mass">Mean Molar Mass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#reaction-gas-yields">Reaction Gas Yields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#multiple-gas-species">Multiple Gas Species</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#gas-generation-network">Gas Generation Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#cumulative-generated-gas">Cumulative Generated Gas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#closed-cell-gas-balance">Closed-Cell Gas Balance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#vented-gas-balance">Vented Gas Balance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#coupling-to-pressure">Coupling to Pressure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#coupling-to-venting">Coupling to Venting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#units">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#current-assumptions">Current Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#limitations-of-direct-species-yields">Limitations of Direct Species Yields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#future-thermochemical-architecture">Future Thermochemical Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#relationship-to-cantera">Relationship to Cantera</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pressure.html">Gas Pressure Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#ideal-gas-equation">Ideal-Gas Equation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#free-volume">Free Volume</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#initial-gas-inventory">Initial Gas Inventory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#pressure-from-generated-gas">Pressure from Generated Gas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#pressure-from-total-gas-amount">Pressure from Total Gas Amount</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#temperature-coupling">Temperature Coupling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#closed-system-pressure-evolution">Closed-System Pressure Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#pressure-during-venting">Pressure During Venting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#vent-opening-criterion">Vent-Opening Criterion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#maximum-pressure-event">Maximum-Pressure Event</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#absolute-pressure">Absolute Pressure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#units">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#current-assumptions">Current Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#limitations">Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#future-extensions">Future Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="venting.html">Vent Flow Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#pressure-definitions">Pressure Definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#pressure-ratio">Pressure Ratio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#specific-gas-constant">Specific Gas Constant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#heat-capacity-ratio">Heat-Capacity Ratio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#critical-pressure-ratio">Critical Pressure Ratio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#choked-flow">Choked Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#physical-meaning-of-choking">Physical Meaning of Choking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#unchoked-flow">Unchoked Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#no-reverse-flow">No Reverse Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#mass-to-molar-flow-conversion">Mass-to-Molar Flow Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#mixture-vent-flow">Mixture Vent Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#species-vent-rates">Species Vent Rates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#species-balance-during-venting">Species Balance During Venting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#vent-opening">Vent Opening</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#irreversible-vent-state">Irreversible Vent State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#coupling-to-the-numerical-solver">Coupling to the Numerical Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#coupling-to-gas-generation">Coupling to Gas Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#coupling-to-temperature">Coupling to Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#units">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#current-assumptions">Current Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#limitations">Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#future-extensions">Future Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hu2020.html">Hu et al. (2020) Thermal Runaway Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#reference">Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#reaction-network">Reaction Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#initial-reaction-state">Initial Reaction State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#sei-decomposition">SEI Decomposition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#sei-unit-conversion">SEI Unit Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#anode-electrolyte-reaction">Anode-Electrolyte Reaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#anode-unit-conversion">Anode Unit Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#sei-dependent-anode-activation">SEI-Dependent Anode Activation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#exponential-inhibition">Exponential Inhibition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#cathode-decomposition">Cathode Decomposition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#cathode-reactant-content">Cathode Reactant Content</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#cathode-channel-1">Cathode Channel 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#cathode-channel-2">Cathode Channel 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#shared-cathode-progress">Shared Cathode Progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#cathode-heat-generation">Cathode Heat Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#electrolyte-decomposition">Electrolyte Decomposition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#electrolyte-parameters">Electrolyte Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#electrolyte-unit-conversion">Electrolyte Unit Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#summary-of-implemented-parameters">Summary of Implemented Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#reaction-ordering">Reaction Ordering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#cell-mass-conversion">Cell-Mass Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#coupling-to-the-thermal-model">Coupling to the Thermal Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#current-liiontr-representation">Current LiionTR Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#implementation">Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html#scope-and-limitations">Scope and Limitations</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../quickstart.html" class="btn btn-neutral float-left" title="Quick Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="thermal.html" class="btn btn-neutral float-right" title="Thermal Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

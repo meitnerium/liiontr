@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>liiontr.library.reactions &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory/index.html">Physical and Mathematical Theory</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">liiontr.library.reactions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for liiontr.library.reactions</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Reusable parameter sets for constructing thermal runaway reactions.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.kinetics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Arrhenius</span><span class="p">,</span>
+    <span class="n">KineticModel</span><span class="p">,</span>
+    <span class="n">ProgressModel</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.reactions.reaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">Reaction</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.cells.cell</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cell</span>
+
+
+<div class="viewcode-block" id="ReactionParameters">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.reactions.ReactionParameters">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReactionParameters</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameter set used to construct a thermal runaway reaction.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="n">activation_energy</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">pre_exponential_factor</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">enthalpy</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">mass_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">reaction_order</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="n">reference</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ReactionParameters.__post_init__">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.reactions.ReactionParameters.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the reaction parameters.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_energy</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Activation energy must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_exponential_factor</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Pre-exponential factor must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mass_fraction</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Mass fraction must be between 0 and 1.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reaction_order</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Reaction order must be greater than zero.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReactionParameters.build">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.reactions.ReactionParameters.build">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">progress_model</span><span class="p">:</span> <span class="n">ProgressModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Reaction</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a Reaction from this parameter set.&quot;&quot;&quot;</span>
+        <span class="n">kinetics</span> <span class="o">=</span> <span class="n">Arrhenius</span><span class="p">(</span>
+            <span class="n">activation_energy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">activation_energy</span><span class="p">,</span>
+            <span class="n">pre_exponential_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pre_exponential_factor</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">progress_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Reaction</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">kinetics</span><span class="o">=</span><span class="n">kinetics</span><span class="p">,</span>
+                <span class="n">enthalpy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enthalpy</span><span class="p">,</span>
+                <span class="n">mass_fraction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mass_fraction</span><span class="p">,</span>
+                <span class="n">reaction_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reaction_order</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Reaction</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">kinetics</span><span class="o">=</span><span class="n">kinetics</span><span class="p">,</span>
+            <span class="n">enthalpy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enthalpy</span><span class="p">,</span>
+            <span class="n">mass_fraction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mass_fraction</span><span class="p">,</span>
+            <span class="n">progress_model</span><span class="o">=</span><span class="n">progress_model</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="VolumetricReactionParameters">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.reactions.VolumetricReactionParameters">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">VolumetricReactionParameters</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reaction parameters reported using reactant content per cell volume.</span>
+
+<span class="sd">    This representation is intended for models where the literature</span>
+<span class="sd">    reports an initial remaining reactant fraction.</span>
+
+<span class="sd">    LiionTR converts that quantity to an initial conversion using:</span>
+
+<span class="sd">        alpha_initial = 1 - remaining_fraction</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="n">activation_energy</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">pre_exponential_factor</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">enthalpy</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">specific_content</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">initial_remaining_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">reaction_order</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="n">reference</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="VolumetricReactionParameters.__post_init__">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.reactions.VolumetricReactionParameters.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the volumetric reaction parameters.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_energy</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Activation energy must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_exponential_factor</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Pre-exponential factor must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">specific_content</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specific content must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_remaining_fraction</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Initial remaining fraction must be between 0 and 1.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reaction_order</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Reaction order must be greater than zero.&quot;</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initial_conversion</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the initial conversion.</span>
+
+<span class="sd">        alpha = 1 - remaining_fraction</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_remaining_fraction</span>
+
+<div class="viewcode-block" id="VolumetricReactionParameters.mass_fraction">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.reactions.VolumetricReactionParameters.mass_fraction">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mass_fraction</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert volumetric reactant content to cell mass fraction.&quot;&quot;&quot;</span>
+        <span class="n">cell_density</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="mf">298.15</span><span class="p">)</span>
+
+        <span class="n">mass_fraction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specific_content</span> <span class="o">/</span> <span class="n">cell_density</span>
+
+        <span class="k">if</span> <span class="n">mass_fraction</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Volumetric reactant content exceeds total cell mass.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mass_fraction</span></div>
+
+
+<div class="viewcode-block" id="VolumetricReactionParameters.build">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.reactions.VolumetricReactionParameters.build">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span>
+        <span class="n">progress_model</span><span class="p">:</span> <span class="n">ProgressModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kinetics</span><span class="p">:</span> <span class="n">KineticModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Reaction</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a Reaction for the specified cell.</span>
+
+<span class="sd">        If no explicit kinetic model is supplied, an Arrhenius model</span>
+<span class="sd">        is constructed from the stored kinetic parameters.</span>
+
+<span class="sd">        If no explicit progress model is supplied, the configured</span>
+<span class="sd">        reaction order is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">kinetics</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kinetics</span> <span class="o">=</span> <span class="n">Arrhenius</span><span class="p">(</span>
+                <span class="n">activation_energy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">activation_energy</span><span class="p">,</span>
+                <span class="n">pre_exponential_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pre_exponential_factor</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">mass_fraction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mass_fraction</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">progress_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Reaction</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">kinetics</span><span class="o">=</span><span class="n">kinetics</span><span class="p">,</span>
+                <span class="n">enthalpy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enthalpy</span><span class="p">,</span>
+                <span class="n">mass_fraction</span><span class="o">=</span><span class="n">mass_fraction</span><span class="p">,</span>
+                <span class="n">reaction_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reaction_order</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Reaction</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">kinetics</span><span class="o">=</span><span class="n">kinetics</span><span class="p">,</span>
+            <span class="n">enthalpy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enthalpy</span><span class="p">,</span>
+            <span class="n">mass_fraction</span><span class="o">=</span><span class="n">mass_fraction</span><span class="p">,</span>
+            <span class="n">progress_model</span><span class="o">=</span><span class="n">progress_model</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="VolumetricConversionReactionParameters">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.reactions.VolumetricConversionReactionParameters">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">VolumetricConversionReactionParameters</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Volumetric reaction parameters with a directly specified initial conversion.</span>
+
+<span class="sd">    This representation is intended for literature models where</span>
+<span class="sd">    the reaction state is reported directly as alpha rather than</span>
+<span class="sd">    as a remaining reactant fraction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="n">activation_energy</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">pre_exponential_factor</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">enthalpy</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">specific_content</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">initial_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">reaction_order</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="n">reference</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="VolumetricConversionReactionParameters.__post_init__">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.reactions.VolumetricConversionReactionParameters.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the volumetric conversion parameters.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_energy</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Activation energy must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_exponential_factor</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Pre-exponential factor must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">specific_content</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specific content must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_conversion</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Initial conversion must be between 0 and 1.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reaction_order</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Reaction order must be greater than zero.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VolumetricConversionReactionParameters.mass_fraction">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.reactions.VolumetricConversionReactionParameters.mass_fraction">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mass_fraction</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert volumetric reactant content to cell mass fraction.&quot;&quot;&quot;</span>
+        <span class="n">cell_density</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="mf">298.15</span><span class="p">)</span>
+
+        <span class="n">mass_fraction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specific_content</span> <span class="o">/</span> <span class="n">cell_density</span>
+
+        <span class="k">if</span> <span class="n">mass_fraction</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Volumetric reactant content exceeds total cell mass.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mass_fraction</span></div>
+
+
+<div class="viewcode-block" id="VolumetricConversionReactionParameters.build">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.reactions.VolumetricConversionReactionParameters.build">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span>
+        <span class="n">progress_model</span><span class="p">:</span> <span class="n">ProgressModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kinetics</span><span class="p">:</span> <span class="n">KineticModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Reaction</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct a Reaction for the specified cell.</span>
+
+<span class="sd">        If no explicit kinetic model is supplied, an Arrhenius model</span>
+<span class="sd">        is constructed from the stored kinetic parameters.</span>
+
+<span class="sd">        If no explicit progress model is supplied, the configured</span>
+<span class="sd">        reaction order is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">kinetics</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kinetics</span> <span class="o">=</span> <span class="n">Arrhenius</span><span class="p">(</span>
+                <span class="n">activation_energy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">activation_energy</span><span class="p">,</span>
+                <span class="n">pre_exponential_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pre_exponential_factor</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">mass_fraction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mass_fraction</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">progress_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Reaction</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">kinetics</span><span class="o">=</span><span class="n">kinetics</span><span class="p">,</span>
+                <span class="n">enthalpy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enthalpy</span><span class="p">,</span>
+                <span class="n">mass_fraction</span><span class="o">=</span><span class="n">mass_fraction</span><span class="p">,</span>
+                <span class="n">reaction_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reaction_order</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Reaction</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">kinetics</span><span class="o">=</span><span class="n">kinetics</span><span class="p">,</span>
+            <span class="n">enthalpy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enthalpy</span><span class="p">,</span>
+            <span class="n">mass_fraction</span><span class="o">=</span><span class="n">mass_fraction</span><span class="p">,</span>
+            <span class="n">progress_model</span><span class="o">=</span><span class="n">progress_model</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

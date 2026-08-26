@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gas Generation &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gas Pressure Model" href="pressure.html" />
+    <link rel="prev" title="Reaction Models" href="reactions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Physical and Mathematical Theory</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html">Reaction Kinetics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#progress-models">Progress Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html">Reaction Models</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Gas Generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gas-species">Gas Species</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gas-inventory">Gas Inventory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#total-gas-mass">Total Gas Mass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mole-fractions">Mole Fractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mean-molar-mass">Mean Molar Mass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-gas-yields">Reaction Gas Yields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-gas-species">Multiple Gas Species</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gas-generation-network">Gas Generation Network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cumulative-generated-gas">Cumulative Generated Gas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#closed-cell-gas-balance">Closed-Cell Gas Balance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vented-gas-balance">Vented Gas Balance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coupling-to-pressure">Coupling to Pressure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coupling-to-venting">Coupling to Venting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#units">Units</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#current-assumptions">Current Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limitations-of-direct-species-yields">Limitations of Direct Species Yields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#future-thermochemical-architecture">Future Thermochemical Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#relationship-to-cantera">Relationship to Cantera</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html">Gas Pressure Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html">Vent Flow Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html">Hu et al. (2020) Thermal Runaway Model</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Physical and Mathematical Theory</a></li>
+      <li class="breadcrumb-item active">Gas Generation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/gases.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gas-generation">
+<h1>Gas Generation<a class="headerlink" href="#gas-generation" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Thermal runaway reactions can generate substantial quantities of gas.</p>
+<p>LiionTR currently represents gas generation using an empirical
+reaction-yield framework in which individual thermal runaway reactions
+are associated with prescribed gas-species yields.</p>
+<p>The gas subsystem converts reaction progress into molar generation
+rates and cumulative gas inventories. These inventories may then be
+used by pressure and venting models.</p>
+<p>The current gas-generation framework is intentionally reduced-order.
+It does not yet calculate gas composition from chemical equilibrium.</p>
+</section>
+<section id="gas-species">
+<h2>Gas Species<a class="headerlink" href="#gas-species" title="Link to this heading"></a></h2>
+<p>A gas species in LiionTR is represented by a name and molar mass.</p>
+<p>For species <span class="math notranslate nohighlight">\(s\)</span>, the molar mass is</p>
+<div class="math notranslate nohighlight">
+\[M_s,\]</div>
+<p>with units of kg/mol.</p>
+<p>The molar mass is used when converting between molar and mass
+quantities, particularly in compressible vent-flow calculations.</p>
+</section>
+<section id="gas-inventory">
+<h2>Gas Inventory<a class="headerlink" href="#gas-inventory" title="Link to this heading"></a></h2>
+<p>The gas inventory stores the mole amount of each species,</p>
+<div class="math notranslate nohighlight">
+\[n_s,\]</div>
+<p>where <span class="math notranslate nohighlight">\(n_s\)</span> is expressed in mol.</p>
+<p>For a mixture containing <span class="math notranslate nohighlight">\(N_s\)</span> species, the total number of moles
+is</p>
+<div class="math notranslate nohighlight">
+\[n_{\mathrm{tot}}
+=
+\sum_s n_s.\]</div>
+</section>
+<section id="total-gas-mass">
+<h2>Total Gas Mass<a class="headerlink" href="#total-gas-mass" title="Link to this heading"></a></h2>
+<p>The total gas mass is</p>
+<div class="math notranslate nohighlight">
+\[m_{\mathrm{gas}}
+=
+\sum_s n_s M_s,\]</div>
+<p>where <span class="math notranslate nohighlight">\(M_s\)</span> is the molar mass of species <span class="math notranslate nohighlight">\(s\)</span>.</p>
+<p>The result is expressed in kg.</p>
+</section>
+<section id="mole-fractions">
+<h2>Mole Fractions<a class="headerlink" href="#mole-fractions" title="Link to this heading"></a></h2>
+<p>The mole fraction of species <span class="math notranslate nohighlight">\(s\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[x_s
+=
+\frac{n_s}{n_{\mathrm{tot}}}.\]</div>
+<p>The mole fractions satisfy</p>
+<div class="math notranslate nohighlight">
+\[\sum_s x_s = 1\]</div>
+<p>when the gas inventory contains a nonzero amount of gas.</p>
+</section>
+<section id="mean-molar-mass">
+<h2>Mean Molar Mass<a class="headerlink" href="#mean-molar-mass" title="Link to this heading"></a></h2>
+<p>The mole-weighted mean molar mass of the mixture is</p>
+<div class="math notranslate nohighlight">
+\[\overline{M}
+=
+\sum_s x_s M_s.\]</div>
+<p>Equivalently,</p>
+<div class="math notranslate nohighlight">
+\[\overline{M}
+=
+\frac{
+    \sum_s n_s M_s
+}{
+    \sum_s n_s
+}.\]</div>
+<p>The mean molar mass is used by the current mixture vent-flow model.</p>
+</section>
+<section id="reaction-gas-yields">
+<h2>Reaction Gas Yields<a class="headerlink" href="#reaction-gas-yields" title="Link to this heading"></a></h2>
+<p>The empirical gas-generation model associates each thermal runaway
+reaction with one or more gas-species yields.</p>
+<p>For species <span class="math notranslate nohighlight">\(s\)</span>, the prescribed yield is</p>
+<div class="math notranslate nohighlight">
+\[Y_s,\]</div>
+<p>with units of mol/kg of reacted material.</p>
+<p>If a reaction represents a mass fraction <span class="math notranslate nohighlight">\(w\)</span> of the total cell
+mass and progresses at a rate</p>
+<div class="math notranslate nohighlight">
+\[\frac{d\alpha}{dt},\]</div>
+<p>then the reacted-material mass rate is</p>
+<div class="math notranslate nohighlight">
+\[\frac{dm_{\mathrm{reacted}}}{dt}
+=
+m_{\mathrm{cell}}
+w
+\frac{d\alpha}{dt}.\]</div>
+<p>The corresponding gas-generation rate is</p>
+<div class="math notranslate nohighlight">
+\[\dot{n}_s
+=
+Y_s
+m_{\mathrm{cell}}
+w
+\frac{d\alpha}{dt}.\]</div>
+<p>The resulting unit is mol/s.</p>
+</section>
+<section id="multiple-gas-species">
+<h2>Multiple Gas Species<a class="headerlink" href="#multiple-gas-species" title="Link to this heading"></a></h2>
+<p>One reaction may generate several gas species simultaneously.</p>
+<p>For a reaction with species yields</p>
+<div class="math notranslate nohighlight">
+\[Y_1, Y_2, \ldots, Y_m,\]</div>
+<p>the corresponding generation-rate vector is</p>
+<div class="math notranslate nohighlight">
+\[\dot{\boldsymbol{n}}
+=
+\left[
+    \dot{n}_1,
+    \dot{n}_2,
+    \ldots,
+    \dot{n}_m
+\right].\]</div>
+<p>If multiple reactions generate the same species, their contributions
+are added.</p>
+</section>
+<section id="gas-generation-network">
+<h2>Gas Generation Network<a class="headerlink" href="#gas-generation-network" title="Link to this heading"></a></h2>
+<p>The gas-generation model is coupled to a
+<a class="reference internal" href="../api/reactions.html#liiontr.reactions.network.ReactionNetwork" title="liiontr.reactions.network.ReactionNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.reactions.network.ReactionNetwork</span></code></a>.</p>
+<p>For each reaction, the model obtains the reaction progress rate and
+applies the corresponding gas yields.</p>
+<p>The total generation rate of species <span class="math notranslate nohighlight">\(s\)</span> is therefore</p>
+<div class="math notranslate nohighlight">
+\[\dot{n}_{s,\mathrm{gen}}
+=
+\sum_i
+Y_{i,s}
+m_{\mathrm{cell}}
+w_i
+\dot{\alpha}_i,\]</div>
+<p>where <span class="math notranslate nohighlight">\(i\)</span> indexes thermal runaway reactions.</p>
+</section>
+<section id="cumulative-generated-gas">
+<h2>Cumulative Generated Gas<a class="headerlink" href="#cumulative-generated-gas" title="Link to this heading"></a></h2>
+<p>For a reaction that progresses from an initial conversion
+<span class="math notranslate nohighlight">\(\alpha_{i,0}\)</span> to a current conversion <span class="math notranslate nohighlight">\(\alpha_i\)</span>, the
+cumulative reacted material is proportional to</p>
+<div class="math notranslate nohighlight">
+\[\Delta \alpha_i
+=
+\alpha_i
+-
+\alpha_{i,0}.\]</div>
+<p>The cumulative quantity of species <span class="math notranslate nohighlight">\(s\)</span> generated by that reaction
+is</p>
+<div class="math notranslate nohighlight">
+\[n_{i,s}
+=
+Y_{i,s}
+m_{\mathrm{cell}}
+w_i
+\left(
+    \alpha_i
+    -
+    \alpha_{i,0}
+\right).\]</div>
+<p>Summing over reactions gives</p>
+<div class="math notranslate nohighlight">
+\[n_{s,\mathrm{generated}}
+=
+\sum_i n_{i,s}.\]</div>
+</section>
+<section id="closed-cell-gas-balance">
+<h2>Closed-Cell Gas Balance<a class="headerlink" href="#closed-cell-gas-balance" title="Link to this heading"></a></h2>
+<p>Before vent opening, generated gas remains inside the cell free volume.</p>
+<p>For each species,</p>
+<div class="math notranslate nohighlight">
+\[\frac{dn_s}{dt}
+=
+\dot{n}_{s,\mathrm{gen}}.\]</div>
+<p>The gas inventory therefore increases according to the integrated
+reaction-driven gas generation.</p>
+</section>
+<section id="vented-gas-balance">
+<h2>Vented Gas Balance<a class="headerlink" href="#vented-gas-balance" title="Link to this heading"></a></h2>
+<p>After vent opening, gas can both be generated and discharged.</p>
+<p>The species balance becomes</p>
+<div class="math notranslate nohighlight">
+\[\frac{dn_s}{dt}
+=
+\dot{n}_{s,\mathrm{gen}}
+-
+\dot{n}_{s,\mathrm{vent}}.\]</div>
+<p>The current solver treats vent opening as irreversible: once the vent
+opens, the system remains in the vented phase.</p>
+</section>
+<section id="coupling-to-pressure">
+<h2>Coupling to Pressure<a class="headerlink" href="#coupling-to-pressure" title="Link to this heading"></a></h2>
+<p>The gas inventory determines the total amount of gas in the cell free
+volume.</p>
+<p>The pressure model then uses</p>
+<div class="math notranslate nohighlight">
+\[n_{\mathrm{tot}}
+=
+\sum_s n_s\]</div>
+<p>together with temperature and free volume to determine internal
+pressure.</p>
+<p>In the current implementation, pressure is calculated using an
+ideal-gas model.</p>
+<p>The pressure formulation is described separately in the pressure-model
+documentation.</p>
+</section>
+<section id="coupling-to-venting">
+<h2>Coupling to Venting<a class="headerlink" href="#coupling-to-venting" title="Link to this heading"></a></h2>
+<p>The gas inventory also provides the mixture composition and mean molar
+mass required by the current vent-flow model.</p>
+<p>The vent-flow model calculates a total discharge rate and distributes it
+among individual species according to the gas-mixture mole fractions.</p>
+<p>This approach assumes that the vented mixture has the same composition
+as the well-mixed gas inventory inside the free volume.</p>
+</section>
+<section id="units">
+<h2>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h2>
+<p>LiionTR uses SI units internally for gas calculations.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 60.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantity</p></th>
+<th class="head"><p>Unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Gas amount</p></td>
+<td><p>mol</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gas-generation rate</p></td>
+<td><p>mol/s</p></td>
+</tr>
+<tr class="row-even"><td><p>Species yield</p></td>
+<td><p>mol/kg reacted material</p></td>
+</tr>
+<tr class="row-odd"><td><p>Molar mass</p></td>
+<td><p>kg/mol</p></td>
+</tr>
+<tr class="row-even"><td><p>Gas mass</p></td>
+<td><p>kg</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mole fraction</p></td>
+<td><p>dimensionless</p></td>
+</tr>
+<tr class="row-even"><td><p>Cell mass</p></td>
+<td><p>kg</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reaction mass fraction</p></td>
+<td><p>dimensionless</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="current-assumptions">
+<h2>Current Assumptions<a class="headerlink" href="#current-assumptions" title="Link to this heading"></a></h2>
+<p>The empirical gas-generation framework currently assumes that:</p>
+<ul class="simple">
+<li><p>gas yields are prescribed directly for each reaction;</p></li>
+<li><p>gas yields are constant and independent of temperature and pressure;</p></li>
+<li><p>generated species are known in advance;</p></li>
+<li><p>gas-phase chemical reactions are not explicitly represented;</p></li>
+<li><p>equilibrium composition is not calculated;</p></li>
+<li><p>condensation and phase separation are neglected;</p></li>
+<li><p>the free-volume gas is spatially well mixed;</p></li>
+<li><p>the gas temperature is represented by the cell temperature in the
+coupled thermal problem;</p></li>
+<li><p>gas dissolution in electrolyte or porous materials is not represented.</p></li>
+</ul>
+</section>
+<section id="limitations-of-direct-species-yields">
+<h2>Limitations of Direct Species Yields<a class="headerlink" href="#limitations-of-direct-species-yields" title="Link to this heading"></a></h2>
+<p>Direct reaction-to-species yields are useful for testing, reduced-order
+models, and empirical fitting, but they have important limitations.</p>
+<p>Actual lithium-ion battery thermal runaway may produce complex mixtures
+containing species such as hydrogen, carbon monoxide, carbon dioxide,
+water vapor, methane, ethylene, and other hydrocarbons.</p>
+<p>The product distribution can depend on temperature, state of charge,
+electrode chemistry, electrolyte composition, pressure, secondary
+gas-phase chemistry, and material decomposition pathways.</p>
+<p>A fixed yield model cannot generally capture these dependencies.</p>
+</section>
+<section id="future-thermochemical-architecture">
+<h2>Future Thermochemical Architecture<a class="headerlink" href="#future-thermochemical-architecture" title="Link to this heading"></a></h2>
+<p>A more physically general gas model may represent reaction progress in
+terms of elemental source inventories rather than fixed gas-species
+yields.</p>
+<p>Conceptually, the future architecture may use</p>
+<div class="math notranslate nohighlight">
+\[\text{reaction progress}
+\rightarrow
+\text{element inventory}
+\rightarrow
+\text{chemical equilibrium}
+\rightarrow
+\text{gas composition}.\]</div>
+<p>The elemental inventory could include elements such as</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{C,\ H,\ O,\ N,\ F,\ P,\ Li},\]</div>
+<p>depending on the modeled battery chemistry.</p>
+<p>A thermochemical backend could then determine equilibrium species,
+pressure, mixture molar mass, heat capacities, and other gas properties.</p>
+<p>Cantera is a candidate backend for this functionality.</p>
+</section>
+<section id="relationship-to-cantera">
+<h2>Relationship to Cantera<a class="headerlink" href="#relationship-to-cantera" title="Link to this heading"></a></h2>
+<p>The current <a class="reference internal" href="../api/chemistry.html#liiontr.chemistry.cantera.CanteraBackend" title="liiontr.chemistry.cantera.CanteraBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.chemistry.cantera.CanteraBackend</span></code></a> is only a
+software interface skeleton.</p>
+<p>It does not yet replace the empirical gas-yield model.</p>
+<p>A future Cantera-based implementation may calculate gas-phase
+thermodynamic and chemical-equilibrium states from reaction-derived
+element inventories.</p>
+<p>This separation is intentional: the existing empirical framework
+provides a simple and testable gas model while the thermochemical
+architecture is developed independently.</p>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>Gas species and inventories are implemented in</p>
+<p><a class="reference internal" href="../api/gases.html#module-liiontr.gases.inventory" title="liiontr.gases.inventory"><code class="xref py py-mod docutils literal notranslate"><span class="pre">liiontr.gases.inventory</span></code></a>.</p>
+<p>Empirical reaction gas yields are implemented by</p>
+<p><a class="reference internal" href="../api/gases.html#liiontr.gases.yield_model.ReactionGasYield" title="liiontr.gases.yield_model.ReactionGasYield"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.gases.yield_model.ReactionGasYield</span></code></a>.</p>
+<p>Reaction-network gas generation is implemented by</p>
+<p><a class="reference internal" href="../api/gases.html#liiontr.gases.generation.GasGenerationModel" title="liiontr.gases.generation.GasGenerationModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.gases.generation.GasGenerationModel</span></code></a>.</p>
+<p>Pressure calculations are handled separately by</p>
+<p><a class="reference internal" href="../api/gases.html#liiontr.gases.ideal.IdealGasPressureModel" title="liiontr.gases.ideal.IdealGasPressureModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.gases.ideal.IdealGasPressureModel</span></code></a>.</p>
+<p>Gas discharge is handled by the vent-flow models in</p>
+<p><a class="reference internal" href="../api/gases.html#module-liiontr.gases.vent" title="liiontr.gases.vent"><code class="xref py py-mod docutils literal notranslate"><span class="pre">liiontr.gases.vent</span></code></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="reactions.html" class="btn btn-neutral float-left" title="Reaction Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pressure.html" class="btn btn-neutral float-right" title="Gas Pressure Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

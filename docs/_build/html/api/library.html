@@ -1,0 +1,677 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model Library &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Materials" href="materials.html" />
+    <link rel="prev" title="Kinetics" href="kinetics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Physical and Mathematical Theory</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cells.html">Cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html">Chemistry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html">Gases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html">Kinetics</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Model Library</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.library.cells">Reference Cells</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.cells.cell_21700_generic"><code class="docutils literal notranslate"><span class="pre">cell_21700_generic()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.library.reactions">Reaction Parameter Helpers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.reactions.ReactionParameters"><code class="docutils literal notranslate"><span class="pre">ReactionParameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.reactions.VolumetricReactionParameters"><code class="docutils literal notranslate"><span class="pre">VolumetricReactionParameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.reactions.VolumetricConversionReactionParameters"><code class="docutils literal notranslate"><span class="pre">VolumetricConversionReactionParameters</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.library.hu2020">Hu et al. (2020)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.hu2020.hu2020_sei_decomposition"><code class="docutils literal notranslate"><span class="pre">hu2020_sei_decomposition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.hu2020.hu2020_anode_electrolyte"><code class="docutils literal notranslate"><span class="pre">hu2020_anode_electrolyte()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.hu2020.hu2020_anode_progress_model"><code class="docutils literal notranslate"><span class="pre">hu2020_anode_progress_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.hu2020.hu2020_initial_conversions"><code class="docutils literal notranslate"><span class="pre">hu2020_initial_conversions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.hu2020.hu2020_reaction_network"><code class="docutils literal notranslate"><span class="pre">hu2020_reaction_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.hu2020.hu2020_cathode_initial_conversion"><code class="docutils literal notranslate"><span class="pre">hu2020_cathode_initial_conversion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.hu2020.hu2020_cathode_decomposition"><code class="docutils literal notranslate"><span class="pre">hu2020_cathode_decomposition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.hu2020.hu2020_electrolyte_decomposition"><code class="docutils literal notranslate"><span class="pre">hu2020_electrolyte_decomposition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.hu2020.hu2020_electrolyte_reaction"><code class="docutils literal notranslate"><span class="pre">hu2020_electrolyte_reaction()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="problems.html">Problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html">Reactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Models</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Model Library</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/library.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="model-library">
+<h1>Model Library<a class="headerlink" href="#model-library" title="Link to this heading"></a></h1>
+<section id="module-liiontr.library.cells">
+<span id="reference-cells"></span><h2>Reference Cells<a class="headerlink" href="#module-liiontr.library.cells" title="Link to this heading"></a></h2>
+<p>Reference battery-cell definitions provided by LiionTR.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.library.cells.cell_21700_generic">
+<span class="sig-prename descclassname"><span class="pre">liiontr.library.cells.</span></span><span class="sig-name descname"><span class="pre">cell_21700_generic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/cells.html#cell_21700_generic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.cells.cell_21700_generic" title="Link to this definition"></a></dt>
+<dd><p>Return a generic 21700 NMC811 cell.</p>
+<p>Parameters are approximate and intended
+for software testing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cells.html#liiontr.cells.cylindrical.CylindricalCell" title="liiontr.cells.cylindrical.CylindricalCell"><em>CylindricalCell</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-liiontr.library.reactions">
+<span id="reaction-parameter-helpers"></span><h2>Reaction Parameter Helpers<a class="headerlink" href="#module-liiontr.library.reactions" title="Link to this heading"></a></h2>
+<p>Reusable parameter sets for constructing thermal runaway reactions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.library.reactions.ReactionParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.library.reactions.</span></span><span class="sig-name descname"><span class="pre">ReactionParameters</span></span><a class="reference internal" href="../_modules/liiontr/library/reactions.html#ReactionParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.reactions.ReactionParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Parameter set used to construct a thermal runaway reaction.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.library.reactions.ReactionParameters.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/reactions.html#ReactionParameters.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.reactions.ReactionParameters.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate the reaction parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.library.reactions.ReactionParameters.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">progress_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/reactions.html#ReactionParameters.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.reactions.ReactionParameters.build" title="Link to this definition"></a></dt>
+<dd><p>Construct a Reaction from this parameter set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>progress_model</strong> (<a class="reference internal" href="kinetics.html#liiontr.kinetics.progress.ProgressModel" title="liiontr.kinetics.progress.ProgressModel"><em>ProgressModel</em></a><em> | </em><em>None</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="reactions.html#liiontr.reactions.reaction.Reaction" title="liiontr.reactions.reaction.Reaction"><em>Reaction</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.library.reactions.ReactionParameters.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_exponential_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enthalpy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.library.reactions.ReactionParameters.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>activation_energy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>pre_exponential_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>enthalpy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>mass_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>reaction_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>reference</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.library.reactions.VolumetricReactionParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.library.reactions.</span></span><span class="sig-name descname"><span class="pre">VolumetricReactionParameters</span></span><a class="reference internal" href="../_modules/liiontr/library/reactions.html#VolumetricReactionParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.reactions.VolumetricReactionParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Reaction parameters reported using reactant content per cell volume.</p>
+<p>This representation is intended for models where the literature
+reports an initial remaining reactant fraction.</p>
+<p>LiionTR converts that quantity to an initial conversion using:</p>
+<blockquote>
+<div><p>alpha_initial = 1 - remaining_fraction</p>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.library.reactions.VolumetricReactionParameters.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/reactions.html#VolumetricReactionParameters.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.reactions.VolumetricReactionParameters.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate the volumetric reaction parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.library.reactions.VolumetricReactionParameters.initial_conversion">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">initial_conversion</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.library.reactions.VolumetricReactionParameters.initial_conversion" title="Link to this definition"></a></dt>
+<dd><p>Return the initial conversion.</p>
+<p>alpha = 1 - remaining_fraction</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.library.reactions.VolumetricReactionParameters.mass_fraction">
+<span class="sig-name descname"><span class="pre">mass_fraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/reactions.html#VolumetricReactionParameters.mass_fraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.reactions.VolumetricReactionParameters.mass_fraction" title="Link to this definition"></a></dt>
+<dd><p>Convert volumetric reactant content to cell mass fraction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.library.reactions.VolumetricReactionParameters.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kinetics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/reactions.html#VolumetricReactionParameters.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.reactions.VolumetricReactionParameters.build" title="Link to this definition"></a></dt>
+<dd><p>Construct a Reaction for the specified cell.</p>
+<p>If no explicit kinetic model is supplied, an Arrhenius model
+is constructed from the stored kinetic parameters.</p>
+<p>If no explicit progress model is supplied, the configured
+reaction order is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>)</p></li>
+<li><p><strong>progress_model</strong> (<a class="reference internal" href="kinetics.html#liiontr.kinetics.progress.ProgressModel" title="liiontr.kinetics.progress.ProgressModel"><em>ProgressModel</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>kinetics</strong> (<a class="reference internal" href="kinetics.html#liiontr.kinetics.model.KineticModel" title="liiontr.kinetics.model.KineticModel"><em>KineticModel</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="reactions.html#liiontr.reactions.reaction.Reaction" title="liiontr.reactions.reaction.Reaction">Reaction</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.library.reactions.VolumetricReactionParameters.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_exponential_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enthalpy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specific_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_remaining_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.library.reactions.VolumetricReactionParameters.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>activation_energy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>pre_exponential_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>enthalpy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>specific_content</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>initial_remaining_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>reaction_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>reference</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.library.reactions.VolumetricConversionReactionParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.library.reactions.</span></span><span class="sig-name descname"><span class="pre">VolumetricConversionReactionParameters</span></span><a class="reference internal" href="../_modules/liiontr/library/reactions.html#VolumetricConversionReactionParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.reactions.VolumetricConversionReactionParameters" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Volumetric reaction parameters with a directly specified initial conversion.</p>
+<p>This representation is intended for literature models where
+the reaction state is reported directly as alpha rather than
+as a remaining reactant fraction.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.library.reactions.VolumetricConversionReactionParameters.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/reactions.html#VolumetricConversionReactionParameters.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.reactions.VolumetricConversionReactionParameters.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate the volumetric conversion parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.library.reactions.VolumetricConversionReactionParameters.mass_fraction">
+<span class="sig-name descname"><span class="pre">mass_fraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/reactions.html#VolumetricConversionReactionParameters.mass_fraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.reactions.VolumetricConversionReactionParameters.mass_fraction" title="Link to this definition"></a></dt>
+<dd><p>Convert volumetric reactant content to cell mass fraction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.library.reactions.VolumetricConversionReactionParameters.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kinetics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/reactions.html#VolumetricConversionReactionParameters.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.reactions.VolumetricConversionReactionParameters.build" title="Link to this definition"></a></dt>
+<dd><p>Construct a Reaction for the specified cell.</p>
+<p>If no explicit kinetic model is supplied, an Arrhenius model
+is constructed from the stored kinetic parameters.</p>
+<p>If no explicit progress model is supplied, the configured
+reaction order is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>)</p></li>
+<li><p><strong>progress_model</strong> (<a class="reference internal" href="kinetics.html#liiontr.kinetics.progress.ProgressModel" title="liiontr.kinetics.progress.ProgressModel"><em>ProgressModel</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>kinetics</strong> (<a class="reference internal" href="kinetics.html#liiontr.kinetics.model.KineticModel" title="liiontr.kinetics.model.KineticModel"><em>KineticModel</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="reactions.html#liiontr.reactions.reaction.Reaction" title="liiontr.reactions.reaction.Reaction">Reaction</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.library.reactions.VolumetricConversionReactionParameters.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_exponential_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enthalpy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specific_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.library.reactions.VolumetricConversionReactionParameters.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>activation_energy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>pre_exponential_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>enthalpy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>specific_content</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>initial_conversion</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>reaction_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>reference</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.library.hu2020">
+<span id="hu-et-al-2020"></span><h2>Hu et al. (2020)<a class="headerlink" href="#module-liiontr.library.hu2020" title="Link to this heading"></a></h2>
+<p>Thermal runaway model parameters from Hu et al. (2020).</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.library.hu2020.hu2020_sei_decomposition">
+<span class="sig-prename descclassname"><span class="pre">liiontr.library.hu2020.</span></span><span class="sig-name descname"><span class="pre">hu2020_sei_decomposition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/hu2020.html#hu2020_sei_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.hu2020.hu2020_sei_decomposition" title="Link to this definition"></a></dt>
+<dd><p>Return the SEI decomposition parameters reported by Hu et al. (2020).</p>
+<section id="original-reported-parameters">
+<h3>Original reported parameters<a class="headerlink" href="#original-reported-parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>A:</dt><dd><p>1.667e15 1/s</p>
+</dd>
+<dt>Ea:</dt><dd><p>1.3508e5 J/mol</p>
+</dd>
+<dt>H:</dt><dd><p>257 J/g</p>
+</dd>
+<dt>Wc:</dt><dd><p>6.104e5 g/m3</p>
+</dd>
+<dt>Initial remaining fraction:</dt><dd><p>0.15</p>
+</dd>
+<dt>Reaction order:</dt><dd><p>1.0</p>
+</dd>
+</dl>
+</section>
+<section id="liiontr-unit-conversions">
+<h3>LiionTR unit conversions<a class="headerlink" href="#liiontr-unit-conversions" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>H:</dt><dd><p>257 J/g -&gt; 257000 J/kg</p>
+</dd>
+<dt>Wc:</dt><dd><p>6.104e5 g/m3 -&gt; 610.4 kg/m3</p>
+</dd>
+</dl>
+<p>LiionTR uses conversion alpha, where:</p>
+<blockquote>
+<div><p>alpha = 1 - remaining_fraction</p>
+</div></blockquote>
+<p>Therefore:</p>
+<blockquote>
+<div><p>alpha_initial = 1 - 0.15 = 0.85</p>
+</div></blockquote>
+</section>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#liiontr.library.reactions.VolumetricReactionParameters" title="liiontr.library.reactions.VolumetricReactionParameters"><em>VolumetricReactionParameters</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.library.hu2020.hu2020_anode_electrolyte">
+<span class="sig-prename descclassname"><span class="pre">liiontr.library.hu2020.</span></span><span class="sig-name descname"><span class="pre">hu2020_anode_electrolyte</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/hu2020.html#hu2020_anode_electrolyte"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.hu2020.hu2020_anode_electrolyte" title="Link to this definition"></a></dt>
+<dd><p>Return the anode-electrolyte reaction parameters reported by Hu et al. (2020).</p>
+<section id="id1">
+<h3>Original reported parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>A:</dt><dd><p>2.5e13 1/s</p>
+</dd>
+<dt>Ea:</dt><dd><p>1.3508e5 J/mol</p>
+</dd>
+<dt>H:</dt><dd><p>1714 J/g</p>
+</dd>
+<dt>Wc:</dt><dd><p>6.104e5 g/m3</p>
+</dd>
+<dt>Initial remaining fraction:</dt><dd><p>0.75</p>
+</dd>
+<dt>Reaction order:</dt><dd><p>1.0</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h3>LiionTR unit conversions<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>H:</dt><dd><p>1714 J/g -&gt; 1.714e6 J/kg</p>
+</dd>
+<dt>Wc:</dt><dd><p>6.104e5 g/m3 -&gt; 610.4 kg/m3</p>
+</dd>
+</dl>
+<p>Initial conversion:</p>
+<blockquote>
+<div><p>alpha_initial = 1 - 0.75 = 0.25</p>
+</div></blockquote>
+<p>The SEI-dependent threshold and exponential inhibition
+are represented separately by hu2020_anode_progress_model().</p>
+</section>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#liiontr.library.reactions.VolumetricReactionParameters" title="liiontr.library.reactions.VolumetricReactionParameters"><em>VolumetricReactionParameters</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.library.hu2020.hu2020_anode_progress_model">
+<span class="sig-prename descclassname"><span class="pre">liiontr.library.hu2020.</span></span><span class="sig-name descname"><span class="pre">hu2020_anode_progress_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/hu2020.html#hu2020_anode_progress_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.hu2020.hu2020_anode_progress_model" title="Link to this definition"></a></dt>
+<dd><p>Return the coupled progress model for the Hu 2020 anode-electrolyte reaction.</p>
+<p>The base reaction follows:</p>
+<blockquote>
+<div><p>f(alpha) = (1 - alpha)</p>
+</div></blockquote>
+<p>and is inhibited by:</p>
+<blockquote>
+<div><p>exp(-sei_thickness_ratio)</p>
+</div></blockquote>
+<p>The reaction is active only when the remaining SEI
+fraction is below 0.10.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="kinetics.html#liiontr.kinetics.progress.ThresholdProgress" title="liiontr.kinetics.progress.ThresholdProgress"><em>ThresholdProgress</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.library.hu2020.hu2020_initial_conversions">
+<span class="sig-prename descclassname"><span class="pre">liiontr.library.hu2020.</span></span><span class="sig-name descname"><span class="pre">hu2020_initial_conversions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/hu2020.html#hu2020_initial_conversions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.hu2020.hu2020_initial_conversions" title="Link to this definition"></a></dt>
+<dd><p>Return initial reaction conversions for the Hu 2020 network.</p>
+<p>Reaction ordering:</p>
+<blockquote>
+<div><p>0: SEI decomposition
+1: Anode-electrolyte
+2: Cathode decomposition
+3: Electrolyte decomposition</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.library.hu2020.hu2020_reaction_network">
+<span class="sig-prename descclassname"><span class="pre">liiontr.library.hu2020.</span></span><span class="sig-name descname"><span class="pre">hu2020_reaction_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/hu2020.html#hu2020_reaction_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.hu2020.hu2020_reaction_network" title="Link to this definition"></a></dt>
+<dd><p>Build the Hu 2020 thermal runaway reaction network.</p>
+<p>Reaction ordering:</p>
+<blockquote>
+<div><p>0: SEI decomposition
+1: Anode-electrolyte
+2: Cathode decomposition
+3: Electrolyte decomposition</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="reactions.html#liiontr.reactions.network.ReactionNetwork" title="liiontr.reactions.network.ReactionNetwork">ReactionNetwork</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.library.hu2020.hu2020_cathode_initial_conversion">
+<span class="sig-prename descclassname"><span class="pre">liiontr.library.hu2020.</span></span><span class="sig-name descname"><span class="pre">hu2020_cathode_initial_conversion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/hu2020.html#hu2020_cathode_initial_conversion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.hu2020.hu2020_cathode_initial_conversion" title="Link to this definition"></a></dt>
+<dd><p>Return the initial cathode reaction conversion reported by Hu et al. (2020).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.library.hu2020.hu2020_cathode_decomposition">
+<span class="sig-prename descclassname"><span class="pre">liiontr.library.hu2020.</span></span><span class="sig-name descname"><span class="pre">hu2020_cathode_decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/hu2020.html#hu2020_cathode_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.hu2020.hu2020_cathode_decomposition" title="Link to this definition"></a></dt>
+<dd><p>Build the Hu 2020 cathode decomposition reaction.</p>
+<p>The cathode is represented by two parallel kinetic channels
+sharing a single reaction conversion alpha.</p>
+<p>Both channels are active only at temperatures greater than
+or equal to 393.15 K.</p>
+<p>Reported cathode content:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Wp = 1.221e6 g/m3</dt><dd><p>= 1221 kg/m3</p>
+</dd>
+</dl>
+</div></blockquote>
+<section id="channel-1">
+<h3>Channel 1<a class="headerlink" href="#channel-1" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>A:</dt><dd><p>1.75e9 1/s</p>
+</dd>
+<dt>Ea:</dt><dd><p>1.1495e5 J/mol</p>
+</dd>
+<dt>H:</dt><dd><p>77 J/g
+= 77000 J/kg</p>
+</dd>
+</dl>
+</section>
+<section id="channel-2">
+<h3>Channel 2<a class="headerlink" href="#channel-2" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>A:</dt><dd><p>1.077e12 1/s</p>
+</dd>
+<dt>Ea:</dt><dd><p>1.5888e5 J/mol</p>
+</dd>
+<dt>H:</dt><dd><p>84 J/g
+= 84000 J/kg</p>
+</dd>
+</dl>
+</section>
+<section id="progress-law">
+<h3>Progress law<a class="headerlink" href="#progress-law" title="Link to this heading"></a></h3>
+<p>f(alpha) = alpha * (1 - alpha)</p>
+</section>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="reactions.html#liiontr.reactions.multichannel.MultiChannelReaction" title="liiontr.reactions.multichannel.MultiChannelReaction">MultiChannelReaction</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.library.hu2020.hu2020_electrolyte_decomposition">
+<span class="sig-prename descclassname"><span class="pre">liiontr.library.hu2020.</span></span><span class="sig-name descname"><span class="pre">hu2020_electrolyte_decomposition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/hu2020.html#hu2020_electrolyte_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.hu2020.hu2020_electrolyte_decomposition" title="Link to this definition"></a></dt>
+<dd><p>Return the electrolyte decomposition parameters reported by Hu et al. (2020).</p>
+<section id="id3">
+<h3>Original reported parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>A:</dt><dd><p>5.14e25 1/s</p>
+</dd>
+<dt>Ea:</dt><dd><p>2.74e5 J/mol</p>
+</dd>
+<dt>H:</dt><dd><p>155 J/g</p>
+</dd>
+<dt>We:</dt><dd><p>4.069e5 g/m3</p>
+</dd>
+<dt>Initial remaining fraction:</dt><dd><p>1.0</p>
+</dd>
+<dt>Reaction order:</dt><dd><p>1.0</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h3>LiionTR unit conversions<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>H:</dt><dd><p>155 J/g -&gt; 155000 J/kg</p>
+</dd>
+<dt>We:</dt><dd><p>4.069e5 g/m3 -&gt; 406.9 kg/m3</p>
+</dd>
+</dl>
+<p>Initial conversion:</p>
+<blockquote>
+<div><p>alpha_initial = 1 - 1.0 = 0.0</p>
+</div></blockquote>
+<p>The temperature threshold is applied separately by
+hu2020_electrolyte_reaction().</p>
+</section>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#liiontr.library.reactions.VolumetricReactionParameters" title="liiontr.library.reactions.VolumetricReactionParameters"><em>VolumetricReactionParameters</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.library.hu2020.hu2020_electrolyte_reaction">
+<span class="sig-prename descclassname"><span class="pre">liiontr.library.hu2020.</span></span><span class="sig-name descname"><span class="pre">hu2020_electrolyte_reaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/hu2020.html#hu2020_electrolyte_reaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.hu2020.hu2020_electrolyte_reaction" title="Link to this definition"></a></dt>
+<dd><p>Build the Hu 2020 electrolyte decomposition reaction.</p>
+<p>The reaction is active only at temperatures greater than
+or equal to 473.15 K.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="reactions.html#liiontr.reactions.reaction.Reaction" title="liiontr.reactions.reaction.Reaction">Reaction</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="kinetics.html" class="btn btn-neutral float-left" title="Kinetics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="materials.html" class="btn btn-neutral float-right" title="Materials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

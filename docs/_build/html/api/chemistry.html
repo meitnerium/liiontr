@@ -1,0 +1,389 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chemistry &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Core" href="core.html" />
+    <link rel="prev" title="Cells" href="cells.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Physical and Mathematical Theory</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cells.html">Cells</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chemistry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.backend">Chemistry Backend</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.backend.ChemistryBackend"><code class="docutils literal notranslate"><span class="pre">ChemistryBackend</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.chemistry">Chemistry Definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.chemistry.Chemistry"><code class="docutils literal notranslate"><span class="pre">Chemistry</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.reaction_backend">Reaction Network Backend</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.reaction_backend.ReactionNetworkBackend"><code class="docutils literal notranslate"><span class="pre">ReactionNetworkBackend</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.cantera">Cantera Backend</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.cantera.CanteraBackend"><code class="docutils literal notranslate"><span class="pre">CanteraBackend</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.nmc">NMC Chemistry</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.nmc.NMC811"><code class="docutils literal notranslate"><span class="pre">NMC811</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html">Gases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html">Kinetics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="library.html">Model Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="problems.html">Problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html">Reactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Models</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Chemistry</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/chemistry.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="chemistry">
+<h1>Chemistry<a class="headerlink" href="#chemistry" title="Link to this heading"></a></h1>
+<section id="module-liiontr.chemistry.backend">
+<span id="chemistry-backend"></span><h2>Chemistry Backend<a class="headerlink" href="#module-liiontr.chemistry.backend" title="Link to this heading"></a></h2>
+<p>Abstract interfaces for LiionTR chemistry backends.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.backend.ChemistryBackend">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.backend.</span></span><span class="sig-name descname"><span class="pre">ChemistryBackend</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/backend.html#ChemistryBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.backend.ChemistryBackend" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Backend used to compute thermal chemistry.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.backend.ChemistryBackend.heat_generation">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">heat_generation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/backend.html#ChemistryBackend.heat_generation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.backend.ChemistryBackend.heat_generation" title="Link to this definition"></a></dt>
+<dd><p>Return the total cell heat generation rate in W.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.chemistry.chemistry">
+<span id="chemistry-definitions"></span><h2>Chemistry Definitions<a class="headerlink" href="#module-liiontr.chemistry.chemistry" title="Link to this heading"></a></h2>
+<p>Battery chemistry definitions used by LiionTR.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.chemistry.Chemistry">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.chemistry.</span></span><span class="sig-name descname"><span class="pre">Chemistry</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/chemistry.html#Chemistry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.chemistry.Chemistry" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Describe a lithium-ion battery chemistry.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.chemistry.Chemistry.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nominal_voltage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specific_capacity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.chemistry.Chemistry.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>nominal_voltage</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>specific_capacity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>density</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.chemistry.reaction_backend">
+<span id="reaction-network-backend"></span><h2>Reaction Network Backend<a class="headerlink" href="#module-liiontr.chemistry.reaction_backend" title="Link to this heading"></a></h2>
+<p>Chemistry backend based on thermal reaction networks.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.reaction_backend.ReactionNetworkBackend">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.reaction_backend.</span></span><span class="sig-name descname"><span class="pre">ReactionNetworkBackend</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/reaction_backend.html#ReactionNetworkBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.reaction_backend.ReactionNetworkBackend" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#liiontr.chemistry.backend.ChemistryBackend" title="liiontr.chemistry.backend.ChemistryBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChemistryBackend</span></code></a></p>
+<p>Couple a thermal reaction network to a battery cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reaction_network</strong> (<a class="reference internal" href="reactions.html#liiontr.reactions.network.ReactionNetwork" title="liiontr.reactions.network.ReactionNetwork"><em>ReactionNetwork</em></a>) – Thermal reaction network used to compute reaction progress and
+mass-specific heat generation.</p></li>
+<li><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>) – Battery cell whose mass is used to convert mass-specific heat
+generation into total heat generation.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The reaction network returns heat generation in W/kg. This backend
+converts it to total cell heat generation in W according to</p>
+<div class="math notranslate nohighlight">
+\[\dot{Q} =
+\dot{q}_{m} m_{\mathrm{cell}},\]</div>
+<p>where <span class="math notranslate nohighlight">\(\dot{q}_{m}\)</span> is the mass-specific heat-generation rate
+and <span class="math notranslate nohighlight">\(m_{\mathrm{cell}}\)</span> is the cell mass.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.reaction_backend.ReactionNetworkBackend.heat_generation">
+<span class="sig-name descname"><span class="pre">heat_generation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/reaction_backend.html#ReactionNetworkBackend.heat_generation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.reaction_backend.ReactionNetworkBackend.heat_generation" title="Link to this definition"></a></dt>
+<dd><p>Return the total heat generation rate of the cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cell temperature in K.</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] or </em><em>None</em><em>, </em><em>optional</em>) – Reaction conversion values for the reaction network.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Total cell heat generation rate in W.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.reaction_backend.ReactionNetworkBackend.progress_rates">
+<span class="sig-name descname"><span class="pre">progress_rates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/reaction_backend.html#ReactionNetworkBackend.progress_rates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.reaction_backend.ReactionNetworkBackend.progress_rates" title="Link to this definition"></a></dt>
+<dd><p>Return reaction conversion rates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cell temperature in K.</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Current dimensionless reaction conversion values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reaction conversion rates in s⁻¹.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.reaction_backend.ReactionNetworkBackend.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction_network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.reaction_backend.ReactionNetworkBackend.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reaction_network</strong> (<a class="reference internal" href="reactions.html#liiontr.reactions.network.ReactionNetwork" title="liiontr.reactions.network.ReactionNetwork"><em>ReactionNetwork</em></a>)</p></li>
+<li><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.chemistry.cantera">
+<span id="cantera-backend"></span><h2>Cantera Backend<a class="headerlink" href="#module-liiontr.chemistry.cantera" title="Link to this heading"></a></h2>
+<p>Cantera-based thermochemical backend for LiionTR.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraBackend">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.cantera.</span></span><span class="sig-name descname"><span class="pre">CanteraBackend</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraBackend" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#liiontr.chemistry.backend.ChemistryBackend" title="liiontr.chemistry.backend.ChemistryBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChemistryBackend</span></code></a></p>
+<p>Provide the interface for Cantera-based thermochemistry.</p>
+<p class="rubric">Notes</p>
+<p>The backend currently stores the Cantera mechanism identifier but
+does not yet implement heat-generation calculations. Future
+versions are expected to use Cantera for gas-phase thermodynamics
+and chemical-equilibrium calculations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraBackend.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mechanism</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraBackend.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraBackend.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the Cantera backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mechanism</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Cantera mechanism file or mechanism identifier to use for
+thermochemical calculations.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraBackend.heat_generation">
+<span class="sig-name descname"><span class="pre">heat_generation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraBackend.heat_generation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraBackend.heat_generation" title="Link to this definition"></a></dt>
+<dd><p>Return the total cell heat generation rate in W.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cell temperature in K.</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] or </em><em>None</em><em>, </em><em>optional</em>) – Reaction conversion values. This argument is reserved for
+compatibility with the chemistry backend interface.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Total cell heat generation rate in W.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.14)"><strong>NotImplementedError</strong></a> – Always raised because Cantera heat generation is not yet
+    implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.chemistry.nmc">
+<span id="nmc-chemistry"></span><h2>NMC Chemistry<a class="headerlink" href="#module-liiontr.chemistry.nmc" title="Link to this heading"></a></h2>
+<p>Nickel-manganese-cobalt lithium-ion battery chemistries.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.nmc.NMC811">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.nmc.</span></span><span class="sig-name descname"><span class="pre">NMC811</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/nmc.html#NMC811"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.nmc.NMC811" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#liiontr.chemistry.chemistry.Chemistry" title="liiontr.chemistry.chemistry.Chemistry"><code class="xref py py-class docutils literal notranslate"><span class="pre">Chemistry</span></code></a></p>
+<p>Represent a generic NMC811 lithium-ion battery chemistry.</p>
+<p class="rubric">Notes</p>
+<p>The current implementation defines nominal bulk properties for an
+NMC811 chemistry:</p>
+<ul class="simple">
+<li><p>nominal voltage: 3.65 V</p></li>
+<li><p>specific capacity: 200 Ah/kg</p></li>
+<li><p>density: 4800 kg/m³</p></li>
+</ul>
+<p>These values currently act as generic chemistry parameters rather
+than a cell-specific calibrated parameter set.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.nmc.NMC811.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/nmc.html#NMC811.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.nmc.NMC811.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the default NMC811 chemistry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cells.html" class="btn btn-neutral float-left" title="Cells" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core.html" class="btn btn-neutral float-right" title="Core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,522 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reaction Models &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gas Generation" href="gases.html" />
+    <link rel="prev" title="Reaction Kinetics" href="kinetics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Physical and Mathematical Theory</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html">Reaction Kinetics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#progress-models">Progress Models</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Reaction Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-state">Reaction State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-rate">Reaction Rate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-enthalpy">Reaction Enthalpy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mass-fraction">Mass Fraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-context">Reaction Context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#context-variables">Context Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-object">Reaction Object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-channel-reactions">Multi-Channel Reactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#shared-conversion">Shared Conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-network">Reaction Network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#network-heat-generation">Network Heat Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-network-backend">Reaction Network Backend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#state-coupling">State Coupling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-conversions">Initial Conversions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validation">Validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#current-assumptions">Current Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#relationship-to-gas-generation">Relationship to Gas Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html">Gas Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html">Gas Pressure Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html">Vent Flow Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html">Hu et al. (2020) Thermal Runaway Model</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Physical and Mathematical Theory</a></li>
+      <li class="breadcrumb-item active">Reaction Models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/reactions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="reaction-models">
+<h1>Reaction Models<a class="headerlink" href="#reaction-models" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>LiionTR represents thermal runaway chemistry as a network of reaction
+models coupled through a common state vector.</p>
+<p>Each reaction model contributes two quantities to the governing
+equations:</p>
+<ul class="simple">
+<li><p>a reaction progress rate;</p></li>
+<li><p>a mass-specific heat-generation rate.</p></li>
+</ul>
+<p>For a reaction <span class="math notranslate nohighlight">\(i\)</span>, the generic progress equation is</p>
+<div class="math notranslate nohighlight">
+\[\frac{d\alpha_i}{dt}
+=
+k_i(T)
+f_i(\alpha_i, \mathrm{context}),\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha_i\)</span> is the reaction conversion, <span class="math notranslate nohighlight">\(k_i(T)\)</span> is
+the kinetic rate, and <span class="math notranslate nohighlight">\(f_i\)</span> is the reaction progress function.</p>
+<p>The reaction framework is intentionally independent from the numerical
+solver. Reaction objects evaluate rates from a supplied thermodynamic
+state but do not internally advance their own state.</p>
+</section>
+<section id="reaction-state">
+<h2>Reaction State<a class="headerlink" href="#reaction-state" title="Link to this heading"></a></h2>
+<p>Each reaction is represented by a dimensionless conversion variable</p>
+<div class="math notranslate nohighlight">
+\[0 \leq \alpha_i \leq 1.\]</div>
+<p>The corresponding remaining reactant fraction is</p>
+<div class="math notranslate nohighlight">
+\[r_i = 1 - \alpha_i.\]</div>
+<p>The numerical solver stores all reaction conversions in its state
+vector. Reaction objects therefore remain stateless with respect to
+integration history.</p>
+</section>
+<section id="reaction-rate">
+<h2>Reaction Rate<a class="headerlink" href="#reaction-rate" title="Link to this heading"></a></h2>
+<p>For a standard reaction model, LiionTR combines a kinetic model and a
+progress model.</p>
+<p>The progress rate is</p>
+<div class="math notranslate nohighlight">
+\[\dot{\alpha}
+=
+\frac{d\alpha}{dt}
+=
+k(T) f(\alpha, \mathrm{context}).\]</div>
+<p>The kinetic model determines the temperature dependence, while the
+progress model determines the dependence on reaction state and
+potentially on the state of other reactions.</p>
+</section>
+<section id="reaction-enthalpy">
+<h2>Reaction Enthalpy<a class="headerlink" href="#reaction-enthalpy" title="Link to this heading"></a></h2>
+<p>A reaction is assigned a specific reaction enthalpy</p>
+<div class="math notranslate nohighlight">
+\[\Delta H,\]</div>
+<p>expressed in J/kg of reacting material.</p>
+<p>For an exothermic thermal runaway model, LiionTR uses the reaction
+enthalpy as the amount of heat released as the reaction progresses.</p>
+<p>If a reaction occupies a mass fraction <span class="math notranslate nohighlight">\(w\)</span> of the total cell,
+the mass-specific heat-generation rate relative to total cell mass can
+be written as</p>
+<div class="math notranslate nohighlight">
+\[\dot{q}
+=
+w \Delta H
+\frac{d\alpha}{dt},\]</div>
+<p>with units of W/kg of cell.</p>
+<p>For a cell of mass <span class="math notranslate nohighlight">\(m_{\mathrm{cell}}\)</span>, the corresponding total
+heat-generation rate is</p>
+<div class="math notranslate nohighlight">
+\[\dot{Q}
+=
+m_{\mathrm{cell}}
+\dot{q}.\]</div>
+<p>Thus,</p>
+<div class="math notranslate nohighlight">
+\[\dot{Q}
+=
+m_{\mathrm{cell}}
+w \Delta H
+\frac{d\alpha}{dt}.\]</div>
+</section>
+<section id="mass-fraction">
+<h2>Mass Fraction<a class="headerlink" href="#mass-fraction" title="Link to this heading"></a></h2>
+<p>The reaction mass fraction</p>
+<div class="math notranslate nohighlight">
+\[w\]</div>
+<p>represents the fraction of total cell mass associated with the material
+participating in a given reaction model.</p>
+<p>This quantity is dimensionless.</p>
+<p>For literature models that report reactant content per unit cell
+volume, LiionTR provides helper classes that convert volumetric content
+to an effective cell mass fraction.</p>
+<p>If a reacting material has volumetric content</p>
+<div class="math notranslate nohighlight">
+\[W_r\]</div>
+<p>in kg/m<sup>3</sup>, and the effective cell density is <span class="math notranslate nohighlight">\(\rho\)</span>,
+then the corresponding mass fraction is</p>
+<div class="math notranslate nohighlight">
+\[w
+=
+\frac{W_r}{\rho}.\]</div>
+</section>
+<section id="reaction-context">
+<h2>Reaction Context<a class="headerlink" href="#reaction-context" title="Link to this heading"></a></h2>
+<p>Some thermal runaway reactions depend on the state of other reactions.</p>
+<p>LiionTR represents these dependencies through a
+<a class="reference internal" href="../api/reactions.html#liiontr.reactions.context.ReactionContext" title="liiontr.reactions.context.ReactionContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.reactions.context.ReactionContext</span></code></a>.</p>
+<p>The reaction context contains the current conversion vector and exposes
+quantities such as:</p>
+<ul class="simple">
+<li><p>conversion of another reaction;</p></li>
+<li><p>remaining fraction of another reaction;</p></li>
+<li><p>normalized context variables derived from reaction state.</p></li>
+</ul>
+<p>This architecture allows reaction coupling without storing mutable
+cross-reaction state inside individual reaction objects.</p>
+</section>
+<section id="context-variables">
+<h2>Context Variables<a class="headerlink" href="#context-variables" title="Link to this heading"></a></h2>
+<p>Context variables transform reaction-network state into quantities used
+by progress models.</p>
+<p>Examples include normalized conversion variables and remaining-fraction
+ratios.</p>
+<p>A generic normalized remaining-fraction variable may be written as</p>
+<div class="math notranslate nohighlight">
+\[x
+=
+\frac{1-\alpha_j}
+     {r_{\mathrm{ref}}},\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha_j\)</span> is the conversion of another reaction and
+<span class="math notranslate nohighlight">\(r_{\mathrm{ref}}\)</span> is a reference remaining fraction.</p>
+<p>Such variables can represent effects including protective-layer
+thickness, depletion of an inhibitor, or activation of a subsequent
+reaction.</p>
+</section>
+<section id="reaction-object">
+<h2>Reaction Object<a class="headerlink" href="#reaction-object" title="Link to this heading"></a></h2>
+<p>The standard <a class="reference internal" href="../api/reactions.html#liiontr.reactions.reaction.Reaction" title="liiontr.reactions.reaction.Reaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.reactions.reaction.Reaction</span></code></a> combines:</p>
+<ul class="simple">
+<li><p>a reaction name;</p></li>
+<li><p>a kinetic model;</p></li>
+<li><p>a reaction enthalpy;</p></li>
+<li><p>a reacting-material mass fraction;</p></li>
+<li><p>a progress model.</p></li>
+</ul>
+<p>Its two principal operations are:</p>
+<div class="math notranslate nohighlight">
+\[\dot{\alpha}
+=
+k(T) f(\alpha, \mathrm{context})\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\dot{q}
+=
+w \Delta H \dot{\alpha}.\]</div>
+<p>This makes the reaction object the basic physical unit used by a
+reaction network.</p>
+</section>
+<section id="multi-channel-reactions">
+<h2>Multi-Channel Reactions<a class="headerlink" href="#multi-channel-reactions" title="Link to this heading"></a></h2>
+<p>Some physical reactions are represented by multiple parallel kinetic
+channels that share a single reaction conversion.</p>
+<p>LiionTR represents these models using
+<a class="reference internal" href="../api/reactions.html#liiontr.reactions.multichannel.MultiChannelReaction" title="liiontr.reactions.multichannel.MultiChannelReaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.reactions.multichannel.MultiChannelReaction</span></code></a>.</p>
+<p>For <span class="math notranslate nohighlight">\(N\)</span> kinetic channels sharing conversion <span class="math notranslate nohighlight">\(\alpha\)</span>, each
+channel has its own rate coefficient and reaction enthalpy.</p>
+<p>A conceptual heat-generation expression is</p>
+<div class="math notranslate nohighlight">
+\[\dot{q}
+=
+w
+f(\alpha, \mathrm{context})
+\sum_{j=1}^{N}
+\Delta H_j k_j(T).\]</div>
+<p>The channels therefore contribute separately to heat generation while
+sharing the same reaction state.</p>
+<p>This structure is useful for literature models in which one physical
+material undergoes multiple simultaneous decomposition pathways.</p>
+</section>
+<section id="shared-conversion">
+<h2>Shared Conversion<a class="headerlink" href="#shared-conversion" title="Link to this heading"></a></h2>
+<p>For a multi-channel reaction, only one conversion variable is integrated.</p>
+<p>The progress rate must therefore represent the combined progression of
+the physical reaction rather than introducing one independent state
+variable for every kinetic channel.</p>
+<p>This distinction is important because parallel heat-generation channels
+do not necessarily imply independent reactant inventories.</p>
+</section>
+<section id="reaction-network">
+<h2>Reaction Network<a class="headerlink" href="#reaction-network" title="Link to this heading"></a></h2>
+<p>A <a class="reference internal" href="../api/reactions.html#liiontr.reactions.network.ReactionNetwork" title="liiontr.reactions.network.ReactionNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.reactions.network.ReactionNetwork</span></code></a> groups multiple
+reaction models into a single thermal runaway mechanism.</p>
+<p>For a network containing <span class="math notranslate nohighlight">\(N\)</span> reactions, the conversion state is</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{\alpha}
+=
+\left[
+    \alpha_1,
+    \alpha_2,
+    \ldots,
+    \alpha_N
+\right].\]</div>
+<p>The network evaluates the progress-rate vector</p>
+<div class="math notranslate nohighlight">
+\[\frac{d\boldsymbol{\alpha}}{dt}
+=
+\left[
+    \dot{\alpha}_1,
+    \dot{\alpha}_2,
+    \ldots,
+    \dot{\alpha}_N
+\right].\]</div>
+<p>Each reaction receives the current temperature, its own conversion, and
+a reaction context representing the complete network state.</p>
+</section>
+<section id="network-heat-generation">
+<h2>Network Heat Generation<a class="headerlink" href="#network-heat-generation" title="Link to this heading"></a></h2>
+<p>The total mass-specific heat-generation rate is the sum of the
+individual reaction contributions,</p>
+<div class="math notranslate nohighlight">
+\[\dot{q}_{\mathrm{total}}
+=
+\sum_{i=1}^{N}
+\dot{q}_i.\]</div>
+<p>For a cell of mass <span class="math notranslate nohighlight">\(m_{\mathrm{cell}}\)</span>, the total heat-generation
+rate supplied to the thermal model is</p>
+<div class="math notranslate nohighlight">
+\[\dot{Q}_{\mathrm{gen}}
+=
+m_{\mathrm{cell}}
+\dot{q}_{\mathrm{total}}.\]</div>
+<p>This value is then used in the lumped thermal energy balance.</p>
+</section>
+<section id="reaction-network-backend">
+<h2>Reaction Network Backend<a class="headerlink" href="#reaction-network-backend" title="Link to this heading"></a></h2>
+<p>LiionTR provides a chemistry backend that connects a reaction network to
+the thermal problem.</p>
+<p>The backend evaluates:</p>
+<ul class="simple">
+<li><p>reaction progress rates;</p></li>
+<li><p>total reaction heat generation.</p></li>
+</ul>
+<p>This layer separates the generic thermal problem from the specific
+reaction-network implementation.</p>
+<p>The architecture also leaves room for alternative chemistry backends in
+the future.</p>
+</section>
+<section id="state-coupling">
+<h2>State Coupling<a class="headerlink" href="#state-coupling" title="Link to this heading"></a></h2>
+<p>The complete thermal-reaction subsystem may be represented as</p>
+<div class="math notranslate nohighlight">
+\[\frac{dT}{dt}
+=
+\frac{
+    \dot{Q}_{\mathrm{gen}}
+    -
+    \dot{Q}_{\mathrm{loss}}
+}{
+    C_{\mathrm{th}}
+},\]</div>
+<p>together with</p>
+<div class="math notranslate nohighlight">
+\[\frac{d\alpha_i}{dt}
+=
+k_i(T)
+f_i(\boldsymbol{\alpha}),
+\qquad
+i = 1,\ldots,N.\]</div>
+<p>The coupling is bidirectional:</p>
+<ol class="arabic simple">
+<li><p>temperature controls reaction rates through the kinetic models;</p></li>
+<li><p>reactions release heat;</p></li>
+<li><p>heat increases temperature;</p></li>
+<li><p>increased temperature accelerates subsequent reactions.</p></li>
+</ol>
+<p>This positive feedback is the fundamental mechanism of thermal runaway
+in the reduced-order model.</p>
+</section>
+<section id="initial-conversions">
+<h2>Initial Conversions<a class="headerlink" href="#initial-conversions" title="Link to this heading"></a></h2>
+<p>A reaction network requires one initial conversion for each reaction.</p>
+<p>The initial state is</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{\alpha}_0
+=
+\left[
+    \alpha_{1,0},
+    \ldots,
+    \alpha_{N,0}
+\right].\]</div>
+<p>Literature models sometimes specify an initial remaining reactant
+fraction rather than an initial conversion.</p>
+<p>LiionTR uses</p>
+<div class="math notranslate nohighlight">
+\[\alpha_0
+=
+1-r_0\]</div>
+<p>to convert between these representations.</p>
+</section>
+<section id="validation">
+<h2>Validation<a class="headerlink" href="#validation" title="Link to this heading"></a></h2>
+<p>The reaction network validates the consistency of reaction definitions
+and conversion vectors before evaluating rates.</p>
+<p>Examples of required consistency include:</p>
+<ul class="simple">
+<li><p>unique reaction names;</p></li>
+<li><p>one conversion value per reaction;</p></li>
+<li><p>physically meaningful conversion values;</p></li>
+<li><p>valid reaction mass fractions and kinetic parameters.</p></li>
+</ul>
+<p>These checks help detect model-definition errors before numerical
+integration begins.</p>
+</section>
+<section id="current-assumptions">
+<h2>Current Assumptions<a class="headerlink" href="#current-assumptions" title="Link to this heading"></a></h2>
+<p>The current reaction framework assumes:</p>
+<ul class="simple">
+<li><p>each integrated reaction is represented by a scalar conversion;</p></li>
+<li><p>reaction state is spatially uniform throughout the cell;</p></li>
+<li><p>heat-release parameters are effective lumped quantities;</p></li>
+<li><p>reaction enthalpies do not vary explicitly with temperature;</p></li>
+<li><p>reaction rates do not directly depend on gas pressure unless encoded
+through a custom model;</p></li>
+<li><p>reaction products are not automatically determined by chemical
+equilibrium;</p></li>
+<li><p>transport limitations are not explicitly resolved.</p></li>
+</ul>
+<p>These assumptions are appropriate for reduced-order thermal runaway
+models but may not capture all mechanisms occurring inside a real
+battery cell.</p>
+</section>
+<section id="relationship-to-gas-generation">
+<h2>Relationship to Gas Generation<a class="headerlink" href="#relationship-to-gas-generation" title="Link to this heading"></a></h2>
+<p>Reaction progress can also be used to drive gas-generation models.</p>
+<p>In the current empirical framework, gas generation may be associated
+with reaction progress through prescribed species yields.</p>
+<p>Conceptually,</p>
+<div class="math notranslate nohighlight">
+\[\dot{n}_s
+=
+Y_s
+m_{\mathrm{cell}}
+w
+\frac{d\alpha}{dt},\]</div>
+<p>where <span class="math notranslate nohighlight">\(Y_s\)</span> is the yield of gas species <span class="math notranslate nohighlight">\(s\)</span> in mol/kg of
+reacted material.</p>
+<p>This direct-yield approach is intentionally simple.</p>
+<p>A future thermochemical architecture may instead convert reaction
+progress into elemental inventories and determine equilibrium gas
+composition using a backend such as Cantera.</p>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>The standard reaction model is</p>
+<p><a class="reference internal" href="../api/reactions.html#liiontr.reactions.reaction.Reaction" title="liiontr.reactions.reaction.Reaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.reactions.reaction.Reaction</span></code></a>.</p>
+<p>Multi-channel reactions are implemented by</p>
+<p><a class="reference internal" href="../api/reactions.html#liiontr.reactions.multichannel.MultiChannelReaction" title="liiontr.reactions.multichannel.MultiChannelReaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.reactions.multichannel.MultiChannelReaction</span></code></a>.</p>
+<p>The reaction-network container is</p>
+<p><a class="reference internal" href="../api/reactions.html#liiontr.reactions.network.ReactionNetwork" title="liiontr.reactions.network.ReactionNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.reactions.network.ReactionNetwork</span></code></a>.</p>
+<p>Context information is provided by</p>
+<p><a class="reference internal" href="../api/reactions.html#liiontr.reactions.context.ReactionContext" title="liiontr.reactions.context.ReactionContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.reactions.context.ReactionContext</span></code></a>.</p>
+<p>Context variables are implemented in</p>
+<p><a class="reference internal" href="../api/reactions.html#module-liiontr.reactions.context_variable" title="liiontr.reactions.context_variable"><code class="xref py py-mod docutils literal notranslate"><span class="pre">liiontr.reactions.context_variable</span></code></a>.</p>
+<p>The reaction-model interface is defined by</p>
+<p><a class="reference internal" href="../api/reactions.html#liiontr.reactions.model.ReactionModel" title="liiontr.reactions.model.ReactionModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.reactions.model.ReactionModel</span></code></a>.</p>
+<p>The reaction-network chemistry backend is</p>
+<p><a class="reference internal" href="../api/chemistry.html#liiontr.chemistry.reaction_backend.ReactionNetworkBackend" title="liiontr.chemistry.reaction_backend.ReactionNetworkBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.chemistry.reaction_backend.ReactionNetworkBackend</span></code></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="kinetics.html" class="btn btn-neutral float-left" title="Reaction Kinetics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gases.html" class="btn btn-neutral float-right" title="Gas Generation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

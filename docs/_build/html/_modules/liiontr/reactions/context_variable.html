@@ -1,0 +1,230 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>liiontr.reactions.context_variable &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory/index.html">Physical and Mathematical Theory</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">liiontr.reactions.context_variable</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for liiontr.reactions.context_variable</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Derived variables evaluated from shared reaction contexts.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.context</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReactionContext</span>
+
+
+<div class="viewcode-block" id="ContextVariable">
+<a class="viewcode-back" href="../../../api/reactions.html#liiontr.reactions.context_variable.ContextVariable">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ContextVariable</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for variables derived from a ReactionContext.</span>
+
+<span class="sd">    Context variables are algebraic quantities computed from the</span>
+<span class="sd">    current reaction state. They are not independent ODE states.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ContextVariable.evaluate">
+<a class="viewcode-back" href="../../../api/reactions.html#liiontr.reactions.context_variable.ContextVariable.evaluate">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">ReactionContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the variable from the current reaction context.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LinearConversionVariable">
+<a class="viewcode-back" href="../../../api/reactions.html#liiontr.reactions.context_variable.LinearConversionVariable">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinearConversionVariable</span><span class="p">(</span><span class="n">ContextVariable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Variable derived linearly from a reaction conversion.</span>
+
+<span class="sd">    The relation is:</span>
+
+<span class="sd">        x = x_ref + slope * (alpha - alpha_ref)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">reaction_name</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="n">reference_conversion</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">reference_value</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span>
+
+<div class="viewcode-block" id="LinearConversionVariable.__post_init__">
+<a class="viewcode-back" href="../../../api/reactions.html#liiontr.reactions.context_variable.LinearConversionVariable.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the reference reaction conversion.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_conversion</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Reference conversion must be between 0 and 1.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LinearConversionVariable.evaluate">
+<a class="viewcode-back" href="../../../api/reactions.html#liiontr.reactions.context_variable.LinearConversionVariable.evaluate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">ReactionContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the derived conversion variable.&quot;&quot;&quot;</span>
+        <span class="n">conversion</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">conversion</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reaction_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_value</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">slope</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="n">conversion</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_conversion</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RemainingFractionRatioVariable">
+<a class="viewcode-back" href="../../../api/reactions.html#liiontr.reactions.context_variable.RemainingFractionRatioVariable">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemainingFractionRatioVariable</span><span class="p">(</span><span class="n">ContextVariable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ratio of the current remaining fraction to a reference value.</span>
+
+<span class="sd">    The relation is:</span>
+
+<span class="sd">        x = (1 - alpha) / c_ref</span>
+
+<span class="sd">    where alpha is the reaction conversion and c_ref is the</span>
+<span class="sd">    reference remaining fraction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">reaction_name</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="n">reference_remaining_fraction</span><span class="p">:</span> <span class="nb">float</span>
+
+<div class="viewcode-block" id="RemainingFractionRatioVariable.__post_init__">
+<a class="viewcode-back" href="../../../api/reactions.html#liiontr.reactions.context_variable.RemainingFractionRatioVariable.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the reference remaining fraction.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_remaining_fraction</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Reference remaining fraction must be greater than 0 and at most 1&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemainingFractionRatioVariable.evaluate">
+<a class="viewcode-back" href="../../../api/reactions.html#liiontr.reactions.context_variable.RemainingFractionRatioVariable.evaluate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">ReactionContext</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the remaining-fraction ratio.&quot;&quot;&quot;</span>
+        <span class="n">remaining_fraction</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">remaining_fraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reaction_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">remaining_fraction</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_remaining_fraction</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

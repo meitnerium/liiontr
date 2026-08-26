@@ -1,0 +1,430 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solver and State Flow &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../api/index.html" />
+    <link rel="prev" title="Architecture Overview" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Physical and Mathematical Theory</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Software Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Architecture Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Solver and State Flow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#state-vector">State Vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#temperature-state">Temperature State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-states">Reaction States</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gas-states">Gas States</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#right-hand-side-evaluation">Right-Hand-Side Evaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#closed-phase">Closed Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vent-opening-event">Vent-Opening Event</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#open-phase">Open Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreversible-state-transition">Irreversible State Transition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maximum-temperature-event">Maximum-Temperature Event</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maximum-pressure-event">Maximum-Pressure Event</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stiff-integration">Stiff Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solver-tolerances">Solver Tolerances</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#result-reconstruction">Result Reconstruction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#physical-model-ownership">Physical Model Ownership</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#benefits-of-the-current-structure">Benefits of the Current Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#future-extensions">Future Extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Software Architecture</a></li>
+      <li class="breadcrumb-item active">Solver and State Flow</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/solver_flow.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="solver-and-state-flow">
+<h1>Solver and State Flow<a class="headerlink" href="#solver-and-state-flow" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The numerical solver integrates the complete LiionTR simulation state.</p>
+<p>The current solver uses SciPy <code class="docutils literal notranslate"><span class="pre">solve_ivp</span></code> with a BDF integration
+method suitable for stiff thermal runaway kinetics.</p>
+</section>
+<section id="state-vector">
+<h2>State Vector<a class="headerlink" href="#state-vector" title="Link to this heading"></a></h2>
+<p>For a thermal problem containing <span class="math notranslate nohighlight">\(N\)</span> reactions and <span class="math notranslate nohighlight">\(M\)</span> gas
+species, the solver state is conceptually</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{y}
+=
+\left[
+    T,
+    \alpha_1,
+    \ldots,
+    \alpha_N,
+    n_1,
+    \ldots,
+    n_M
+\right].\]</div>
+<p>The state contains:</p>
+<ul class="simple">
+<li><p>one temperature variable;</p></li>
+<li><p>one conversion variable per reaction;</p></li>
+<li><p>one mole amount per gas species.</p></li>
+</ul>
+</section>
+<section id="temperature-state">
+<h2>Temperature State<a class="headerlink" href="#temperature-state" title="Link to this heading"></a></h2>
+<p>The first state variable is the lumped cell temperature,</p>
+<div class="math notranslate nohighlight">
+\[y_0 = T.\]</div>
+<p>Its derivative is supplied by the thermal model,</p>
+<div class="math notranslate nohighlight">
+\[\frac{dT}{dt}
+=
+\frac{
+    \dot{Q}_{\mathrm{gen}}
+    -
+    \dot{Q}_{\mathrm{loss}}
+}{
+    C_{\mathrm{th}}
+}.\]</div>
+</section>
+<section id="reaction-states">
+<h2>Reaction States<a class="headerlink" href="#reaction-states" title="Link to this heading"></a></h2>
+<p>Each thermal runaway reaction contributes one integrated conversion,</p>
+<div class="math notranslate nohighlight">
+\[\alpha_i.\]</div>
+<p>The corresponding derivative is</p>
+<div class="math notranslate nohighlight">
+\[\frac{d\alpha_i}{dt}
+=
+k_i(T)
+f_i(\boldsymbol{\alpha}).\]</div>
+</section>
+<section id="gas-states">
+<h2>Gas States<a class="headerlink" href="#gas-states" title="Link to this heading"></a></h2>
+<p>When gas generation is enabled, each gas species contributes one mole
+state,</p>
+<div class="math notranslate nohighlight">
+\[n_s.\]</div>
+<p>Before vent opening,</p>
+<div class="math notranslate nohighlight">
+\[\frac{dn_s}{dt}
+=
+\dot{n}_{s,\mathrm{gen}}.\]</div>
+<p>After vent opening,</p>
+<div class="math notranslate nohighlight">
+\[\frac{dn_s}{dt}
+=
+\dot{n}_{s,\mathrm{gen}}
+-
+\dot{n}_{s,\mathrm{vent}}.\]</div>
+</section>
+<section id="right-hand-side-evaluation">
+<h2>Right-Hand-Side Evaluation<a class="headerlink" href="#right-hand-side-evaluation" title="Link to this heading"></a></h2>
+<p>For each solver evaluation, LiionTR conceptually performs the following
+sequence:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>current state y
+     |
+     v
+extract T, alpha, gas moles
+     |
+     v
+build reaction context
+     |
+     v
+evaluate reaction rates
+     |
+     +---------&gt; reaction progress rates
+     |
+     +---------&gt; heat generation
+     |
+     v
+evaluate thermal model
+     |
+     +---------&gt; dT/dt
+     |
+     v
+evaluate gas generation
+     |
+     +---------&gt; dn_gen/dt
+     |
+     v
+evaluate pressure
+     |
+     v
+if vent open:
+     evaluate vent flow
+     |
+     +---------&gt; dn_vent/dt
+     |
+     v
+assemble dy/dt
+</pre></div>
+</div>
+</section>
+<section id="closed-phase">
+<h2>Closed Phase<a class="headerlink" href="#closed-phase" title="Link to this heading"></a></h2>
+<p>The simulation begins with the vent closed.</p>
+<p>The gas balance is</p>
+<div class="math notranslate nohighlight">
+\[\frac{dn_s}{dt}
+=
+\dot{n}_{s,\mathrm{gen}}.\]</div>
+<p>During this phase, internal pressure is continuously reconstructed from
+the current temperature and gas inventory.</p>
+</section>
+<section id="vent-opening-event">
+<h2>Vent-Opening Event<a class="headerlink" href="#vent-opening-event" title="Link to this heading"></a></h2>
+<p>The solver monitors the residual</p>
+<div class="math notranslate nohighlight">
+\[g_{\mathrm{vent}}
+=
+P_{\mathrm{vent}}
+-
+P.\]</div>
+<p>The event occurs when</p>
+<div class="math notranslate nohighlight">
+\[g_{\mathrm{vent}} = 0.\]</div>
+<p>This corresponds to</p>
+<div class="math notranslate nohighlight">
+\[P = P_{\mathrm{vent}}.\]</div>
+</section>
+<section id="open-phase">
+<h2>Open Phase<a class="headerlink" href="#open-phase" title="Link to this heading"></a></h2>
+<p>After the vent-opening event, LiionTR starts a second integration phase.</p>
+<p>The gas balance becomes</p>
+<div class="math notranslate nohighlight">
+\[\frac{dn_s}{dt}
+=
+\dot{n}_{s,\mathrm{gen}}
+-
+\dot{n}_{s,\mathrm{vent}}.\]</div>
+<p>The vent remains open for the remainder of the simulation.</p>
+</section>
+<section id="irreversible-state-transition">
+<h2>Irreversible State Transition<a class="headerlink" href="#irreversible-state-transition" title="Link to this heading"></a></h2>
+<p>The solver architecture currently uses an irreversible transition</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>CLOSED
+   |
+   | P = P_vent
+   v
+ OPEN
+</pre></div>
+</div>
+<p>There is no transition from <code class="docutils literal notranslate"><span class="pre">OPEN</span></code> back to <code class="docutils literal notranslate"><span class="pre">CLOSED</span></code>.</p>
+<p>This prevents numerical oscillation around the opening threshold and
+represents a mechanical vent that does not reseal during the event.</p>
+</section>
+<section id="maximum-temperature-event">
+<h2>Maximum-Temperature Event<a class="headerlink" href="#maximum-temperature-event" title="Link to this heading"></a></h2>
+<p>A simulation may define a maximum temperature.</p>
+<p>The solver monitors a temperature event residual that reaches zero when</p>
+<div class="math notranslate nohighlight">
+\[T = T_{\mathrm{max}}.\]</div>
+<p>This event may terminate integration.</p>
+</section>
+<section id="maximum-pressure-event">
+<h2>Maximum-Pressure Event<a class="headerlink" href="#maximum-pressure-event" title="Link to this heading"></a></h2>
+<p>A simulation may also define a maximum pressure.</p>
+<p>The corresponding event is triggered when</p>
+<div class="math notranslate nohighlight">
+\[P = P_{\mathrm{max}}.\]</div>
+<p>This threshold is distinct from the vent-opening pressure.</p>
+</section>
+<section id="stiff-integration">
+<h2>Stiff Integration<a class="headerlink" href="#stiff-integration" title="Link to this heading"></a></h2>
+<p>Thermal runaway kinetics can be highly stiff because Arrhenius reaction
+rates may change by many orders of magnitude over a relatively small
+temperature interval.</p>
+<p>LiionTR therefore uses a BDF integration method by default.</p>
+<p>BDF methods are implicit multistep schemes that are commonly used for
+stiff systems of ordinary differential equations.</p>
+</section>
+<section id="solver-tolerances">
+<h2>Solver Tolerances<a class="headerlink" href="#solver-tolerances" title="Link to this heading"></a></h2>
+<p>The solver exposes relative and absolute integration tolerances.</p>
+<p>The relative tolerance controls errors proportional to the magnitude of
+the state variables.</p>
+<p>The absolute tolerance provides a lower error scale for states close to
+zero.</p>
+<p>Appropriate tolerances are particularly important when the state vector
+contains quantities with different physical magnitudes, such as:</p>
+<ul class="simple">
+<li><p>temperature in hundreds of kelvin;</p></li>
+<li><p>conversion between zero and one;</p></li>
+<li><p>gas inventories that may initially be very small.</p></li>
+</ul>
+</section>
+<section id="result-reconstruction">
+<h2>Result Reconstruction<a class="headerlink" href="#result-reconstruction" title="Link to this heading"></a></h2>
+<p>After numerical integration, the solver reconstructs simulation outputs
+from the integrated state.</p>
+<p>These may include:</p>
+<ul class="simple">
+<li><p>time;</p></li>
+<li><p>temperature;</p></li>
+<li><p>reaction conversions;</p></li>
+<li><p>gas-species mole amounts;</p></li>
+<li><p>internal pressure;</p></li>
+<li><p>vent state.</p></li>
+</ul>
+<p>The two integration phases are combined into one continuous result when
+vent opening occurs.</p>
+</section>
+<section id="physical-model-ownership">
+<h2>Physical Model Ownership<a class="headerlink" href="#physical-model-ownership" title="Link to this heading"></a></h2>
+<p>The solver does not own the physical laws.</p>
+<p>Instead, it orchestrates calls to:</p>
+<ul class="simple">
+<li><p>reaction models;</p></li>
+<li><p>chemistry backend;</p></li>
+<li><p>thermal model;</p></li>
+<li><p>gas-generation model;</p></li>
+<li><p>pressure model;</p></li>
+<li><p>vent-flow model.</p></li>
+</ul>
+<p>This separation keeps numerical integration independent from individual
+physical model implementations.</p>
+</section>
+<section id="benefits-of-the-current-structure">
+<h2>Benefits of the Current Structure<a class="headerlink" href="#benefits-of-the-current-structure" title="Link to this heading"></a></h2>
+<p>The current solver architecture supports:</p>
+<ul class="simple">
+<li><p>independent unit testing of physical models;</p></li>
+<li><p>event-driven state transitions;</p></li>
+<li><p>interchangeable physics components;</p></li>
+<li><p>future alternative numerical solvers;</p></li>
+<li><p>clear ownership of integrated state;</p></li>
+<li><p>straightforward addition of new state variables.</p></li>
+</ul>
+</section>
+<section id="future-extensions">
+<h2>Future Extensions<a class="headerlink" href="#future-extensions" title="Link to this heading"></a></h2>
+<p>Potential solver extensions include:</p>
+<ul class="simple">
+<li><p>analytical or sparse Jacobians;</p></li>
+<li><p>solver-specific state scaling;</p></li>
+<li><p>adaptive event handling for rupture;</p></li>
+<li><p>phase-change state variables;</p></li>
+<li><p>dynamic vent geometry;</p></li>
+<li><p>spatial thermal states;</p></li>
+<li><p>propagation between cells;</p></li>
+<li><p>thermochemical equilibrium states;</p></li>
+<li><p>coupling to PyBaMM electrochemical variables;</p></li>
+<li><p>restart and checkpoint support;</p></li>
+<li><p>sensitivity analysis and parameter estimation.</p></li>
+</ul>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>The SciPy solver is implemented by</p>
+<p><a class="reference internal" href="../api/solver.html#liiontr.solver.scipy_solver.ScipySolver" title="liiontr.solver.scipy_solver.ScipySolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.solver.scipy_solver.ScipySolver</span></code></a>.</p>
+<p>The thermal problem definition is</p>
+<p><a class="reference internal" href="../api/problems.html#liiontr.problems.thermal.ThermalProblem" title="liiontr.problems.thermal.ThermalProblem"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.problems.thermal.ThermalProblem</span></code></a>.</p>
+<p>Simulation results are represented by</p>
+<p><a class="reference internal" href="../api/core.html#liiontr.core.results.Results" title="liiontr.core.results.Results"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.core.results.Results</span></code></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="overview.html" class="btn btn-neutral float-left" title="Architecture Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

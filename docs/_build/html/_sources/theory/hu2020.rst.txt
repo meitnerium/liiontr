@@ -1,0 +1,761 @@
+Hu et al. (2020) Thermal Runaway Model
+======================================
+
+Overview
+--------
+
+LiionTR includes a reduced-order thermal runaway reaction network based
+on the model reported by Hu et al. (2020).
+
+The model represents thermal runaway using four principal reaction
+states:
+
+#. SEI decomposition;
+#. anode-electrolyte reaction;
+#. cathode decomposition;
+#. electrolyte decomposition.
+
+Each reaction contributes heat according to its kinetic rate, reaction
+progress state, reacting-material content, and reaction enthalpy.
+
+The model is implemented in
+
+:mod:`liiontr.library.hu2020`.
+
+
+Reference
+---------
+
+The thermal runaway model implemented in LiionTR is based on the work
+of Hu et al. :cite:p:`hu2020inhibition`.
+
+The original study developed a numerical lithium-ion battery thermal
+runaway model incorporating multiple internal side reactions, including
+SEI, anode, cathode, and electrolyte reactions.
+
+LiionTR converts the reported model parameters to SI units before
+constructing the reaction network.
+
+
+Reaction Network
+----------------
+
+The reaction-state vector is
+
+.. math::
+
+   \boldsymbol{\alpha}
+   =
+   \left[
+       \alpha_{\mathrm{SEI}},
+       \alpha_{\mathrm{anode}},
+       \alpha_{\mathrm{cathode}},
+       \alpha_{\mathrm{electrolyte}}
+   \right].
+
+The corresponding progress equations have the generic form
+
+.. math::
+
+   \frac{d\alpha_i}{dt}
+   =
+   k_i(T)
+   f_i(\boldsymbol{\alpha}).
+
+The total heat-generation rate is obtained by summing the contributions
+of all reactions.
+
+
+Initial Reaction State
+----------------------
+
+LiionTR initializes the Hu et al. reaction network using
+
+.. math::
+
+   \boldsymbol{\alpha}_0
+   =
+   \left[
+       0.85,
+       0.25,
+       0.04,
+       0.00
+   \right].
+
+These values correspond respectively to:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 45 25
+
+   * - Reaction
+     - Initial conversion
+
+   * - SEI decomposition
+     - 0.85
+
+   * - Anode-electrolyte
+     - 0.25
+
+   * - Cathode decomposition
+     - 0.04
+
+   * - Electrolyte decomposition
+     - 0.00
+
+
+SEI Decomposition
+-----------------
+
+The SEI decomposition reaction uses Arrhenius kinetics,
+
+.. math::
+
+   k_{\mathrm{SEI}}(T)
+   =
+   A_{\mathrm{SEI}}
+   \exp\left(
+       -\frac{
+           E_{a,\mathrm{SEI}}
+       }{
+           R T
+       }
+   \right).
+
+The implemented parameters are:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 30 25
+
+   * - Parameter
+     - Value
+     - Unit
+
+   * - Pre-exponential factor
+     - :math:`1.667\times10^{15}`
+     - s\ :sup:`-1`
+
+   * - Activation energy
+     - :math:`1.3508\times10^{5}`
+     - J/mol
+
+   * - Reaction enthalpy
+     - :math:`2.57\times10^{5}`
+     - J/kg
+
+   * - Volumetric reactant content
+     - 610.4
+     - kg/m\ :sup:`3`
+
+   * - Initial conversion
+     - 0.85
+     - dimensionless
+
+   * - Reaction order
+     - 1
+     - dimensionless
+
+
+SEI Unit Conversion
+-------------------
+
+The reported reaction enthalpy is converted as
+
+.. math::
+
+   257
+   \ \mathrm{J/g}
+   =
+   257000
+   \ \mathrm{J/kg}.
+
+The reported volumetric reactant content is converted as
+
+.. math::
+
+   6.104\times10^{5}
+   \ \mathrm{g/m^3}
+   =
+   610.4
+   \ \mathrm{kg/m^3}.
+
+The original initial remaining fraction is 0.15.
+
+Because LiionTR uses reaction conversion,
+
+.. math::
+
+   \alpha
+   =
+   1-r,
+
+the initial SEI conversion is
+
+.. math::
+
+   \alpha_{\mathrm{SEI},0}
+   =
+   1-0.15
+   =
+   0.85.
+
+
+Anode-Electrolyte Reaction
+--------------------------
+
+The anode-electrolyte reaction also uses Arrhenius kinetics.
+
+The implemented kinetic and energetic parameters are:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 30 25
+
+   * - Parameter
+     - Value
+     - Unit
+
+   * - Pre-exponential factor
+     - :math:`2.5\times10^{13}`
+     - s\ :sup:`-1`
+
+   * - Activation energy
+     - :math:`1.3508\times10^{5}`
+     - J/mol
+
+   * - Reaction enthalpy
+     - :math:`1.714\times10^{6}`
+     - J/kg
+
+   * - Volumetric reactant content
+     - 610.4
+     - kg/m\ :sup:`3`
+
+   * - Initial conversion
+     - 0.25
+     - dimensionless
+
+
+Anode Unit Conversion
+---------------------
+
+The reaction enthalpy conversion is
+
+.. math::
+
+   1714
+   \ \mathrm{J/g}
+   =
+   1.714\times10^{6}
+   \ \mathrm{J/kg}.
+
+The initial remaining fraction is 0.75, giving
+
+.. math::
+
+   \alpha_{\mathrm{anode},0}
+   =
+   1-0.75
+   =
+   0.25.
+
+
+SEI-Dependent Anode Activation
+------------------------------
+
+The anode-electrolyte reaction is coupled to the state of the SEI
+reaction.
+
+In the current LiionTR implementation, the reaction becomes active only
+after the remaining SEI fraction falls below a prescribed threshold.
+
+The remaining SEI fraction is
+
+.. math::
+
+   r_{\mathrm{SEI}}
+   =
+   1-\alpha_{\mathrm{SEI}}.
+
+The threshold is
+
+.. math::
+
+   r_{\mathrm{SEI}}
+   <
+   0.10.
+
+This introduces a coupling between the SEI and anode-electrolyte
+reaction states.
+
+
+Exponential Inhibition
+----------------------
+
+The anode reaction also includes an exponential inhibition term.
+
+Conceptually,
+
+.. math::
+
+   f_{\mathrm{anode}}
+   =
+   f_{\mathrm{base}}
+   \exp(-x_{\mathrm{SEI}}),
+
+where :math:`x_{\mathrm{SEI}}` is obtained from the normalized remaining
+SEI state.
+
+This captures the effect of the remaining SEI layer on the
+anode-electrolyte reaction.
+
+
+Cathode Decomposition
+---------------------
+
+The cathode decomposition is represented using two parallel kinetic
+channels that share a single cathode conversion.
+
+The reaction is active only above
+
+.. math::
+
+   T_{\mathrm{cathode}}
+   =
+   393.15
+   \ \mathrm{K}.
+
+
+Cathode Reactant Content
+------------------------
+
+The reported cathode content is
+
+.. math::
+
+   1.221\times10^{6}
+   \ \mathrm{g/m^3}.
+
+LiionTR converts this to
+
+.. math::
+
+   1221
+   \ \mathrm{kg/m^3}.
+
+
+Cathode Channel 1
+-----------------
+
+The first channel uses:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 30 25
+
+   * - Parameter
+     - Value
+     - Unit
+
+   * - Pre-exponential factor
+     - :math:`1.75\times10^{9}`
+     - s\ :sup:`-1`
+
+   * - Activation energy
+     - :math:`1.1495\times10^{5}`
+     - J/mol
+
+   * - Reaction enthalpy
+     - :math:`7.7\times10^{4}`
+     - J/kg
+
+
+Cathode Channel 2
+-----------------
+
+The second channel uses:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 30 25
+
+   * - Parameter
+     - Value
+     - Unit
+
+   * - Pre-exponential factor
+     - :math:`1.077\times10^{12}`
+     - s\ :sup:`-1`
+
+   * - Activation energy
+     - :math:`1.5888\times10^{5}`
+     - J/mol
+
+   * - Reaction enthalpy
+     - :math:`8.4\times10^{4}`
+     - J/kg
+
+
+Shared Cathode Progress
+-----------------------
+
+Both cathode channels share the same reaction conversion,
+
+.. math::
+
+   \alpha_{\mathrm{cathode}}.
+
+The implemented progress law is autocatalytic,
+
+.. math::
+
+   f_{\mathrm{cathode}}
+   =
+   \alpha_{\mathrm{cathode}}
+   \left(
+       1-\alpha_{\mathrm{cathode}}
+   \right).
+
+The initial cathode conversion is
+
+.. math::
+
+   \alpha_{\mathrm{cathode},0}
+   =
+   0.04.
+
+
+Cathode Heat Generation
+-----------------------
+
+Because both channels share one reaction state, their heat-generation
+contributions are summed.
+
+Conceptually,
+
+.. math::
+
+   \dot{q}_{\mathrm{cathode}}
+   =
+   w_{\mathrm{cathode}}
+   f_{\mathrm{cathode}}
+   \left[
+       \Delta H_1 k_1(T)
+       +
+       \Delta H_2 k_2(T)
+   \right].
+
+This structure is represented using a LiionTR multi-channel reaction.
+
+
+Electrolyte Decomposition
+-------------------------
+
+Electrolyte decomposition is modeled using Arrhenius kinetics and a
+temperature threshold.
+
+The implemented threshold is
+
+.. math::
+
+   T_{\mathrm{electrolyte}}
+   =
+   473.15
+   \ \mathrm{K}.
+
+
+Electrolyte Parameters
+----------------------
+
+The implemented parameters are:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 30 25
+
+   * - Parameter
+     - Value
+     - Unit
+
+   * - Pre-exponential factor
+     - :math:`5.14\times10^{25}`
+     - s\ :sup:`-1`
+
+   * - Activation energy
+     - :math:`2.74\times10^{5}`
+     - J/mol
+
+   * - Reaction enthalpy
+     - :math:`1.55\times10^{5}`
+     - J/kg
+
+   * - Volumetric reactant content
+     - 406.9
+     - kg/m\ :sup:`3`
+
+   * - Initial conversion
+     - 0.00
+     - dimensionless
+
+
+Electrolyte Unit Conversion
+---------------------------
+
+The reaction enthalpy conversion is
+
+.. math::
+
+   155
+   \ \mathrm{J/g}
+   =
+   155000
+   \ \mathrm{J/kg}.
+
+The volumetric content conversion is
+
+.. math::
+
+   4.069\times10^{5}
+   \ \mathrm{g/m^3}
+   =
+   406.9
+   \ \mathrm{kg/m^3}.
+
+The initial remaining fraction is unity,
+
+.. math::
+
+   r_0 = 1,
+
+therefore
+
+.. math::
+
+   \alpha_{\mathrm{electrolyte},0}
+   =
+   1-r_0
+   =
+   0.
+
+
+Summary of Implemented Parameters
+---------------------------------
+
+.. list-table::
+   :header-rows: 1
+
+   * - Reaction
+     - :math:`A` (s\ :sup:`-1`)
+     - :math:`E_a` (J/mol)
+     - :math:`\Delta H` (J/kg)
+     - Initial :math:`\alpha`
+
+   * - SEI
+     - :math:`1.667\times10^{15}`
+     - :math:`1.3508\times10^{5}`
+     - 257000
+     - 0.85
+
+   * - Anode-electrolyte
+     - :math:`2.5\times10^{13}`
+     - :math:`1.3508\times10^{5}`
+     - 1714000
+     - 0.25
+
+   * - Cathode channel 1
+     - :math:`1.75\times10^{9}`
+     - :math:`1.1495\times10^{5}`
+     - 77000
+     - 0.04
+
+   * - Cathode channel 2
+     - :math:`1.077\times10^{12}`
+     - :math:`1.5888\times10^{5}`
+     - 84000
+     - 0.04
+
+   * - Electrolyte
+     - :math:`5.14\times10^{25}`
+     - :math:`2.74\times10^{5}`
+     - 155000
+     - 0.00
+
+
+Reaction Ordering
+-----------------
+
+LiionTR preserves the following ordering throughout the network:
+
+.. code-block:: text
+
+   0  SEI decomposition
+   1  Anode-electrolyte
+   2  Cathode decomposition
+   3  Electrolyte decomposition
+
+The conversion vector therefore follows
+
+.. math::
+
+   \boldsymbol{\alpha}
+   =
+   [
+       \alpha_{\mathrm{SEI}},
+       \alpha_{\mathrm{anode}},
+       \alpha_{\mathrm{cathode}},
+       \alpha_{\mathrm{electrolyte}}
+   ].
+
+
+Cell-Mass Conversion
+--------------------
+
+Several parameters in the literature model are specified as reactant
+content per unit cell volume.
+
+LiionTR converts a volumetric reactant content :math:`W_i` to a cell
+mass fraction using
+
+.. math::
+
+   w_i
+   =
+   \frac{W_i}{\rho_{\mathrm{cell}}},
+
+where :math:`\rho_{\mathrm{cell}}` is the effective cell density.
+
+The reaction heat-generation rate then becomes
+
+.. math::
+
+   \dot{Q}_i
+   =
+   m_{\mathrm{cell}}
+   w_i
+   \Delta H_i
+   \dot{\alpha}_i.
+
+
+Coupling to the Thermal Model
+-----------------------------
+
+The total heat-generation rate is
+
+.. math::
+
+   \dot{Q}_{\mathrm{gen}}
+   =
+   \sum_i
+   \dot{Q}_i.
+
+This value is supplied to the lumped thermal model,
+
+.. math::
+
+   C_{\mathrm{th}}
+   \frac{dT}{dt}
+   =
+   \dot{Q}_{\mathrm{gen}}
+   -
+   h A
+   \left(
+       T-T_{\infty}
+   \right).
+
+The resulting increase in temperature accelerates the Arrhenius
+kinetics and produces the thermal-runaway feedback loop.
+
+
+Current LiionTR Representation
+------------------------------
+
+The Hu et al. model is represented using the generic LiionTR
+architecture rather than a single monolithic model class.
+
+The mapping is approximately:
+
+.. code-block:: text
+
+   Hu model
+      |
+      +-- SEI
+      |     +-- Arrhenius
+      |     +-- volumetric reaction parameters
+      |
+      +-- Anode-electrolyte
+      |     +-- Arrhenius
+      |     +-- SEI-dependent threshold
+      |     +-- exponential inhibition
+      |
+      +-- Cathode
+      |     +-- channel 1 Arrhenius
+      |     +-- channel 2 Arrhenius
+      |     +-- temperature threshold
+      |     +-- shared autocatalytic conversion
+      |
+      +-- Electrolyte
+            +-- Arrhenius
+            +-- temperature threshold
+
+                |
+                v
+
+          ReactionNetwork
+
+
+Implementation
+--------------
+
+The complete reaction network is constructed by
+
+:func:`liiontr.library.hu2020.hu2020_reaction_network`.
+
+The initial conversion vector is provided by
+
+:func:`liiontr.library.hu2020.hu2020_initial_conversions`.
+
+SEI parameters are provided by
+
+:func:`liiontr.library.hu2020.hu2020_sei_decomposition`.
+
+Anode-electrolyte parameters are provided by
+
+:func:`liiontr.library.hu2020.hu2020_anode_electrolyte`.
+
+Its coupled progress model is constructed by
+
+:func:`liiontr.library.hu2020.hu2020_anode_progress_model`.
+
+The cathode reaction is constructed by
+
+:func:`liiontr.library.hu2020.hu2020_cathode_decomposition`.
+
+Electrolyte parameters are provided by
+
+:func:`liiontr.library.hu2020.hu2020_electrolyte_decomposition`.
+
+The complete electrolyte reaction is constructed by
+
+:func:`liiontr.library.hu2020.hu2020_electrolyte_reaction`.
+
+
+Scope and Limitations
+---------------------
+
+The LiionTR implementation should be interpreted as a reduced-order
+representation of the Hu et al. thermal runaway model.
+
+It currently focuses on:
+
+* reaction kinetics;
+* reaction progress;
+* heat generation;
+* coupling to a lumped thermal state.
+
+Gas chemistry, chemical equilibrium, multiphase behavior, detailed
+electrochemistry, and internal spatial temperature gradients are not
+part of the Hu reaction-network implementation itself.
+
+These processes may be coupled to the reaction model through other
+LiionTR subsystems as the framework evolves.

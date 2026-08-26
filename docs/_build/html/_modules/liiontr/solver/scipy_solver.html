@@ -1,0 +1,803 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>liiontr.solver.scipy_solver &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory/index.html">Physical and Mathematical Theory</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">liiontr.solver.scipy_solver</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for liiontr.solver.scipy_solver</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;SciPy-based numerical integration for LiionTR thermal problems.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.chemistry</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReactionNetworkBackend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.core.results</span><span class="w"> </span><span class="kn">import</span> <span class="n">Results</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.gases</span><span class="w"> </span><span class="kn">import</span> <span class="n">GasInventory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.problems.thermal</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThermalProblem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.thermal.lumped</span><span class="w"> </span><span class="kn">import</span> <span class="n">LumpedThermalModel</span>
+
+
+<div class="viewcode-block" id="ScipySolver">
+<a class="viewcode-back" href="../../../api/solver.html#liiontr.solver.scipy_solver.ScipySolver">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ScipySolver</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SciPy-based ODE solver.</span>
+
+<span class="sd">    BDF is used by default because thermal runaway kinetics</span>
+<span class="sd">    can become stiff at elevated temperatures.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;BDF&quot;</span>
+
+    <span class="n">relative_tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0e-6</span>
+
+    <span class="n">absolute_tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0e-9</span>
+
+<div class="viewcode-block" id="ScipySolver.solve">
+<a class="viewcode-back" href="../../../api/solver.html#liiontr.solver.scipy_solver.ScipySolver.solve">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">problem</span><span class="p">:</span> <span class="n">ThermalProblem</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Results</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Solve a lumped thermal-runaway problem using SciPy.</span>
+
+<span class="sd">        The solver integrates the cell temperature, reaction conversions,</span>
+<span class="sd">        and gas-species mole amounts. When a vent model is configured,</span>
+<span class="sd">        integration is split into a closed phase and an irreversibly open</span>
+<span class="sd">        venting phase.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        problem : ThermalProblem</span>
+<span class="sd">            Thermal-runaway problem defining the cell, chemistry, thermal</span>
+<span class="sd">            boundary conditions, gas models, pressure limits, and venting</span>
+<span class="sd">            configuration.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Results</span>
+<span class="sd">            Time-dependent simulation results containing temperature,</span>
+<span class="sd">            reaction conversions, gas amounts, pressure, and vent state</span>
+<span class="sd">            when applicable.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the problem configuration is inconsistent.</span>
+<span class="sd">        RuntimeError</span>
+<span class="sd">            If numerical integration fails or a required model is missing.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The state vector is organized as</span>
+
+<span class="sd">        ``[T, alpha_0, ..., alpha_n, n_gas_0, ..., n_gas_m]``,</span>
+
+<span class="sd">        where ``T`` is the cell temperature in K, ``alpha`` values are</span>
+<span class="sd">        dimensionless reaction conversions, and gas amounts are in mol.</span>
+
+<span class="sd">        The default BDF integration method is suitable for the stiff</span>
+<span class="sd">        kinetics commonly encountered during thermal runaway.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">LumpedThermalModel</span><span class="p">(</span>
+            <span class="n">cell</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span>
+            <span class="n">convection_coefficient</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">convection_coefficient</span><span class="p">,</span>
+            <span class="n">ambient_temperature</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">ambient_temperature</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">backend</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">chemistry_backend</span>
+
+        <span class="n">n_reactions</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">backend</span><span class="p">,</span>
+            <span class="n">ReactionNetworkBackend</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="n">n_reactions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">reaction_network</span><span class="o">.</span><span class="n">reactions</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">problem</span><span class="o">.</span><span class="n">initial_conversions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">initial_conversions</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_reactions</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">initial_conversions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">initial_conversions</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">initial_conversions</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n_reactions</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Number of initial conversions must match number of reactions.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+                <span class="n">conversion</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">conversion</span> <span class="o">&gt;</span> <span class="mf">1.0</span>
+                <span class="k">for</span> <span class="n">conversion</span> <span class="ow">in</span> <span class="n">initial_conversions</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Initial conversions must be between 0 and 1.&quot;</span><span class="p">)</span>
+
+        <span class="n">gas_generation_model</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">gas_generation_model</span>
+
+        <span class="n">pressure_model</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">pressure_model</span>
+
+        <span class="n">maximum_pressure</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">maximum_pressure</span>
+
+        <span class="k">if</span> <span class="n">maximum_pressure</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">pressure_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Maximum pressure requires a pressure model.&quot;</span><span class="p">)</span>
+
+        <span class="n">initial_gas_inventory</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">initial_gas_inventory</span>
+
+        <span class="n">vent_model</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">vent_model</span>
+        <span class="n">vent_open_pressure</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">vent_open_pressure</span>
+
+        <span class="k">if</span> <span class="n">vent_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">vent_open_pressure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vent model requires a vent opening pressure.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">pressure_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vent model requires a pressure model.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">initial_gas_inventory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Vent model requires an explicit initial gas inventory.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">vent_open_pressure</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">vent_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vent opening pressure requires a vent model.&quot;</span><span class="p">)</span>
+
+        <span class="n">gas_species_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">initial_gas_inventory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">gas_species_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">species</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">species</span> <span class="ow">in</span> <span class="n">initial_gas_inventory</span><span class="o">.</span><span class="n">species</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">gas_generation_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">backend</span><span class="p">,</span>
+                <span class="n">ReactionNetworkBackend</span><span class="p">,</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Gas generation requires a ReactionNetworkBackend.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">gas_generation_model</span><span class="o">.</span><span class="n">reaction_network</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">backend</span><span class="o">.</span><span class="n">reaction_network</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Gas generation model must use &quot;</span>
+                    <span class="s2">&quot;the same reaction network as &quot;</span>
+                    <span class="s2">&quot;the chemistry backend.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">species_name</span> <span class="ow">in</span> <span class="n">gas_generation_model</span><span class="o">.</span><span class="n">species_names</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">species_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gas_species_names</span><span class="p">:</span>
+                    <span class="n">gas_species_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">species_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">vent_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">initial_gas_inventory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Initial gas inventory is missing.&quot;</span><span class="p">)</span>
+
+            <span class="n">defined_species</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">species</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">species</span> <span class="ow">in</span> <span class="n">initial_gas_inventory</span><span class="o">.</span><span class="n">species</span>
+            <span class="p">}</span>
+
+            <span class="n">missing_species</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">species_name</span>
+                <span class="k">for</span> <span class="n">species_name</span> <span class="ow">in</span> <span class="n">gas_species_names</span>
+                <span class="k">if</span> <span class="n">species_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">defined_species</span>
+            <span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">missing_species</span><span class="p">:</span>
+                <span class="n">names</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_species</span><span class="p">)</span>
+
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Vent model requires gas species definitions for: </span><span class="si">{</span><span class="n">names</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">initial_gas_inventory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">initial_gas_moles</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">gas_species_names</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">initial_gas_moles</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">initial_gas_inventory</span><span class="o">.</span><span class="n">moles_of</span><span class="p">(</span><span class="n">species_name</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">species_name</span> <span class="ow">in</span> <span class="n">gas_species_names</span>
+            <span class="p">]</span>
+
+        <span class="n">initial_state</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">problem</span><span class="o">.</span><span class="n">initial_temperature</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">initial_conversions</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">initial_gas_moles</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="n">reaction_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">initial_conversions</span><span class="p">)</span>
+
+        <span class="n">conversion_start</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">conversion_end</span> <span class="o">=</span> <span class="n">conversion_start</span> <span class="o">+</span> <span class="n">reaction_count</span>
+
+        <span class="n">gas_start</span> <span class="o">=</span> <span class="n">conversion_end</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">pressure_from_state</span><span class="p">(</span>
+            <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Return the internal gas pressure for an ODE state in Pa.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">pressure_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Pressure model is not configured.&quot;</span><span class="p">)</span>
+
+            <span class="n">temperature</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">gas_moles</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+                <span class="nb">max</span><span class="p">(</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+                    <span class="mf">0.0</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">state</span><span class="p">[</span><span class="n">gas_start</span><span class="p">:]</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">initial_gas_inventory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">pressure_model</span><span class="o">.</span><span class="n">pressure_from_total_moles</span><span class="p">(</span>
+                    <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+                    <span class="n">total_moles</span><span class="o">=</span><span class="n">gas_moles</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">pressure_model</span><span class="o">.</span><span class="n">pressure</span><span class="p">(</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+                <span class="n">generated_moles</span><span class="o">=</span><span class="n">gas_moles</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">base_rates</span><span class="p">(</span>
+            <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
+            <span class="nb">float</span><span class="p">,</span>
+            <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+            <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="p">]:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Return thermal, reaction-progress, and gas-generation rates.&quot;&quot;&quot;</span>
+            <span class="n">temperature</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">conversions</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">min</span><span class="p">(</span>
+                    <span class="nb">max</span><span class="p">(</span>
+                        <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+                        <span class="mf">0.0</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="mf">1.0</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">state</span><span class="p">[</span><span class="n">conversion_start</span><span class="p">:</span><span class="n">conversion_end</span><span class="p">]</span>
+            <span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">backend</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">heat_generation</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">progress_rates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">backend</span><span class="p">,</span>
+                <span class="n">ReactionNetworkBackend</span><span class="p">,</span>
+            <span class="p">):</span>
+                <span class="n">heat_generation</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">heat_generation</span><span class="p">(</span>
+                    <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+                    <span class="n">conversions</span><span class="o">=</span><span class="n">conversions</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">progress_rates</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">progress_rates</span><span class="p">(</span>
+                    <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+                    <span class="n">conversions</span><span class="o">=</span><span class="n">conversions</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">heat_generation</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">heat_generation</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
+
+                <span class="n">progress_rates</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">temperature_rate</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">temperature_derivative</span><span class="p">(</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+                <span class="n">heat_generation</span><span class="o">=</span><span class="p">(</span><span class="n">heat_generation</span><span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="n">gas_rates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">gas_species_names</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">gas_generation_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">generation_rates</span> <span class="o">=</span> <span class="n">gas_generation_model</span><span class="o">.</span><span class="n">generation_rates</span><span class="p">(</span>
+                    <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+                    <span class="n">conversions</span><span class="o">=</span><span class="n">conversions</span><span class="p">,</span>
+                    <span class="n">cell_mass</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">gas_rates</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">generation_rates</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="n">species_name</span><span class="p">,</span>
+                        <span class="mf">0.0</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">species_name</span> <span class="ow">in</span> <span class="n">gas_species_names</span>
+                <span class="p">]</span>
+
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">temperature_rate</span><span class="p">,</span>
+                <span class="n">progress_rates</span><span class="p">,</span>
+                <span class="n">gas_rates</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">closed_rhs</span><span class="p">(</span>
+            <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Return ODE rates while the cell vent remains closed.&quot;&quot;&quot;</span>
+            <span class="k">del</span> <span class="n">time</span>
+
+            <span class="p">(</span>
+                <span class="n">temperature_rate</span><span class="p">,</span>
+                <span class="n">progress_rates</span><span class="p">,</span>
+                <span class="n">gas_rates</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="n">base_rates</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="n">temperature_rate</span><span class="p">,</span>
+                <span class="o">*</span><span class="n">progress_rates</span><span class="p">,</span>
+                <span class="o">*</span><span class="n">gas_rates</span><span class="p">,</span>
+            <span class="p">]</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">open_rhs</span><span class="p">(</span>
+            <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Return ODE rates after irreversible vent opening.&quot;&quot;&quot;</span>
+            <span class="k">del</span> <span class="n">time</span>
+
+            <span class="k">if</span> <span class="n">vent_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Vent model is not configured.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">initial_gas_inventory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Initial gas inventory is missing.&quot;</span><span class="p">)</span>
+
+            <span class="p">(</span>
+                <span class="n">temperature_rate</span><span class="p">,</span>
+                <span class="n">progress_rates</span><span class="p">,</span>
+                <span class="n">generation_rates</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="n">base_rates</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+            <span class="n">temperature</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">current_moles</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">species_name</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">gas_start</span> <span class="o">+</span> <span class="n">index</span><span class="p">]),</span>
+                    <span class="mf">0.0</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">species_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">gas_species_names</span><span class="p">)</span>
+            <span class="p">}</span>
+
+            <span class="n">inventory</span> <span class="o">=</span> <span class="n">GasInventory</span><span class="p">(</span>
+                <span class="n">species</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">initial_gas_inventory</span><span class="o">.</span><span class="n">species</span><span class="p">),</span>
+                <span class="n">moles</span><span class="o">=</span><span class="n">current_moles</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">upstream_pressure</span> <span class="o">=</span> <span class="n">pressure_from_state</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+            <span class="n">vent_rates</span> <span class="o">=</span> <span class="n">vent_model</span><span class="o">.</span><span class="n">species_molar_flow_rates</span><span class="p">(</span>
+                <span class="n">inventory</span><span class="o">=</span><span class="n">inventory</span><span class="p">,</span>
+                <span class="n">upstream_pressure</span><span class="o">=</span><span class="p">(</span><span class="n">upstream_pressure</span><span class="p">),</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">net_gas_rates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">species_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">gas_species_names</span><span class="p">):</span>
+                <span class="n">net_rate</span> <span class="o">=</span> <span class="n">generation_rates</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">vent_rates</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">species_name</span><span class="p">,</span>
+                    <span class="mf">0.0</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">state_amount</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">gas_start</span> <span class="o">+</span> <span class="n">index</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="n">state_amount</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">net_rate</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">net_rate</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+                <span class="n">net_gas_rates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">net_rate</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="n">temperature_rate</span><span class="p">,</span>
+                <span class="o">*</span><span class="n">progress_rates</span><span class="p">,</span>
+                <span class="o">*</span><span class="n">net_gas_rates</span><span class="p">,</span>
+            <span class="p">]</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">add_temperature_event</span><span class="p">(</span>
+            <span class="n">events</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Add the configured maximum-temperature termination event.&quot;&quot;&quot;</span>
+            <span class="n">maximum_temperature</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">maximum_temperature</span>
+
+            <span class="k">if</span> <span class="n">maximum_temperature</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">temperature_event</span><span class="p">(</span>
+                <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Return the maximum-temperature event residual.&quot;&quot;&quot;</span>
+                <span class="k">del</span> <span class="n">time</span>
+
+                <span class="k">return</span> <span class="n">maximum_temperature</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">temperature_event</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># type: ignore[attr-defined]</span>
+            <span class="n">temperature_event</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>  <span class="c1"># type: ignore[attr-defined]</span>
+
+            <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temperature_event</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">add_maximum_pressure_event</span><span class="p">(</span>
+            <span class="n">events</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Add the configured maximum-pressure termination event.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">maximum_pressure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">maximum_pressure_event</span><span class="p">(</span>
+                <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Return the maximum-pressure event residual.&quot;&quot;&quot;</span>
+                <span class="k">del</span> <span class="n">time</span>
+
+                <span class="k">return</span> <span class="n">maximum_pressure</span> <span class="o">-</span> <span class="n">pressure_from_state</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+            <span class="n">maximum_pressure_event</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># type: ignore[attr-defined]</span>
+            <span class="n">maximum_pressure_event</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>  <span class="c1"># type: ignore[attr-defined]</span>
+
+            <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">maximum_pressure_event</span><span class="p">)</span>
+
+        <span class="n">phase_1_events</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">add_temperature_event</span><span class="p">(</span><span class="n">phase_1_events</span><span class="p">)</span>
+
+        <span class="n">add_maximum_pressure_event</span><span class="p">(</span><span class="n">phase_1_events</span><span class="p">)</span>
+
+        <span class="n">vent_event_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">vent_initially_open</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">initial_state_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">initial_state</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">vent_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">vent_open_pressure</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">initial_pressure</span> <span class="o">=</span> <span class="n">pressure_from_state</span><span class="p">(</span><span class="n">initial_state_array</span><span class="p">)</span>
+
+            <span class="n">vent_initially_open</span> <span class="o">=</span> <span class="n">initial_pressure</span> <span class="o">&gt;=</span> <span class="n">vent_open_pressure</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">vent_initially_open</span><span class="p">:</span>
+
+                <span class="k">def</span><span class="w"> </span><span class="nf">vent_open_event</span><span class="p">(</span>
+                    <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                    <span class="n">state</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;Return the vent-opening pressure event residual.&quot;&quot;&quot;</span>
+                    <span class="k">del</span> <span class="n">time</span>
+
+                    <span class="k">return</span> <span class="n">vent_open_pressure</span> <span class="o">-</span> <span class="n">pressure_from_state</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+                <span class="n">vent_open_event</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># type: ignore[attr-defined]</span>
+                <span class="n">vent_open_event</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>  <span class="c1"># type: ignore[attr-defined]</span>
+
+                <span class="n">vent_event_index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">phase_1_events</span><span class="p">)</span>
+
+                <span class="n">phase_1_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vent_open_event</span><span class="p">)</span>
+
+        <span class="n">phase_1_solution</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">vent_triggered</span> <span class="o">=</span> <span class="n">vent_initially_open</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">vent_initially_open</span><span class="p">:</span>
+            <span class="n">phase_1_solution</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
+                <span class="n">closed_rhs</span><span class="p">,</span>
+                <span class="p">(</span>
+                    <span class="mf">0.0</span><span class="p">,</span>
+                    <span class="n">problem</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">initial_state</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+                <span class="n">rtol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">relative_tolerance</span><span class="p">,</span>
+                <span class="n">atol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">absolute_tolerance</span><span class="p">,</span>
+                <span class="n">events</span><span class="o">=</span><span class="n">phase_1_events</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">phase_1_solution</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;ODE integration failed: </span><span class="si">{</span><span class="n">phase_1_solution</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">vent_event_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">vent_triggered</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">phase_1_solution</span><span class="o">.</span><span class="n">t_events</span><span class="p">[</span><span class="n">vent_event_index</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="n">phase_2_solution</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">vent_triggered</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">vent_initially_open</span><span class="p">:</span>
+                <span class="n">phase_2_start_time</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+                <span class="n">phase_2_initial_state</span> <span class="o">=</span> <span class="n">initial_state_array</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">phase_1_solution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Closed-phase solution is missing.&quot;</span><span class="p">)</span>
+
+                <span class="n">phase_2_start_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">phase_1_solution</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+                <span class="n">phase_2_initial_state</span> <span class="o">=</span> <span class="n">phase_1_solution</span><span class="o">.</span><span class="n">y</span><span class="p">[</span>
+                    <span class="p">:,</span>
+                    <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">phase_2_start_time</span> <span class="o">&lt;</span> <span class="n">problem</span><span class="o">.</span><span class="n">duration</span><span class="p">:</span>
+                <span class="n">phase_2_events</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="n">add_temperature_event</span><span class="p">(</span><span class="n">phase_2_events</span><span class="p">)</span>
+
+                <span class="n">add_maximum_pressure_event</span><span class="p">(</span><span class="n">phase_2_events</span><span class="p">)</span>
+
+                <span class="n">phase_2_solution</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
+                    <span class="n">open_rhs</span><span class="p">,</span>
+                    <span class="p">(</span>
+                        <span class="n">phase_2_start_time</span><span class="p">,</span>
+                        <span class="n">problem</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">phase_2_initial_state</span><span class="p">,</span>
+                    <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+                    <span class="n">rtol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">relative_tolerance</span><span class="p">,</span>
+                    <span class="n">atol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">absolute_tolerance</span><span class="p">,</span>
+                    <span class="n">events</span><span class="o">=</span><span class="p">(</span><span class="n">phase_2_events</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">phase_2_solution</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                        <span class="s2">&quot;ODE integration failed &quot;</span>
+                        <span class="s2">&quot;after vent opening: &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">phase_2_solution</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">vent_initially_open</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">phase_2_solution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">time_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+                    <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">state_values</span> <span class="o">=</span> <span class="n">initial_state_array</span><span class="p">[</span>
+                    <span class="p">:,</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span>
+                <span class="p">]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">time_values</span> <span class="o">=</span> <span class="n">phase_2_solution</span><span class="o">.</span><span class="n">t</span>
+
+                <span class="n">state_values</span> <span class="o">=</span> <span class="n">phase_2_solution</span><span class="o">.</span><span class="n">y</span>
+
+            <span class="n">vent_open_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">time_values</span><span class="p">),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">vent_triggered</span> <span class="ow">and</span> <span class="n">phase_1_solution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">phase_2_solution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">time_values</span> <span class="o">=</span> <span class="n">phase_1_solution</span><span class="o">.</span><span class="n">t</span>
+
+                <span class="n">state_values</span> <span class="o">=</span> <span class="n">phase_1_solution</span><span class="o">.</span><span class="n">y</span>
+
+                <span class="n">vent_open_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">time_values</span><span class="p">),</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">vent_open_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">time_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="n">phase_1_solution</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+                        <span class="n">phase_2_solution</span><span class="o">.</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+                <span class="n">state_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="n">phase_1_solution</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                        <span class="n">phase_2_solution</span><span class="o">.</span><span class="n">y</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span>
+                    <span class="p">),</span>
+                    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">closed_flags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">phase_1_solution</span><span class="o">.</span><span class="n">t</span><span class="p">),</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">closed_flags</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+                <span class="n">open_flags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span>
+                    <span class="nb">max</span><span class="p">(</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="n">phase_2_solution</span><span class="o">.</span><span class="n">t</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">vent_open_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="n">closed_flags</span><span class="p">,</span>
+                        <span class="n">open_flags</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">phase_1_solution</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ODE solution is missing.&quot;</span><span class="p">)</span>
+
+            <span class="n">time_values</span> <span class="o">=</span> <span class="n">phase_1_solution</span><span class="o">.</span><span class="n">t</span>
+
+            <span class="n">state_values</span> <span class="o">=</span> <span class="n">phase_1_solution</span><span class="o">.</span><span class="n">y</span>
+
+            <span class="n">vent_open_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">time_values</span><span class="p">),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">Results</span><span class="p">(</span>
+            <span class="n">time</span><span class="o">=</span><span class="n">time_values</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">results</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span>
+            <span class="s2">&quot;temperature&quot;</span><span class="p">,</span>
+            <span class="n">state_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reactions</span><span class="p">):</span>
+            <span class="n">conversion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+                <span class="n">state_values</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
+                <span class="mf">0.0</span><span class="p">,</span>
+                <span class="mf">1.0</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">results</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;conversion_</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">conversion</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">gas_arrays</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">species_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">gas_species_names</span><span class="p">):</span>
+            <span class="n">gas_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+                <span class="n">state_values</span><span class="p">[</span><span class="n">gas_start</span> <span class="o">+</span> <span class="n">index</span><span class="p">],</span>
+                <span class="mf">0.0</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">gas_arrays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gas_values</span><span class="p">)</span>
+
+            <span class="n">results</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;gas_</span><span class="si">{</span><span class="n">species_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">gas_values</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pressure_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pressure_values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">time_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_values</span><span class="p">)):</span>
+                <span class="n">pressure_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pressure_from_state</span><span class="p">(</span><span class="n">state_values</span><span class="p">[:,</span> <span class="n">time_index</span><span class="p">]))</span>
+
+            <span class="n">results</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span>
+                <span class="s2">&quot;pressure&quot;</span><span class="p">,</span>
+                <span class="n">pressure_values</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">vent_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span>
+                <span class="s2">&quot;vent_open&quot;</span><span class="p">,</span>
+                <span class="n">vent_open_values</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

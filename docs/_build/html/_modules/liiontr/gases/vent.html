@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>liiontr.gases.vent &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../theory/index.html">Physical and Mathematical Theory</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">liiontr.gases.vent</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for liiontr.gases.vent</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Compressible gas venting models for battery thermal runaway.</span>
+
+<span class="sd">This module provides models for gas discharge through a battery</span>
+<span class="sd">safety vent. Both choked and subsonic compressible flow regimes are</span>
+<span class="sd">supported for ideal-gas mixtures.</span>
+
+<span class="sd">Code written by François Dion (francois.dion@numericatech.ca, Numerica Techologies by LDV)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ideal</span><span class="w"> </span><span class="kn">import</span> <span class="n">GAS_CONSTANT</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.inventory</span><span class="w"> </span><span class="kn">import</span> <span class="n">GasInventory</span>
+
+
+<div class="viewcode-block" id="CompressibleVentFlowModel">
+<a class="viewcode-back" href="../../../api/gases.html#liiontr.gases.vent.CompressibleVentFlowModel">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CompressibleVentFlowModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compressible ideal-gas flow through a vent or orifice.</span>
+
+<span class="sd">    The model automatically distinguishes between choked and</span>
+<span class="sd">    unchoked flow according to the downstream-to-upstream</span>
+<span class="sd">    pressure ratio.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vent_area:</span>
+<span class="sd">        Effective geometric vent area in m2.</span>
+
+<span class="sd">    discharge_coefficient:</span>
+<span class="sd">        Dimensionless discharge coefficient.</span>
+
+<span class="sd">    heat_capacity_ratio:</span>
+<span class="sd">        Gas heat capacity ratio gamma = Cp / Cv.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">vent_area</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">discharge_coefficient</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="n">heat_capacity_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.40</span>
+
+<div class="viewcode-block" id="CompressibleVentFlowModel.__post_init__">
+<a class="viewcode-back" href="../../../api/gases.html#liiontr.gases.vent.CompressibleVentFlowModel.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the compressible vent-flow parameters.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vent_area</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vent area must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">discharge_coefficient</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Discharge coefficient must be between 0 and 1.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_capacity_ratio</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Heat capacity ratio must be greater than one.&quot;</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">critical_pressure_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the critical downstream-to-upstream pressure ratio.</span>
+
+<span class="sd">        Flow becomes choked when:</span>
+
+<span class="sd">            P_downstream / P_upstream &lt;= critical_pressure_ratio</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_capacity_ratio</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">/</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">))</span>
+
+<div class="viewcode-block" id="CompressibleVentFlowModel.mass_flow_rate">
+<a class="viewcode-back" href="../../../api/gases.html#liiontr.gases.vent.CompressibleVentFlowModel.mass_flow_rate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mass_flow_rate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">upstream_pressure</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">downstream_pressure</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">molar_mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return gas mass flow rate through the vent in kg/s.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            upstream_pressure : float</span>
+<span class="sd">                Absolute cell internal pressure in Pa.</span>
+<span class="sd">            downstream_pressure : float</span>
+<span class="sd">                Absolute ambient pressure in Pa.</span>
+<span class="sd">            temperature : float</span>
+<span class="sd">                Upstream gas temperature in K.</span>
+<span class="sd">            molar_mass : float</span>
+<span class="sd">                Mean gas molar mass in kg/mol.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            float</span>
+<span class="sd">                Vent mass flow rate in kg/s.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">            The flow is treated as choked when the downstream-to-upstream</span>
+<span class="sd">            pressure ratio is below the critical pressure ratio.</span>
+
+<span class="sd">            Reverse flow into the cell is not modeled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">upstream_pressure</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Upstream pressure must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">downstream_pressure</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Downstream pressure must not be negative.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">temperature</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Temperature must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">molar_mass</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Molar mass must be greater than zero.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">downstream_pressure</span> <span class="o">&gt;=</span> <span class="n">upstream_pressure</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="c1"># gamma = self.heat_capacity_ratio</span>
+
+        <span class="n">specific_gas_constant</span> <span class="o">=</span> <span class="n">GAS_CONSTANT</span> <span class="o">/</span> <span class="n">molar_mass</span>
+
+        <span class="n">pressure_ratio</span> <span class="o">=</span> <span class="n">downstream_pressure</span> <span class="o">/</span> <span class="n">upstream_pressure</span>
+
+        <span class="k">if</span> <span class="n">pressure_ratio</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">critical_pressure_ratio</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_choked_mass_flow_rate</span><span class="p">(</span>
+                <span class="n">upstream_pressure</span><span class="o">=</span><span class="n">upstream_pressure</span><span class="p">,</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+                <span class="n">specific_gas_constant</span><span class="o">=</span><span class="p">(</span><span class="n">specific_gas_constant</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unchoked_mass_flow_rate</span><span class="p">(</span>
+            <span class="n">upstream_pressure</span><span class="o">=</span><span class="n">upstream_pressure</span><span class="p">,</span>
+            <span class="n">pressure_ratio</span><span class="o">=</span><span class="n">pressure_ratio</span><span class="p">,</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+            <span class="n">specific_gas_constant</span><span class="o">=</span><span class="p">(</span><span class="n">specific_gas_constant</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_choked_mass_flow_rate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">upstream_pressure</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">specific_gas_constant</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the choked-flow mass discharge rate.&quot;&quot;&quot;</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_capacity_ratio</span>
+
+        <span class="n">sonic_factor</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">))</span> <span class="o">**</span> <span class="p">((</span><span class="n">gamma</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">discharge_coefficient</span>
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">vent_area</span>
+            <span class="o">*</span> <span class="n">upstream_pressure</span>
+            <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">gamma</span> <span class="o">/</span> <span class="p">(</span><span class="n">specific_gas_constant</span> <span class="o">*</span> <span class="n">temperature</span><span class="p">))</span>
+            <span class="o">*</span> <span class="n">sonic_factor</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_unchoked_mass_flow_rate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">upstream_pressure</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">pressure_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">specific_gas_constant</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the unchoked mass discharge rate.&quot;&quot;&quot;</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_capacity_ratio</span>
+
+        <span class="n">pressure_term</span> <span class="o">=</span> <span class="n">pressure_ratio</span> <span class="o">**</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="n">gamma</span><span class="p">)</span> <span class="o">-</span> <span class="n">pressure_ratio</span> <span class="o">**</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">gamma</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">gamma</span>
+        <span class="p">)</span>
+
+        <span class="n">coefficient</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">2.0</span> <span class="o">*</span> <span class="n">gamma</span> <span class="o">/</span> <span class="p">(</span><span class="n">specific_gas_constant</span> <span class="o">*</span> <span class="n">temperature</span> <span class="o">*</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">discharge_coefficient</span>
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">vent_area</span>
+            <span class="o">*</span> <span class="n">upstream_pressure</span>
+            <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">coefficient</span> <span class="o">*</span> <span class="n">pressure_term</span><span class="p">)</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="CompressibleVentFlowModel.molar_flow_rate">
+<a class="viewcode-back" href="../../../api/gases.html#liiontr.gases.vent.CompressibleVentFlowModel.molar_flow_rate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">molar_flow_rate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">upstream_pressure</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">downstream_pressure</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">molar_mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return gas molar flow rate through the vent in mol/s.&quot;&quot;&quot;</span>
+        <span class="n">mass_flow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mass_flow_rate</span><span class="p">(</span>
+            <span class="n">upstream_pressure</span><span class="o">=</span><span class="n">upstream_pressure</span><span class="p">,</span>
+            <span class="n">downstream_pressure</span><span class="o">=</span><span class="n">downstream_pressure</span><span class="p">,</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+            <span class="n">molar_mass</span><span class="o">=</span><span class="n">molar_mass</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mass_flow</span> <span class="o">/</span> <span class="n">molar_mass</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MixtureVentFlowModel">
+<a class="viewcode-back" href="../../../api/gases.html#liiontr.gases.vent.MixtureVentFlowModel">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MixtureVentFlowModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vent flow model for a gas mixture.</span>
+
+<span class="sd">    Total compressible flow is calculated using the</span>
+<span class="sd">    mole-weighted mean molar mass of the mixture.</span>
+
+<span class="sd">    The total molar flow is then distributed among</span>
+<span class="sd">    species according to their mole fractions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">flow_model</span><span class="p">:</span> <span class="n">CompressibleVentFlowModel</span>
+
+    <span class="n">downstream_pressure</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">101325.0</span>
+
+<div class="viewcode-block" id="MixtureVentFlowModel.__post_init__">
+<a class="viewcode-back" href="../../../api/gases.html#liiontr.gases.vent.MixtureVentFlowModel.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the gas-mixture vent model.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">downstream_pressure</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Downstream pressure must not be negative.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MixtureVentFlowModel.total_molar_flow_rate">
+<a class="viewcode-back" href="../../../api/gases.html#liiontr.gases.vent.MixtureVentFlowModel.total_molar_flow_rate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">total_molar_flow_rate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inventory</span><span class="p">:</span> <span class="n">GasInventory</span><span class="p">,</span>
+        <span class="n">upstream_pressure</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return total vent molar flow rate in mol/s.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">inventory</span><span class="o">.</span><span class="n">total_moles</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">flow_model</span><span class="o">.</span><span class="n">molar_flow_rate</span><span class="p">(</span>
+            <span class="n">upstream_pressure</span><span class="o">=</span><span class="n">upstream_pressure</span><span class="p">,</span>
+            <span class="n">downstream_pressure</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">downstream_pressure</span><span class="p">,</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+            <span class="n">molar_mass</span><span class="o">=</span><span class="n">inventory</span><span class="o">.</span><span class="n">mean_molar_mass</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MixtureVentFlowModel.species_molar_flow_rates">
+<a class="viewcode-back" href="../../../api/gases.html#liiontr.gases.vent.MixtureVentFlowModel.species_molar_flow_rates">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">species_molar_flow_rates</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inventory</span><span class="p">:</span> <span class="n">GasInventory</span><span class="p">,</span>
+        <span class="n">upstream_pressure</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return vent molar flow rate for each gas species.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">inventory</span><span class="o">.</span><span class="n">total_moles</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">species</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">species</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">species</span><span class="p">}</span>
+
+        <span class="n">total_flow_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_molar_flow_rate</span><span class="p">(</span>
+            <span class="n">inventory</span><span class="o">=</span><span class="n">inventory</span><span class="p">,</span>
+            <span class="n">upstream_pressure</span><span class="o">=</span><span class="n">upstream_pressure</span><span class="p">,</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">species</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="p">(</span><span class="n">inventory</span><span class="o">.</span><span class="n">mole_fraction</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">*</span> <span class="n">total_flow_rate</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">species</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">species</span>
+        <span class="p">}</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

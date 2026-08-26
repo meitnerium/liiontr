@@ -1,0 +1,650 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vent Flow Model &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hu et al. (2020) Thermal Runaway Model" href="hu2020.html" />
+    <link rel="prev" title="Gas Pressure Model" href="pressure.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Physical and Mathematical Theory</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html">Reaction Kinetics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#progress-models">Progress Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html">Reaction Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html">Gas Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html">Gas Pressure Model</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Vent Flow Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pressure-definitions">Pressure Definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pressure-ratio">Pressure Ratio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#specific-gas-constant">Specific Gas Constant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#heat-capacity-ratio">Heat-Capacity Ratio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#critical-pressure-ratio">Critical Pressure Ratio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#choked-flow">Choked Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#physical-meaning-of-choking">Physical Meaning of Choking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unchoked-flow">Unchoked Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#no-reverse-flow">No Reverse Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mass-to-molar-flow-conversion">Mass-to-Molar Flow Conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mixture-vent-flow">Mixture Vent Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#species-vent-rates">Species Vent Rates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#species-balance-during-venting">Species Balance During Venting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vent-opening">Vent Opening</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreversible-vent-state">Irreversible Vent State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coupling-to-the-numerical-solver">Coupling to the Numerical Solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coupling-to-gas-generation">Coupling to Gas Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coupling-to-temperature">Coupling to Temperature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#units">Units</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#current-assumptions">Current Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limitations">Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#future-extensions">Future Extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html">Hu et al. (2020) Thermal Runaway Model</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Physical and Mathematical Theory</a></li>
+      <li class="breadcrumb-item active">Vent Flow Model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/venting.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="vent-flow-model">
+<h1>Vent Flow Model<a class="headerlink" href="#vent-flow-model" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>LiionTR models gas discharge from a battery cell using a compressible
+ideal-gas vent-flow model.</p>
+<p>The flow rate depends on the upstream cell pressure, downstream ambient
+pressure, gas temperature, vent area, gas molar mass, discharge
+coefficient, and heat-capacity ratio.</p>
+<p>Two flow regimes are represented:</p>
+<ul class="simple">
+<li><p>choked flow;</p></li>
+<li><p>unchoked compressible flow.</p></li>
+</ul>
+<p>The model does not permit reverse flow into the cell.</p>
+</section>
+<section id="pressure-definitions">
+<h2>Pressure Definitions<a class="headerlink" href="#pressure-definitions" title="Link to this heading"></a></h2>
+<p>The vent model distinguishes between the upstream pressure</p>
+<div class="math notranslate nohighlight">
+\[P_u\]</div>
+<p>and downstream pressure</p>
+<div class="math notranslate nohighlight">
+\[P_d.\]</div>
+<p>In the current battery application,</p>
+<div class="math notranslate nohighlight">
+\[P_u
+=
+P_{\mathrm{cell}}\]</div>
+<p>and the downstream pressure typically represents atmospheric pressure,</p>
+<div class="math notranslate nohighlight">
+\[P_d
+=
+P_{\mathrm{ambient}}.\]</div>
+<p>Both pressures are absolute pressures expressed in Pa.</p>
+</section>
+<section id="pressure-ratio">
+<h2>Pressure Ratio<a class="headerlink" href="#pressure-ratio" title="Link to this heading"></a></h2>
+<p>The downstream-to-upstream pressure ratio is</p>
+<div class="math notranslate nohighlight">
+\[r_p
+=
+\frac{P_d}{P_u}.\]</div>
+<p>This ratio determines whether the flow is choked or unchoked.</p>
+</section>
+<section id="specific-gas-constant">
+<h2>Specific Gas Constant<a class="headerlink" href="#specific-gas-constant" title="Link to this heading"></a></h2>
+<p>The vent-flow equations require the specific gas constant of the gas
+mixture,</p>
+<div class="math notranslate nohighlight">
+\[R_s
+=
+\frac{R}{M},\]</div>
+<p>where</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23.5%" />
+<col style="width: 52.9%" />
+<col style="width: 23.5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>SI unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(R_s\)</span></p></td>
+<td><p>Specific gas constant</p></td>
+<td><p>J kg<sup>-1</sup> K<sup>-1</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(R\)</span></p></td>
+<td><p>Universal gas constant</p></td>
+<td><p>J mol<sup>-1</sup> K<sup>-1</sup></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(M\)</span></p></td>
+<td><p>Gas molar mass</p></td>
+<td><p>kg mol<sup>-1</sup></p></td>
+</tr>
+</tbody>
+</table>
+<p>For a gas mixture, LiionTR currently uses the mole-weighted mean molar
+mass of the gas inventory.</p>
+</section>
+<section id="heat-capacity-ratio">
+<h2>Heat-Capacity Ratio<a class="headerlink" href="#heat-capacity-ratio" title="Link to this heading"></a></h2>
+<p>The compressible-flow model uses the heat-capacity ratio</p>
+<div class="math notranslate nohighlight">
+\[\gamma
+=
+\frac{c_p}{c_v}.\]</div>
+<p>The current model treats <span class="math notranslate nohighlight">\(\gamma\)</span> as a prescribed constant.</p>
+<p>Its value affects both the critical pressure ratio and the predicted
+mass flow rate.</p>
+</section>
+<section id="critical-pressure-ratio">
+<h2>Critical Pressure Ratio<a class="headerlink" href="#critical-pressure-ratio" title="Link to this heading"></a></h2>
+<p>For ideal-gas isentropic flow, the critical downstream-to-upstream
+pressure ratio is</p>
+<div class="math notranslate nohighlight">
+\[r_{\mathrm{crit}}
+=
+\left(
+    \frac{2}{\gamma + 1}
+\right)^{
+    \frac{\gamma}{\gamma - 1}
+}.\]</div>
+<p>The flow is treated as choked when</p>
+<div class="math notranslate nohighlight">
+\[\frac{P_d}{P_u}
+\leq
+r_{\mathrm{crit}}.\]</div>
+<p>When this condition is satisfied, the gas velocity reaches the local
+speed of sound at the restrictive section of the vent.</p>
+</section>
+<section id="choked-flow">
+<h2>Choked Flow<a class="headerlink" href="#choked-flow" title="Link to this heading"></a></h2>
+<p>For choked flow, the mass discharge rate is calculated as</p>
+<div class="math notranslate nohighlight">
+\[\dot{m}
+=
+C_d A_v P_u
+\sqrt{
+    \frac{\gamma}
+         {R_s T}
+}
+\left(
+    \frac{2}
+         {\gamma + 1}
+\right)^{
+    \frac{\gamma + 1}
+         {2(\gamma - 1)}
+},\]</div>
+<p>where</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23.5%" />
+<col style="width: 52.9%" />
+<col style="width: 23.5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>SI unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\dot{m}\)</span></p></td>
+<td><p>Gas mass flow rate</p></td>
+<td><p>kg/s</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(C_d\)</span></p></td>
+<td><p>Discharge coefficient</p></td>
+<td><p>dimensionless</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(A_v\)</span></p></td>
+<td><p>Effective vent area</p></td>
+<td><p>m<sup>2</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(P_u\)</span></p></td>
+<td><p>Upstream absolute pressure</p></td>
+<td><p>Pa</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(T\)</span></p></td>
+<td><p>Upstream gas temperature</p></td>
+<td><p>K</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(R_s\)</span></p></td>
+<td><p>Specific gas constant</p></td>
+<td><p>J kg<sup>-1</sup> K<sup>-1</sup></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\gamma\)</span></p></td>
+<td><p>Heat-capacity ratio</p></td>
+<td><p>dimensionless</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="physical-meaning-of-choking">
+<h2>Physical Meaning of Choking<a class="headerlink" href="#physical-meaning-of-choking" title="Link to this heading"></a></h2>
+<p>Once the flow becomes choked, decreasing the downstream pressure
+further does not increase the mass flow rate predicted by the
+isentropic nozzle relation.</p>
+<p>The discharge rate is then controlled primarily by the upstream
+thermodynamic state and the effective vent geometry.</p>
+<p>This behavior is particularly relevant during rapid battery venting
+when the cell pressure is substantially greater than ambient pressure.</p>
+</section>
+<section id="unchoked-flow">
+<h2>Unchoked Flow<a class="headerlink" href="#unchoked-flow" title="Link to this heading"></a></h2>
+<p>When</p>
+<div class="math notranslate nohighlight">
+\[\frac{P_d}{P_u}
+&gt;
+r_{\mathrm{crit}},\]</div>
+<p>the flow is treated as unchoked.</p>
+<p>The mass flow rate is calculated using</p>
+<div class="math notranslate nohighlight">
+\[\dot{m}
+=
+C_d A_v P_u
+\sqrt{
+    \frac{
+        2\gamma
+    }{
+        R_s T
+        (\gamma - 1)
+    }
+    \left[
+        \left(
+            \frac{P_d}{P_u}
+        \right)^{
+            \frac{2}{\gamma}
+        }
+        -
+        \left(
+            \frac{P_d}{P_u}
+        \right)^{
+            \frac{\gamma+1}{\gamma}
+        }
+    \right]
+}.\]</div>
+<p>As the upstream and downstream pressures approach one another, the
+predicted mass flow rate approaches zero.</p>
+</section>
+<section id="no-reverse-flow">
+<h2>No Reverse Flow<a class="headerlink" href="#no-reverse-flow" title="Link to this heading"></a></h2>
+<p>The current model does not simulate gas entering the battery through
+the vent.</p>
+<p>Therefore, when</p>
+<div class="math notranslate nohighlight">
+\[P_u
+\leq
+P_d,\]</div>
+<p>the discharge rate is taken to be zero,</p>
+<div class="math notranslate nohighlight">
+\[\dot{m}
+=
+0.\]</div>
+<p>This assumption is appropriate for the current thermal-runaway venting
+model, which focuses on outward discharge following internal
+pressurization.</p>
+</section>
+<section id="mass-to-molar-flow-conversion">
+<h2>Mass-to-Molar Flow Conversion<a class="headerlink" href="#mass-to-molar-flow-conversion" title="Link to this heading"></a></h2>
+<p>The compressible-flow equations produce a mass flow rate.</p>
+<p>LiionTR converts this value to total molar flow using</p>
+<div class="math notranslate nohighlight">
+\[\dot{n}_{\mathrm{vent}}
+=
+\frac{\dot{m}}
+     {M},\]</div>
+<p>where <span class="math notranslate nohighlight">\(M\)</span> is the gas or mixture molar mass.</p>
+<p>The resulting molar flow rate has units of mol/s.</p>
+</section>
+<section id="mixture-vent-flow">
+<h2>Mixture Vent Flow<a class="headerlink" href="#mixture-vent-flow" title="Link to this heading"></a></h2>
+<p>The current mixture model assumes that the gas inside the cell free
+volume is perfectly mixed.</p>
+<p>The total vent molar flow rate is calculated using the mean molar mass</p>
+<div class="math notranslate nohighlight">
+\[\overline{M}
+=
+\sum_s x_s M_s.\]</div>
+<p>Thus,</p>
+<div class="math notranslate nohighlight">
+\[\dot{n}_{\mathrm{vent}}
+=
+\frac{
+    \dot{m}_{\mathrm{vent}}
+}{
+    \overline{M}
+}.\]</div>
+</section>
+<section id="species-vent-rates">
+<h2>Species Vent Rates<a class="headerlink" href="#species-vent-rates" title="Link to this heading"></a></h2>
+<p>The total molar flow is distributed among gas species according to the
+current mole fractions.</p>
+<p>For species <span class="math notranslate nohighlight">\(s\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\dot{n}_{s,\mathrm{vent}}
+=
+x_s
+\dot{n}_{\mathrm{vent}}.\]</div>
+<p>Consequently,</p>
+<div class="math notranslate nohighlight">
+\[\sum_s
+\dot{n}_{s,\mathrm{vent}}
+=
+\dot{n}_{\mathrm{vent}}.\]</div>
+<p>This treatment assumes that no species is preferentially retained or
+discharged through the vent.</p>
+</section>
+<section id="species-balance-during-venting">
+<h2>Species Balance During Venting<a class="headerlink" href="#species-balance-during-venting" title="Link to this heading"></a></h2>
+<p>After vent opening, each species follows</p>
+<div class="math notranslate nohighlight">
+\[\frac{dn_s}{dt}
+=
+\dot{n}_{s,\mathrm{gen}}
+-
+\dot{n}_{s,\mathrm{vent}}.\]</div>
+<p>The pressure is recalculated from the remaining gas inventory after the
+generation and discharge terms are applied.</p>
+</section>
+<section id="vent-opening">
+<h2>Vent Opening<a class="headerlink" href="#vent-opening" title="Link to this heading"></a></h2>
+<p>The vent remains closed until the internal pressure reaches the
+configured vent-opening pressure,</p>
+<div class="math notranslate nohighlight">
+\[P_{\mathrm{cell}}
+=
+P_{\mathrm{vent}}.\]</div>
+<p>The numerical solver treats this condition as an event.</p>
+<p>Before this event,</p>
+<div class="math notranslate nohighlight">
+\[\dot{n}_{s,\mathrm{vent}}
+=
+0.\]</div>
+<p>After the event, the venting terms are enabled.</p>
+</section>
+<section id="irreversible-vent-state">
+<h2>Irreversible Vent State<a class="headerlink" href="#irreversible-vent-state" title="Link to this heading"></a></h2>
+<p>LiionTR currently treats vent opening as irreversible.</p>
+<p>The simulation therefore consists conceptually of two phases.</p>
+<p>Closed phase:</p>
+<div class="math notranslate nohighlight">
+\[\frac{dn_s}{dt}
+=
+\dot{n}_{s,\mathrm{gen}}.\]</div>
+<p>Open phase:</p>
+<div class="math notranslate nohighlight">
+\[\frac{dn_s}{dt}
+=
+\dot{n}_{s,\mathrm{gen}}
+-
+\dot{n}_{s,\mathrm{vent}}.\]</div>
+<p>Even if the cell pressure subsequently decreases below the original
+vent-opening pressure, the vent remains open.</p>
+</section>
+<section id="coupling-to-the-numerical-solver">
+<h2>Coupling to the Numerical Solver<a class="headerlink" href="#coupling-to-the-numerical-solver" title="Link to this heading"></a></h2>
+<p>The SciPy solver integrates the closed system until the vent-opening
+event is detected.</p>
+<p>A second integration phase is then started using the open-vent
+governing equations.</p>
+<p>Conceptually,</p>
+<div class="math notranslate nohighlight">
+\[\text{closed RHS}
+\rightarrow
+P = P_{\mathrm{vent}}
+\rightarrow
+\text{open RHS}.\]</div>
+<p>The two integration segments are combined into a single simulation
+result.</p>
+</section>
+<section id="coupling-to-gas-generation">
+<h2>Coupling to Gas Generation<a class="headerlink" href="#coupling-to-gas-generation" title="Link to this heading"></a></h2>
+<p>Gas generation and vent discharge occur simultaneously after vent
+opening.</p>
+<p>A thermal runaway reaction can therefore continue increasing the gas
+inventory even while material is being discharged.</p>
+<p>Whether the pressure rises or falls depends on the competition between</p>
+<div class="math notranslate nohighlight">
+\[\dot{n}_{\mathrm{generation}}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\dot{n}_{\mathrm{vent}},\]</div>
+<p>as well as on the simultaneous evolution of temperature.</p>
+</section>
+<section id="coupling-to-temperature">
+<h2>Coupling to Temperature<a class="headerlink" href="#coupling-to-temperature" title="Link to this heading"></a></h2>
+<p>Temperature affects vent flow through the compressible-flow equations.</p>
+<p>For a fixed pressure state, the mass-flow expressions contain a factor
+proportional to</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{\sqrt{T}}.\]</div>
+<p>However, temperature also affects internal pressure and reaction-driven
+gas generation.</p>
+<p>The complete coupled response therefore cannot generally be inferred
+from this direct temperature dependence alone.</p>
+</section>
+<section id="units">
+<h2>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h2>
+<p>LiionTR uses SI units internally.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 60.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantity</p></th>
+<th class="head"><p>Unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Absolute pressure</p></td>
+<td><p>Pa</p></td>
+</tr>
+<tr class="row-odd"><td><p>Temperature</p></td>
+<td><p>K</p></td>
+</tr>
+<tr class="row-even"><td><p>Vent area</p></td>
+<td><p>m<sup>2</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p>Mass flow rate</p></td>
+<td><p>kg/s</p></td>
+</tr>
+<tr class="row-even"><td><p>Molar flow rate</p></td>
+<td><p>mol/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>Molar mass</p></td>
+<td><p>kg/mol</p></td>
+</tr>
+<tr class="row-even"><td><p>Specific gas constant</p></td>
+<td><p>J kg<sup>-1</sup> K<sup>-1</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p>Heat-capacity ratio</p></td>
+<td><p>dimensionless</p></td>
+</tr>
+<tr class="row-even"><td><p>Discharge coefficient</p></td>
+<td><p>dimensionless</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="current-assumptions">
+<h2>Current Assumptions<a class="headerlink" href="#current-assumptions" title="Link to this heading"></a></h2>
+<p>The present vent model assumes that:</p>
+<ul class="simple">
+<li><p>the gas behaves ideally;</p></li>
+<li><p>the gas mixture is spatially uniform;</p></li>
+<li><p>the upstream gas has a single temperature;</p></li>
+<li><p>flow through the vent is quasi-steady;</p></li>
+<li><p>the vent is represented by a fixed effective area;</p></li>
+<li><p>the discharge coefficient is constant;</p></li>
+<li><p>the heat-capacity ratio is constant;</p></li>
+<li><p>the mean gas molar mass adequately represents mixture flow;</p></li>
+<li><p>the gas composition discharged through the vent equals the internal
+gas composition;</p></li>
+<li><p>reverse flow is neglected;</p></li>
+<li><p>vent opening is irreversible;</p></li>
+<li><p>vent geometry does not evolve after opening;</p></li>
+<li><p>multiphase discharge is neglected.</p></li>
+</ul>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h2>
+<p>Real lithium-ion battery venting can be substantially more complex than
+single-phase ideal-gas nozzle flow.</p>
+<p>Battery vent streams may contain:</p>
+<ul class="simple">
+<li><p>permanent gases;</p></li>
+<li><p>electrolyte vapor;</p></li>
+<li><p>liquid droplets;</p></li>
+<li><p>aerosols;</p></li>
+<li><p>condensed particles;</p></li>
+<li><p>electrode or separator decomposition products.</p></li>
+</ul>
+<p>The vent itself may also open progressively, deform, rupture, or change
+effective area during the event.</p>
+<p>These effects are not represented by the current reduced-order model.</p>
+</section>
+<section id="future-extensions">
+<h2>Future Extensions<a class="headerlink" href="#future-extensions" title="Link to this heading"></a></h2>
+<p>Potential improvements include:</p>
+<ul class="simple">
+<li><p>temperature-dependent mixture heat capacities;</p></li>
+<li><p>dynamically calculated <span class="math notranslate nohighlight">\(\gamma\)</span>;</p></li>
+<li><p>gas properties supplied by Cantera;</p></li>
+<li><p>variable vent area;</p></li>
+<li><p>explicit vent-opening dynamics;</p></li>
+<li><p>two-phase or multiphase discharge;</p></li>
+<li><p>flashing of liquid electrolyte;</p></li>
+<li><p>non-equilibrium gas composition;</p></li>
+<li><p>momentum and jet models outside the cell;</p></li>
+<li><p>coupling to fire and combustion models.</p></li>
+</ul>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>Compressible gas discharge is implemented by</p>
+<p><a class="reference internal" href="../api/gases.html#liiontr.gases.vent.CompressibleVentFlowModel" title="liiontr.gases.vent.CompressibleVentFlowModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.gases.vent.CompressibleVentFlowModel</span></code></a>.</p>
+<p>Gas-mixture discharge is implemented by</p>
+<p><a class="reference internal" href="../api/gases.html#liiontr.gases.vent.MixtureVentFlowModel" title="liiontr.gases.vent.MixtureVentFlowModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.gases.vent.MixtureVentFlowModel</span></code></a>.</p>
+<p>The gas composition is supplied by</p>
+<p><a class="reference internal" href="../api/gases.html#liiontr.gases.inventory.GasInventory" title="liiontr.gases.inventory.GasInventory"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.gases.inventory.GasInventory</span></code></a>.</p>
+<p>Pressure is evaluated by</p>
+<p><a class="reference internal" href="../api/gases.html#liiontr.gases.ideal.IdealGasPressureModel" title="liiontr.gases.ideal.IdealGasPressureModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.gases.ideal.IdealGasPressureModel</span></code></a>.</p>
+<p>Vent opening and the transition between closed and open integration
+phases are handled by</p>
+<p><a class="reference internal" href="../api/solver.html#liiontr.solver.scipy_solver.ScipySolver" title="liiontr.solver.scipy_solver.ScipySolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.solver.scipy_solver.ScipySolver</span></code></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pressure.html" class="btn btn-neutral float-left" title="Gas Pressure Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hu2020.html" class="btn btn-neutral float-right" title="Hu et al. (2020) Thermal Runaway Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

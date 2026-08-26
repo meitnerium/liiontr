@@ -1,0 +1,796 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hu et al. (2020) Thermal Runaway Model &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Software Architecture" href="../architecture/index.html" />
+    <link rel="prev" title="Vent Flow Model" href="venting.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Physical and Mathematical Theory</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html">Reaction Kinetics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#progress-models">Progress Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html">Reaction Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html">Gas Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html">Gas Pressure Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html">Vent Flow Model</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Hu et al. (2020) Thermal Runaway Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference">Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-network">Reaction Network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-reaction-state">Initial Reaction State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sei-decomposition">SEI Decomposition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sei-unit-conversion">SEI Unit Conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#anode-electrolyte-reaction">Anode-Electrolyte Reaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#anode-unit-conversion">Anode Unit Conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sei-dependent-anode-activation">SEI-Dependent Anode Activation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exponential-inhibition">Exponential Inhibition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cathode-decomposition">Cathode Decomposition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cathode-reactant-content">Cathode Reactant Content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cathode-channel-1">Cathode Channel 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cathode-channel-2">Cathode Channel 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#shared-cathode-progress">Shared Cathode Progress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cathode-heat-generation">Cathode Heat Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#electrolyte-decomposition">Electrolyte Decomposition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#electrolyte-parameters">Electrolyte Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#electrolyte-unit-conversion">Electrolyte Unit Conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#summary-of-implemented-parameters">Summary of Implemented Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-ordering">Reaction Ordering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cell-mass-conversion">Cell-Mass Conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coupling-to-the-thermal-model">Coupling to the Thermal Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#current-liiontr-representation">Current LiionTR Representation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scope-and-limitations">Scope and Limitations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Physical and Mathematical Theory</a></li>
+      <li class="breadcrumb-item active">Hu et al. (2020) Thermal Runaway Model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/hu2020.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hu-et-al-2020-thermal-runaway-model">
+<h1>Hu et al. (2020) Thermal Runaway Model<a class="headerlink" href="#hu-et-al-2020-thermal-runaway-model" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>LiionTR includes a reduced-order thermal runaway reaction network based
+on the model reported by Hu et al. (2020).</p>
+<p>The model represents thermal runaway using four principal reaction
+states:</p>
+<ol class="arabic simple">
+<li><p>SEI decomposition;</p></li>
+<li><p>anode-electrolyte reaction;</p></li>
+<li><p>cathode decomposition;</p></li>
+<li><p>electrolyte decomposition.</p></li>
+</ol>
+<p>Each reaction contributes heat according to its kinetic rate, reaction
+progress state, reacting-material content, and reaction enthalpy.</p>
+<p>The model is implemented in</p>
+<p><a class="reference internal" href="../api/library.html#module-liiontr.library.hu2020" title="liiontr.library.hu2020"><code class="xref py py-mod docutils literal notranslate"><span class="pre">liiontr.library.hu2020</span></code></a>.</p>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading"></a></h2>
+<p>The thermal runaway model implemented in LiionTR is based on the work
+of Hu et al. <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../references.html#id2" title="Hao Hu, Xiaoming Xu, Xudong Sun, Renzheng Li, Yangjun Zhang, and Jiaqi Fu. Numerical study on the inhibition control of lithium-ion battery thermal runaway. ACS Omega, 5(29):18254–18261, 2020. doi:10.1021/acsomega.0c01862.">Hu <em>et al.</em>, 2020</a>]</span>.</p>
+<p>The original study developed a numerical lithium-ion battery thermal
+runaway model incorporating multiple internal side reactions, including
+SEI, anode, cathode, and electrolyte reactions.</p>
+<p>LiionTR converts the reported model parameters to SI units before
+constructing the reaction network.</p>
+</section>
+<section id="reaction-network">
+<h2>Reaction Network<a class="headerlink" href="#reaction-network" title="Link to this heading"></a></h2>
+<p>The reaction-state vector is</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{\alpha}
+=
+\left[
+    \alpha_{\mathrm{SEI}},
+    \alpha_{\mathrm{anode}},
+    \alpha_{\mathrm{cathode}},
+    \alpha_{\mathrm{electrolyte}}
+\right].\]</div>
+<p>The corresponding progress equations have the generic form</p>
+<div class="math notranslate nohighlight">
+\[\frac{d\alpha_i}{dt}
+=
+k_i(T)
+f_i(\boldsymbol{\alpha}).\]</div>
+<p>The total heat-generation rate is obtained by summing the contributions
+of all reactions.</p>
+</section>
+<section id="initial-reaction-state">
+<h2>Initial Reaction State<a class="headerlink" href="#initial-reaction-state" title="Link to this heading"></a></h2>
+<p>LiionTR initializes the Hu et al. reaction network using</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{\alpha}_0
+=
+\left[
+    0.85,
+    0.25,
+    0.04,
+    0.00
+\right].\]</div>
+<p>These values correspond respectively to:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 64.3%" />
+<col style="width: 35.7%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Reaction</p></th>
+<th class="head"><p>Initial conversion</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>SEI decomposition</p></td>
+<td><p>0.85</p></td>
+</tr>
+<tr class="row-odd"><td><p>Anode-electrolyte</p></td>
+<td><p>0.25</p></td>
+</tr>
+<tr class="row-even"><td><p>Cathode decomposition</p></td>
+<td><p>0.04</p></td>
+</tr>
+<tr class="row-odd"><td><p>Electrolyte decomposition</p></td>
+<td><p>0.00</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sei-decomposition">
+<h2>SEI Decomposition<a class="headerlink" href="#sei-decomposition" title="Link to this heading"></a></h2>
+<p>The SEI decomposition reaction uses Arrhenius kinetics,</p>
+<div class="math notranslate nohighlight">
+\[k_{\mathrm{SEI}}(T)
+=
+A_{\mathrm{SEI}}
+\exp\left(
+    -\frac{
+        E_{a,\mathrm{SEI}}
+    }{
+        R T
+    }
+\right).\]</div>
+<p>The implemented parameters are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 38.9%" />
+<col style="width: 33.3%" />
+<col style="width: 27.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Pre-exponential factor</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.667\times10^{15}\)</span></p></td>
+<td><p>s<sup>-1</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p>Activation energy</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.3508\times10^{5}\)</span></p></td>
+<td><p>J/mol</p></td>
+</tr>
+<tr class="row-even"><td><p>Reaction enthalpy</p></td>
+<td><p><span class="math notranslate nohighlight">\(2.57\times10^{5}\)</span></p></td>
+<td><p>J/kg</p></td>
+</tr>
+<tr class="row-odd"><td><p>Volumetric reactant content</p></td>
+<td><p>610.4</p></td>
+<td><p>kg/m<sup>3</sup></p></td>
+</tr>
+<tr class="row-even"><td><p>Initial conversion</p></td>
+<td><p>0.85</p></td>
+<td><p>dimensionless</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reaction order</p></td>
+<td><p>1</p></td>
+<td><p>dimensionless</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sei-unit-conversion">
+<h2>SEI Unit Conversion<a class="headerlink" href="#sei-unit-conversion" title="Link to this heading"></a></h2>
+<p>The reported reaction enthalpy is converted as</p>
+<div class="math notranslate nohighlight">
+\[257
+\ \mathrm{J/g}
+=
+257000
+\ \mathrm{J/kg}.\]</div>
+<p>The reported volumetric reactant content is converted as</p>
+<div class="math notranslate nohighlight">
+\[6.104\times10^{5}
+\ \mathrm{g/m^3}
+=
+610.4
+\ \mathrm{kg/m^3}.\]</div>
+<p>The original initial remaining fraction is 0.15.</p>
+<p>Because LiionTR uses reaction conversion,</p>
+<div class="math notranslate nohighlight">
+\[\alpha
+=
+1-r,\]</div>
+<p>the initial SEI conversion is</p>
+<div class="math notranslate nohighlight">
+\[\alpha_{\mathrm{SEI},0}
+=
+1-0.15
+=
+0.85.\]</div>
+</section>
+<section id="anode-electrolyte-reaction">
+<h2>Anode-Electrolyte Reaction<a class="headerlink" href="#anode-electrolyte-reaction" title="Link to this heading"></a></h2>
+<p>The anode-electrolyte reaction also uses Arrhenius kinetics.</p>
+<p>The implemented kinetic and energetic parameters are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 38.9%" />
+<col style="width: 33.3%" />
+<col style="width: 27.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Pre-exponential factor</p></td>
+<td><p><span class="math notranslate nohighlight">\(2.5\times10^{13}\)</span></p></td>
+<td><p>s<sup>-1</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p>Activation energy</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.3508\times10^{5}\)</span></p></td>
+<td><p>J/mol</p></td>
+</tr>
+<tr class="row-even"><td><p>Reaction enthalpy</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.714\times10^{6}\)</span></p></td>
+<td><p>J/kg</p></td>
+</tr>
+<tr class="row-odd"><td><p>Volumetric reactant content</p></td>
+<td><p>610.4</p></td>
+<td><p>kg/m<sup>3</sup></p></td>
+</tr>
+<tr class="row-even"><td><p>Initial conversion</p></td>
+<td><p>0.25</p></td>
+<td><p>dimensionless</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="anode-unit-conversion">
+<h2>Anode Unit Conversion<a class="headerlink" href="#anode-unit-conversion" title="Link to this heading"></a></h2>
+<p>The reaction enthalpy conversion is</p>
+<div class="math notranslate nohighlight">
+\[1714
+\ \mathrm{J/g}
+=
+1.714\times10^{6}
+\ \mathrm{J/kg}.\]</div>
+<p>The initial remaining fraction is 0.75, giving</p>
+<div class="math notranslate nohighlight">
+\[\alpha_{\mathrm{anode},0}
+=
+1-0.75
+=
+0.25.\]</div>
+</section>
+<section id="sei-dependent-anode-activation">
+<h2>SEI-Dependent Anode Activation<a class="headerlink" href="#sei-dependent-anode-activation" title="Link to this heading"></a></h2>
+<p>The anode-electrolyte reaction is coupled to the state of the SEI
+reaction.</p>
+<p>In the current LiionTR implementation, the reaction becomes active only
+after the remaining SEI fraction falls below a prescribed threshold.</p>
+<p>The remaining SEI fraction is</p>
+<div class="math notranslate nohighlight">
+\[r_{\mathrm{SEI}}
+=
+1-\alpha_{\mathrm{SEI}}.\]</div>
+<p>The threshold is</p>
+<div class="math notranslate nohighlight">
+\[r_{\mathrm{SEI}}
+&lt;
+0.10.\]</div>
+<p>This introduces a coupling between the SEI and anode-electrolyte
+reaction states.</p>
+</section>
+<section id="exponential-inhibition">
+<h2>Exponential Inhibition<a class="headerlink" href="#exponential-inhibition" title="Link to this heading"></a></h2>
+<p>The anode reaction also includes an exponential inhibition term.</p>
+<p>Conceptually,</p>
+<div class="math notranslate nohighlight">
+\[f_{\mathrm{anode}}
+=
+f_{\mathrm{base}}
+\exp(-x_{\mathrm{SEI}}),\]</div>
+<p>where <span class="math notranslate nohighlight">\(x_{\mathrm{SEI}}\)</span> is obtained from the normalized remaining
+SEI state.</p>
+<p>This captures the effect of the remaining SEI layer on the
+anode-electrolyte reaction.</p>
+</section>
+<section id="cathode-decomposition">
+<h2>Cathode Decomposition<a class="headerlink" href="#cathode-decomposition" title="Link to this heading"></a></h2>
+<p>The cathode decomposition is represented using two parallel kinetic
+channels that share a single cathode conversion.</p>
+<p>The reaction is active only above</p>
+<div class="math notranslate nohighlight">
+\[T_{\mathrm{cathode}}
+=
+393.15
+\ \mathrm{K}.\]</div>
+</section>
+<section id="cathode-reactant-content">
+<h2>Cathode Reactant Content<a class="headerlink" href="#cathode-reactant-content" title="Link to this heading"></a></h2>
+<p>The reported cathode content is</p>
+<div class="math notranslate nohighlight">
+\[1.221\times10^{6}
+\ \mathrm{g/m^3}.\]</div>
+<p>LiionTR converts this to</p>
+<div class="math notranslate nohighlight">
+\[1221
+\ \mathrm{kg/m^3}.\]</div>
+</section>
+<section id="cathode-channel-1">
+<h2>Cathode Channel 1<a class="headerlink" href="#cathode-channel-1" title="Link to this heading"></a></h2>
+<p>The first channel uses:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 38.9%" />
+<col style="width: 33.3%" />
+<col style="width: 27.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Pre-exponential factor</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.75\times10^{9}\)</span></p></td>
+<td><p>s<sup>-1</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p>Activation energy</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.1495\times10^{5}\)</span></p></td>
+<td><p>J/mol</p></td>
+</tr>
+<tr class="row-even"><td><p>Reaction enthalpy</p></td>
+<td><p><span class="math notranslate nohighlight">\(7.7\times10^{4}\)</span></p></td>
+<td><p>J/kg</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="cathode-channel-2">
+<h2>Cathode Channel 2<a class="headerlink" href="#cathode-channel-2" title="Link to this heading"></a></h2>
+<p>The second channel uses:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 38.9%" />
+<col style="width: 33.3%" />
+<col style="width: 27.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Pre-exponential factor</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.077\times10^{12}\)</span></p></td>
+<td><p>s<sup>-1</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p>Activation energy</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.5888\times10^{5}\)</span></p></td>
+<td><p>J/mol</p></td>
+</tr>
+<tr class="row-even"><td><p>Reaction enthalpy</p></td>
+<td><p><span class="math notranslate nohighlight">\(8.4\times10^{4}\)</span></p></td>
+<td><p>J/kg</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="shared-cathode-progress">
+<h2>Shared Cathode Progress<a class="headerlink" href="#shared-cathode-progress" title="Link to this heading"></a></h2>
+<p>Both cathode channels share the same reaction conversion,</p>
+<div class="math notranslate nohighlight">
+\[\alpha_{\mathrm{cathode}}.\]</div>
+<p>The implemented progress law is autocatalytic,</p>
+<div class="math notranslate nohighlight">
+\[f_{\mathrm{cathode}}
+=
+\alpha_{\mathrm{cathode}}
+\left(
+    1-\alpha_{\mathrm{cathode}}
+\right).\]</div>
+<p>The initial cathode conversion is</p>
+<div class="math notranslate nohighlight">
+\[\alpha_{\mathrm{cathode},0}
+=
+0.04.\]</div>
+</section>
+<section id="cathode-heat-generation">
+<h2>Cathode Heat Generation<a class="headerlink" href="#cathode-heat-generation" title="Link to this heading"></a></h2>
+<p>Because both channels share one reaction state, their heat-generation
+contributions are summed.</p>
+<p>Conceptually,</p>
+<div class="math notranslate nohighlight">
+\[\dot{q}_{\mathrm{cathode}}
+=
+w_{\mathrm{cathode}}
+f_{\mathrm{cathode}}
+\left[
+    \Delta H_1 k_1(T)
+    +
+    \Delta H_2 k_2(T)
+\right].\]</div>
+<p>This structure is represented using a LiionTR multi-channel reaction.</p>
+</section>
+<section id="electrolyte-decomposition">
+<h2>Electrolyte Decomposition<a class="headerlink" href="#electrolyte-decomposition" title="Link to this heading"></a></h2>
+<p>Electrolyte decomposition is modeled using Arrhenius kinetics and a
+temperature threshold.</p>
+<p>The implemented threshold is</p>
+<div class="math notranslate nohighlight">
+\[T_{\mathrm{electrolyte}}
+=
+473.15
+\ \mathrm{K}.\]</div>
+</section>
+<section id="electrolyte-parameters">
+<h2>Electrolyte Parameters<a class="headerlink" href="#electrolyte-parameters" title="Link to this heading"></a></h2>
+<p>The implemented parameters are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 38.9%" />
+<col style="width: 33.3%" />
+<col style="width: 27.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Pre-exponential factor</p></td>
+<td><p><span class="math notranslate nohighlight">\(5.14\times10^{25}\)</span></p></td>
+<td><p>s<sup>-1</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p>Activation energy</p></td>
+<td><p><span class="math notranslate nohighlight">\(2.74\times10^{5}\)</span></p></td>
+<td><p>J/mol</p></td>
+</tr>
+<tr class="row-even"><td><p>Reaction enthalpy</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.55\times10^{5}\)</span></p></td>
+<td><p>J/kg</p></td>
+</tr>
+<tr class="row-odd"><td><p>Volumetric reactant content</p></td>
+<td><p>406.9</p></td>
+<td><p>kg/m<sup>3</sup></p></td>
+</tr>
+<tr class="row-even"><td><p>Initial conversion</p></td>
+<td><p>0.00</p></td>
+<td><p>dimensionless</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="electrolyte-unit-conversion">
+<h2>Electrolyte Unit Conversion<a class="headerlink" href="#electrolyte-unit-conversion" title="Link to this heading"></a></h2>
+<p>The reaction enthalpy conversion is</p>
+<div class="math notranslate nohighlight">
+\[155
+\ \mathrm{J/g}
+=
+155000
+\ \mathrm{J/kg}.\]</div>
+<p>The volumetric content conversion is</p>
+<div class="math notranslate nohighlight">
+\[4.069\times10^{5}
+\ \mathrm{g/m^3}
+=
+406.9
+\ \mathrm{kg/m^3}.\]</div>
+<p>The initial remaining fraction is unity,</p>
+<div class="math notranslate nohighlight">
+\[r_0 = 1,\]</div>
+<p>therefore</p>
+<div class="math notranslate nohighlight">
+\[\alpha_{\mathrm{electrolyte},0}
+=
+1-r_0
+=
+0.\]</div>
+</section>
+<section id="summary-of-implemented-parameters">
+<h2>Summary of Implemented Parameters<a class="headerlink" href="#summary-of-implemented-parameters" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Reaction</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(A\)</span> (s<sup>-1</sup>)</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(E_a\)</span> (J/mol)</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\Delta H\)</span> (J/kg)</p></th>
+<th class="head"><p>Initial <span class="math notranslate nohighlight">\(\alpha\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>SEI</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.667\times10^{15}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(1.3508\times10^{5}\)</span></p></td>
+<td><p>257000</p></td>
+<td><p>0.85</p></td>
+</tr>
+<tr class="row-odd"><td><p>Anode-electrolyte</p></td>
+<td><p><span class="math notranslate nohighlight">\(2.5\times10^{13}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(1.3508\times10^{5}\)</span></p></td>
+<td><p>1714000</p></td>
+<td><p>0.25</p></td>
+</tr>
+<tr class="row-even"><td><p>Cathode channel 1</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.75\times10^{9}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(1.1495\times10^{5}\)</span></p></td>
+<td><p>77000</p></td>
+<td><p>0.04</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cathode channel 2</p></td>
+<td><p><span class="math notranslate nohighlight">\(1.077\times10^{12}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(1.5888\times10^{5}\)</span></p></td>
+<td><p>84000</p></td>
+<td><p>0.04</p></td>
+</tr>
+<tr class="row-even"><td><p>Electrolyte</p></td>
+<td><p><span class="math notranslate nohighlight">\(5.14\times10^{25}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(2.74\times10^{5}\)</span></p></td>
+<td><p>155000</p></td>
+<td><p>0.00</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reaction-ordering">
+<h2>Reaction Ordering<a class="headerlink" href="#reaction-ordering" title="Link to this heading"></a></h2>
+<p>LiionTR preserves the following ordering throughout the network:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>0  SEI decomposition
+1  Anode-electrolyte
+2  Cathode decomposition
+3  Electrolyte decomposition
+</pre></div>
+</div>
+<p>The conversion vector therefore follows</p>
+<div class="math notranslate nohighlight">
+\[\boldsymbol{\alpha}
+=
+[
+    \alpha_{\mathrm{SEI}},
+    \alpha_{\mathrm{anode}},
+    \alpha_{\mathrm{cathode}},
+    \alpha_{\mathrm{electrolyte}}
+].\]</div>
+</section>
+<section id="cell-mass-conversion">
+<h2>Cell-Mass Conversion<a class="headerlink" href="#cell-mass-conversion" title="Link to this heading"></a></h2>
+<p>Several parameters in the literature model are specified as reactant
+content per unit cell volume.</p>
+<p>LiionTR converts a volumetric reactant content <span class="math notranslate nohighlight">\(W_i\)</span> to a cell
+mass fraction using</p>
+<div class="math notranslate nohighlight">
+\[w_i
+=
+\frac{W_i}{\rho_{\mathrm{cell}}},\]</div>
+<p>where <span class="math notranslate nohighlight">\(\rho_{\mathrm{cell}}\)</span> is the effective cell density.</p>
+<p>The reaction heat-generation rate then becomes</p>
+<div class="math notranslate nohighlight">
+\[\dot{Q}_i
+=
+m_{\mathrm{cell}}
+w_i
+\Delta H_i
+\dot{\alpha}_i.\]</div>
+</section>
+<section id="coupling-to-the-thermal-model">
+<h2>Coupling to the Thermal Model<a class="headerlink" href="#coupling-to-the-thermal-model" title="Link to this heading"></a></h2>
+<p>The total heat-generation rate is</p>
+<div class="math notranslate nohighlight">
+\[\dot{Q}_{\mathrm{gen}}
+=
+\sum_i
+\dot{Q}_i.\]</div>
+<p>This value is supplied to the lumped thermal model,</p>
+<div class="math notranslate nohighlight">
+\[C_{\mathrm{th}}
+\frac{dT}{dt}
+=
+\dot{Q}_{\mathrm{gen}}
+-
+h A
+\left(
+    T-T_{\infty}
+\right).\]</div>
+<p>The resulting increase in temperature accelerates the Arrhenius
+kinetics and produces the thermal-runaway feedback loop.</p>
+</section>
+<section id="current-liiontr-representation">
+<h2>Current LiionTR Representation<a class="headerlink" href="#current-liiontr-representation" title="Link to this heading"></a></h2>
+<p>The Hu et al. model is represented using the generic LiionTR
+architecture rather than a single monolithic model class.</p>
+<p>The mapping is approximately:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Hu model
+   |
+   +-- SEI
+   |     +-- Arrhenius
+   |     +-- volumetric reaction parameters
+   |
+   +-- Anode-electrolyte
+   |     +-- Arrhenius
+   |     +-- SEI-dependent threshold
+   |     +-- exponential inhibition
+   |
+   +-- Cathode
+   |     +-- channel 1 Arrhenius
+   |     +-- channel 2 Arrhenius
+   |     +-- temperature threshold
+   |     +-- shared autocatalytic conversion
+   |
+   +-- Electrolyte
+         +-- Arrhenius
+         +-- temperature threshold
+
+             |
+             v
+
+       ReactionNetwork
+</pre></div>
+</div>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>The complete reaction network is constructed by</p>
+<p><a class="reference internal" href="../api/library.html#liiontr.library.hu2020.hu2020_reaction_network" title="liiontr.library.hu2020.hu2020_reaction_network"><code class="xref py py-func docutils literal notranslate"><span class="pre">liiontr.library.hu2020.hu2020_reaction_network()</span></code></a>.</p>
+<p>The initial conversion vector is provided by</p>
+<p><a class="reference internal" href="../api/library.html#liiontr.library.hu2020.hu2020_initial_conversions" title="liiontr.library.hu2020.hu2020_initial_conversions"><code class="xref py py-func docutils literal notranslate"><span class="pre">liiontr.library.hu2020.hu2020_initial_conversions()</span></code></a>.</p>
+<p>SEI parameters are provided by</p>
+<p><a class="reference internal" href="../api/library.html#liiontr.library.hu2020.hu2020_sei_decomposition" title="liiontr.library.hu2020.hu2020_sei_decomposition"><code class="xref py py-func docutils literal notranslate"><span class="pre">liiontr.library.hu2020.hu2020_sei_decomposition()</span></code></a>.</p>
+<p>Anode-electrolyte parameters are provided by</p>
+<p><a class="reference internal" href="../api/library.html#liiontr.library.hu2020.hu2020_anode_electrolyte" title="liiontr.library.hu2020.hu2020_anode_electrolyte"><code class="xref py py-func docutils literal notranslate"><span class="pre">liiontr.library.hu2020.hu2020_anode_electrolyte()</span></code></a>.</p>
+<p>Its coupled progress model is constructed by</p>
+<p><a class="reference internal" href="../api/library.html#liiontr.library.hu2020.hu2020_anode_progress_model" title="liiontr.library.hu2020.hu2020_anode_progress_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">liiontr.library.hu2020.hu2020_anode_progress_model()</span></code></a>.</p>
+<p>The cathode reaction is constructed by</p>
+<p><a class="reference internal" href="../api/library.html#liiontr.library.hu2020.hu2020_cathode_decomposition" title="liiontr.library.hu2020.hu2020_cathode_decomposition"><code class="xref py py-func docutils literal notranslate"><span class="pre">liiontr.library.hu2020.hu2020_cathode_decomposition()</span></code></a>.</p>
+<p>Electrolyte parameters are provided by</p>
+<p><a class="reference internal" href="../api/library.html#liiontr.library.hu2020.hu2020_electrolyte_decomposition" title="liiontr.library.hu2020.hu2020_electrolyte_decomposition"><code class="xref py py-func docutils literal notranslate"><span class="pre">liiontr.library.hu2020.hu2020_electrolyte_decomposition()</span></code></a>.</p>
+<p>The complete electrolyte reaction is constructed by</p>
+<p><a class="reference internal" href="../api/library.html#liiontr.library.hu2020.hu2020_electrolyte_reaction" title="liiontr.library.hu2020.hu2020_electrolyte_reaction"><code class="xref py py-func docutils literal notranslate"><span class="pre">liiontr.library.hu2020.hu2020_electrolyte_reaction()</span></code></a>.</p>
+</section>
+<section id="scope-and-limitations">
+<h2>Scope and Limitations<a class="headerlink" href="#scope-and-limitations" title="Link to this heading"></a></h2>
+<p>The LiionTR implementation should be interpreted as a reduced-order
+representation of the Hu et al. thermal runaway model.</p>
+<p>It currently focuses on:</p>
+<ul class="simple">
+<li><p>reaction kinetics;</p></li>
+<li><p>reaction progress;</p></li>
+<li><p>heat generation;</p></li>
+<li><p>coupling to a lumped thermal state.</p></li>
+</ul>
+<p>Gas chemistry, chemical equilibrium, multiphase behavior, detailed
+electrochemistry, and internal spatial temperature gradients are not
+part of the Hu reaction-network implementation itself.</p>
+<p>These processes may be coupled to the reaction model through other
+LiionTR subsystems as the framework evolves.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="venting.html" class="btn btn-neutral float-left" title="Vent Flow Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../architecture/index.html" class="btn btn-neutral float-right" title="Software Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

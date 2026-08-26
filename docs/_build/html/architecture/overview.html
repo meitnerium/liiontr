@@ -1,0 +1,542 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture Overview &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Solver and State Flow" href="solver_flow.html" />
+    <link rel="prev" title="Software Architecture" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Physical and Mathematical Theory</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Software Architecture</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Architecture Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#design-goals">Design Goals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#high-level-data-flow">High-Level Data Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cells">Cells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geometry">Geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#materials">Materials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-kinetics">Reaction Kinetics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#progress-models">Progress Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-models">Reaction Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reaction-network">Reaction Network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chemistry-backend">Chemistry Backend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thermal-model">Thermal Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gas-generation">Gas Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gas-inventory">Gas Inventory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pressure-model">Pressure Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vent-flow">Vent Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thermal-problem">Thermal Problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#numerical-solver">Numerical Solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#separation-of-state-and-physics">Separation of State and Physics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-scientific-backends">Optional Scientific Backends</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cantera">Cantera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pybamm">PyBaMM</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#intended-long-term-architecture">Intended Long-Term Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-map">Implementation Map</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="solver_flow.html">Solver and State Flow</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Software Architecture</a></li>
+      <li class="breadcrumb-item active">Architecture Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="architecture-overview">
+<h1>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Link to this heading"></a></h1>
+<section id="design-goals">
+<h2>Design Goals<a class="headerlink" href="#design-goals" title="Link to this heading"></a></h2>
+<p>LiionTR is designed as a modular scientific framework for lithium-ion
+battery thermal runaway modeling.</p>
+<p>The architecture separates:</p>
+<ul class="simple">
+<li><p>cell geometry and effective material properties;</p></li>
+<li><p>reaction kinetics and progress laws;</p></li>
+<li><p>thermal runaway reaction networks;</p></li>
+<li><p>heat generation;</p></li>
+<li><p>gas generation;</p></li>
+<li><p>gas inventory and pressure;</p></li>
+<li><p>vent-flow models;</p></li>
+<li><p>numerical integration;</p></li>
+<li><p>optional thermochemical and electrochemical backends.</p></li>
+</ul>
+<p>This separation allows individual physical models to be replaced or
+extended without rewriting the complete simulation framework.</p>
+</section>
+<section id="high-level-data-flow">
+<h2>High-Level Data Flow<a class="headerlink" href="#high-level-data-flow" title="Link to this heading"></a></h2>
+<p>The current reduced-order architecture can be represented as</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Cell + Material
+       |
+       v
+Reaction Network
+   |         |
+   |         +----------------&gt; Heat Generation
+   |                                  |
+   |                                  v
+   |                            Thermal Model
+   |                                  |
+   |                                  v
+   +----------------------------&gt; Temperature
+   |
+   v
+Gas Generation
+   |
+   v
+Gas Inventory
+   |
+   v
+Pressure Model
+   |
+   v
+Vent Flow
+   |
+   +----------------------------&gt; Gas Inventory
+
+                 ScipySolver
+          integrates all state variables
+</pre></div>
+</div>
+</section>
+<section id="cells">
+<h2>Cells<a class="headerlink" href="#cells" title="Link to this heading"></a></h2>
+<p>A battery cell combines three main concepts:</p>
+<ul class="simple">
+<li><p>geometry;</p></li>
+<li><p>effective material properties;</p></li>
+<li><p>chemistry.</p></li>
+</ul>
+<p>The cell provides quantities required by other models, including:</p>
+<ul class="simple">
+<li><p>volume;</p></li>
+<li><p>surface area;</p></li>
+<li><p>mass;</p></li>
+<li><p>thermal capacity.</p></li>
+</ul>
+<p>The cell itself does not perform thermal runaway calculations.</p>
+</section>
+<section id="geometry">
+<h2>Geometry<a class="headerlink" href="#geometry" title="Link to this heading"></a></h2>
+<p>Geometry models provide geometric quantities independently from material
+or chemistry models.</p>
+<p>For cylindrical cells, LiionTR currently evaluates quantities such as</p>
+<div class="math notranslate nohighlight">
+\[V
+=
+\pi r^2 h\]</div>
+<p>and the external surface area required by the lumped thermal model.</p>
+<p>This separation makes it possible to add prismatic or pouch-cell
+geometries without modifying the thermal or reaction subsystems.</p>
+</section>
+<section id="materials">
+<h2>Materials<a class="headerlink" href="#materials" title="Link to this heading"></a></h2>
+<p>Material models provide effective thermophysical properties such as:</p>
+<ul class="simple">
+<li><p>density;</p></li>
+<li><p>specific heat capacity;</p></li>
+<li><p>thermal conductivity.</p></li>
+</ul>
+<p>The current implementation supports constant effective properties.</p>
+<p>These properties are intentionally represented independently from the
+cell geometry.</p>
+</section>
+<section id="reaction-kinetics">
+<h2>Reaction Kinetics<a class="headerlink" href="#reaction-kinetics" title="Link to this heading"></a></h2>
+<p>Kinetic models determine the intrinsic temperature dependence of
+thermal runaway reactions.</p>
+<p>A common example is the Arrhenius relation</p>
+<div class="math notranslate nohighlight">
+\[k(T)
+=
+A
+\exp\left(
+    -\frac{E_a}{RT}
+\right).\]</div>
+<p>The kinetic model does not contain the complete physical reaction
+definition.</p>
+</section>
+<section id="progress-models">
+<h2>Progress Models<a class="headerlink" href="#progress-models" title="Link to this heading"></a></h2>
+<p>Progress models describe how reaction state modifies the kinetic rate.</p>
+<p>For example,</p>
+<div class="math notranslate nohighlight">
+\[f(\alpha)
+=
+(1-\alpha)^n.\]</div>
+<p>Progress models may also depend on the state of other reactions through
+a reaction context.</p>
+<p>Separating kinetics from progress makes the same kinetic law reusable
+with multiple physical reaction formulations.</p>
+</section>
+<section id="reaction-models">
+<h2>Reaction Models<a class="headerlink" href="#reaction-models" title="Link to this heading"></a></h2>
+<p>A reaction combines:</p>
+<ul class="simple">
+<li><p>a kinetic model;</p></li>
+<li><p>a progress model;</p></li>
+<li><p>reaction enthalpy;</p></li>
+<li><p>reacting-material mass fraction.</p></li>
+</ul>
+<p>The reaction provides:</p>
+<ul class="simple">
+<li><p>a conversion rate;</p></li>
+<li><p>a mass-specific heat-generation rate.</p></li>
+</ul>
+<p>The reaction object does not integrate its own state.</p>
+</section>
+<section id="reaction-network">
+<h2>Reaction Network<a class="headerlink" href="#reaction-network" title="Link to this heading"></a></h2>
+<p>A reaction network groups multiple reaction models and evaluates them
+using a shared reaction state.</p>
+<p>The network provides:</p>
+<ul class="simple">
+<li><p>reaction progress rates;</p></li>
+<li><p>heat generation by reaction;</p></li>
+<li><p>total heat generation;</p></li>
+<li><p>context information for coupled reactions.</p></li>
+</ul>
+<p>The numerical solver owns the actual conversion vector.</p>
+</section>
+<section id="chemistry-backend">
+<h2>Chemistry Backend<a class="headerlink" href="#chemistry-backend" title="Link to this heading"></a></h2>
+<p>The chemistry backend separates the physical problem from the mechanism
+used to calculate heat generation.</p>
+<p>The current reaction-network backend maps a
+<a class="reference internal" href="../api/reactions.html#liiontr.reactions.network.ReactionNetwork" title="liiontr.reactions.network.ReactionNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.reactions.network.ReactionNetwork</span></code></a> to the generic
+chemistry interface.</p>
+<p>This design leaves room for additional chemistry implementations.</p>
+</section>
+<section id="thermal-model">
+<h2>Thermal Model<a class="headerlink" href="#thermal-model" title="Link to this heading"></a></h2>
+<p>The thermal model converts net heat flow into a temperature derivative.</p>
+<p>For the current lumped model,</p>
+<div class="math notranslate nohighlight">
+\[\frac{dT}{dt}
+=
+\frac{
+    \dot{Q}_{\mathrm{gen}}
+    -
+    hA(T-T_{\infty})
+}{
+    C_{\mathrm{th}}
+}.\]</div>
+<p>The thermal model does not calculate reaction rates.</p>
+</section>
+<section id="gas-generation">
+<h2>Gas Generation<a class="headerlink" href="#gas-generation" title="Link to this heading"></a></h2>
+<p>The current gas-generation subsystem maps reaction progress to
+prescribed gas-species generation rates.</p>
+<p>It uses:</p>
+<ul class="simple">
+<li><p>reaction progress rates;</p></li>
+<li><p>cell mass;</p></li>
+<li><p>reaction mass fraction;</p></li>
+<li><p>empirical species yields.</p></li>
+</ul>
+<p>Gas generation is therefore coupled to the reaction network but remains
+independent from pressure and vent-flow calculations.</p>
+</section>
+<section id="gas-inventory">
+<h2>Gas Inventory<a class="headerlink" href="#gas-inventory" title="Link to this heading"></a></h2>
+<p>The gas inventory stores the instantaneous mole amount of each species.</p>
+<p>It provides derived quantities such as:</p>
+<ul class="simple">
+<li><p>total moles;</p></li>
+<li><p>total gas mass;</p></li>
+<li><p>mole fractions;</p></li>
+<li><p>mean molar mass.</p></li>
+</ul>
+<p>The inventory forms the connection between gas generation, pressure,
+and venting.</p>
+</section>
+<section id="pressure-model">
+<h2>Pressure Model<a class="headerlink" href="#pressure-model" title="Link to this heading"></a></h2>
+<p>The current pressure model applies the ideal-gas equation</p>
+<div class="math notranslate nohighlight">
+\[P
+=
+\frac{nRT}{V}.\]</div>
+<p>It uses the instantaneous gas inventory and temperature but does not
+modify those states directly.</p>
+</section>
+<section id="vent-flow">
+<h2>Vent Flow<a class="headerlink" href="#vent-flow" title="Link to this heading"></a></h2>
+<p>The vent-flow subsystem calculates gas discharge when the internal
+pressure exceeds the configured vent-opening threshold.</p>
+<p>The model consumes:</p>
+<ul class="simple">
+<li><p>internal pressure;</p></li>
+<li><p>downstream pressure;</p></li>
+<li><p>temperature;</p></li>
+<li><p>gas-mixture properties.</p></li>
+</ul>
+<p>It returns vent molar-flow rates that become sink terms in the gas
+species balances.</p>
+</section>
+<section id="thermal-problem">
+<h2>Thermal Problem<a class="headerlink" href="#thermal-problem" title="Link to this heading"></a></h2>
+<p>A thermal problem acts as the simulation configuration container.</p>
+<p>It assembles the models and conditions required by the solver,
+including:</p>
+<ul class="simple">
+<li><p>cell;</p></li>
+<li><p>thermal model;</p></li>
+<li><p>chemistry backend;</p></li>
+<li><p>initial temperature;</p></li>
+<li><p>reaction conversions;</p></li>
+<li><p>gas models;</p></li>
+<li><p>pressure model;</p></li>
+<li><p>vent model;</p></li>
+<li><p>event thresholds;</p></li>
+<li><p>simulation time span.</p></li>
+</ul>
+<p>The problem definition does not itself perform numerical integration.</p>
+</section>
+<section id="numerical-solver">
+<h2>Numerical Solver<a class="headerlink" href="#numerical-solver" title="Link to this heading"></a></h2>
+<p>The numerical solver is responsible for advancing the complete physical
+state.</p>
+<p>The current implementation uses SciPy <code class="docutils literal notranslate"><span class="pre">solve_ivp</span></code> with a BDF method.</p>
+<p>The solver evaluates the configured physical models to construct the
+right-hand side of the governing ODE system.</p>
+</section>
+<section id="separation-of-state-and-physics">
+<h2>Separation of State and Physics<a class="headerlink" href="#separation-of-state-and-physics" title="Link to this heading"></a></h2>
+<p>An important architectural principle in LiionTR is that physical model
+objects do not mutate their own integration state.</p>
+<p>Instead, the solver stores state variables such as</p>
+<div class="math notranslate nohighlight">
+\[T,
+\alpha_1,
+\ldots,
+\alpha_N,
+n_1,
+\ldots,
+n_M.\]</div>
+<p>Models receive the current state and return rates or derived
+properties.</p>
+<p>This design has several advantages:</p>
+<ul class="simple">
+<li><p>deterministic right-hand-side evaluation;</p></li>
+<li><p>compatibility with standard ODE solvers;</p></li>
+<li><p>easier testing;</p></li>
+<li><p>reduced hidden coupling;</p></li>
+<li><p>simpler restart and event handling;</p></li>
+<li><p>easier future implementation of alternative solvers.</p></li>
+</ul>
+</section>
+<section id="optional-scientific-backends">
+<h2>Optional Scientific Backends<a class="headerlink" href="#optional-scientific-backends" title="Link to this heading"></a></h2>
+<p>LiionTR is intended to support external scientific engines without
+making them mandatory dependencies.</p>
+<section id="cantera">
+<h3>Cantera<a class="headerlink" href="#cantera" title="Link to this heading"></a></h3>
+<p>Cantera is intended for future thermochemical calculations such as:</p>
+<ul class="simple">
+<li><p>equilibrium gas composition;</p></li>
+<li><p>mixture thermodynamic properties;</p></li>
+<li><p>heat capacities;</p></li>
+<li><p>chemical equilibrium;</p></li>
+<li><p>possibly energy-consistent gas chemistry.</p></li>
+</ul>
+</section>
+<section id="pybamm">
+<h3>PyBaMM<a class="headerlink" href="#pybamm" title="Link to this heading"></a></h3>
+<p>PyBaMM may eventually provide electrochemical states before or during
+abuse simulations, including:</p>
+<ul class="simple">
+<li><p>state of charge;</p></li>
+<li><p>electrode concentrations;</p></li>
+<li><p>voltage;</p></li>
+<li><p>current;</p></li>
+<li><p>electrochemical heat generation;</p></li>
+<li><p>degradation state.</p></li>
+</ul>
+<p>LiionTR remains responsible for thermal runaway and safety-oriented
+physics.</p>
+</section>
+</section>
+<section id="intended-long-term-architecture">
+<h2>Intended Long-Term Architecture<a class="headerlink" href="#intended-long-term-architecture" title="Link to this heading"></a></h2>
+<p>A future coupled workflow may conceptually follow</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>PyBaMM
+   |
+   | electrochemical state
+   v
+LiionTR Reaction Models
+   |
+   +-----------&gt; Heat
+   |
+   +-----------&gt; Element Sources
+                     |
+                     v
+                  Cantera
+                     |
+                     +----&gt; Gas Composition
+                     +----&gt; Thermodynamic Properties
+                     +----&gt; Pressure Support
+                     |
+                     v
+                  Venting
+</pre></div>
+</div>
+<p>The external packages therefore complement LiionTR rather than replace
+its orchestration layer.</p>
+</section>
+<section id="implementation-map">
+<h2>Implementation Map<a class="headerlink" href="#implementation-map" title="Link to this heading"></a></h2>
+<p>The major source packages are:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Package</p></th>
+<th class="head"><p>Responsibility</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.cells</span></code></p></td>
+<td><p>Battery-cell definitions</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.geometry</span></code></p></td>
+<td><p>Cell geometry</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.materials</span></code></p></td>
+<td><p>Effective material properties</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.kinetics</span></code></p></td>
+<td><p>Kinetic and reaction-progress models</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.reactions</span></code></p></td>
+<td><p>Reactions and reaction networks</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.chemistry</span></code></p></td>
+<td><p>Chemistry backend interfaces</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.thermal</span></code></p></td>
+<td><p>Thermal models</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.gases</span></code></p></td>
+<td><p>Gas generation, pressure, inventory, and venting</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.problems</span></code></p></td>
+<td><p>Physical problem definitions</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.solver</span></code></p></td>
+<td><p>Numerical integration</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.library</span></code></p></td>
+<td><p>Reference cells and literature models</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">liiontr.core</span></code></p></td>
+<td><p>Generic framework infrastructure</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Software Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="solver_flow.html" class="btn btn-neutral float-right" title="Solver and State Flow" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

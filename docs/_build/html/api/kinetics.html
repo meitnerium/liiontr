@@ -1,0 +1,512 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kinetics &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model Library" href="library.html" />
+    <link rel="prev" title="Geometry" href="geometry.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Physical and Mathematical Theory</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cells.html">Cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html">Chemistry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html">Gases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Kinetics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.kinetics.model">Kinetic Model Interface</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.kinetics.model.KineticModel"><code class="docutils literal notranslate"><span class="pre">KineticModel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.kinetics.arrhenius">Arrhenius Kinetics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.kinetics.arrhenius.Arrhenius"><code class="docutils literal notranslate"><span class="pre">Arrhenius</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.kinetics.progress">Progress Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.kinetics.progress.ProgressModel"><code class="docutils literal notranslate"><span class="pre">ProgressModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.kinetics.progress.PowerLawProgress"><code class="docutils literal notranslate"><span class="pre">PowerLawProgress</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.kinetics.progress.AutocatalyticProgress"><code class="docutils literal notranslate"><span class="pre">AutocatalyticProgress</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.kinetics.progress.ThresholdProgress"><code class="docutils literal notranslate"><span class="pre">ThresholdProgress</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.kinetics.progress.ExponentialInhibitionProgress"><code class="docutils literal notranslate"><span class="pre">ExponentialInhibitionProgress</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.kinetics.threshold">Temperature Thresholds</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.kinetics.threshold.TemperatureThresholdKinetics"><code class="docutils literal notranslate"><span class="pre">TemperatureThresholdKinetics</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="library.html">Model Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="problems.html">Problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html">Reactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Models</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Kinetics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/kinetics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="kinetics">
+<h1>Kinetics<a class="headerlink" href="#kinetics" title="Link to this heading"></a></h1>
+<section id="module-liiontr.kinetics.model">
+<span id="kinetic-model-interface"></span><h2>Kinetic Model Interface<a class="headerlink" href="#module-liiontr.kinetics.model" title="Link to this heading"></a></h2>
+<p>Abstract interfaces for temperature-dependent kinetic models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.kinetics.model.KineticModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.kinetics.model.</span></span><span class="sig-name descname"><span class="pre">KineticModel</span></span><a class="reference internal" href="../_modules/liiontr/kinetics/model.html#KineticModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.model.KineticModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Abstract interface for temperature-dependent kinetic models.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.model.KineticModel.rate">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/model.html#KineticModel.rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.model.KineticModel.rate" title="Link to this definition"></a></dt>
+<dd><p>Return the reaction rate at the given temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.kinetics.arrhenius">
+<span id="arrhenius-kinetics"></span><h2>Arrhenius Kinetics<a class="headerlink" href="#module-liiontr.kinetics.arrhenius" title="Link to this heading"></a></h2>
+<p>Kinetic and reaction-progress models used by LiionTR.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.kinetics.arrhenius.Arrhenius">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.kinetics.arrhenius.</span></span><span class="sig-name descname"><span class="pre">Arrhenius</span></span><a class="reference internal" href="../_modules/liiontr/kinetics/arrhenius.html#Arrhenius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.arrhenius.Arrhenius" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#liiontr.kinetics.model.KineticModel" title="liiontr.kinetics.model.KineticModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">KineticModel</span></code></a></p>
+<p>Arrhenius kinetic model.</p>
+<p>rate = A * exp(-Ea / (R * T))</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.arrhenius.Arrhenius.rate">
+<span class="sig-name descname"><span class="pre">rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/arrhenius.html#Arrhenius.rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.arrhenius.Arrhenius.rate" title="Link to this definition"></a></dt>
+<dd><p>Return the Arrhenius kinetic rate at the given temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.arrhenius.Arrhenius.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">activation_energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_exponential_factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.kinetics.arrhenius.Arrhenius.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>activation_energy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>pre_exponential_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.kinetics.progress">
+<span id="progress-models"></span><h2>Progress Models<a class="headerlink" href="#module-liiontr.kinetics.progress" title="Link to this heading"></a></h2>
+<p>Reaction-progress models for thermal runaway kinetics.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.ProgressModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.kinetics.progress.</span></span><span class="sig-name descname"><span class="pre">ProgressModel</span></span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#ProgressModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.ProgressModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Base class for reaction progress models.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.ProgressModel.factor">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conversion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#ProgressModel.factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.ProgressModel.factor" title="Link to this definition"></a></dt>
+<dd><p>Return the conversion-dependent reaction factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conversion</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>context</strong> (<a class="reference internal" href="reactions.html#liiontr.reactions.context.ReactionContext" title="liiontr.reactions.context.ReactionContext"><em>ReactionContext</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.PowerLawProgress">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.kinetics.progress.</span></span><span class="sig-name descname"><span class="pre">PowerLawProgress</span></span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#PowerLawProgress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.PowerLawProgress" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#liiontr.kinetics.progress.ProgressModel" title="liiontr.kinetics.progress.ProgressModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProgressModel</span></code></a></p>
+<p>Power-law reaction progress model.</p>
+<p>f(alpha) = (1 - alpha)^n</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.PowerLawProgress.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#PowerLawProgress.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.PowerLawProgress.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate the reaction-progress order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.PowerLawProgress.factor">
+<span class="sig-name descname"><span class="pre">factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conversion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#PowerLawProgress.factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.PowerLawProgress.factor" title="Link to this definition"></a></dt>
+<dd><p>Return the reaction progress factor.</p>
+<p>The reaction context is accepted for interface compatibility
+but is not used by this model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conversion</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>context</strong> (<a class="reference internal" href="reactions.html#liiontr.reactions.context.ReactionContext" title="liiontr.reactions.context.ReactionContext"><em>ReactionContext</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.PowerLawProgress.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.kinetics.progress.PowerLawProgress.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.AutocatalyticProgress">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.kinetics.progress.</span></span><span class="sig-name descname"><span class="pre">AutocatalyticProgress</span></span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#AutocatalyticProgress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.AutocatalyticProgress" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#liiontr.kinetics.progress.ProgressModel" title="liiontr.kinetics.progress.ProgressModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProgressModel</span></code></a></p>
+<p>Autocatalytic reaction progress model.</p>
+<p>f(alpha) = alpha^m * (1 - alpha)^n</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.AutocatalyticProgress.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#AutocatalyticProgress.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.AutocatalyticProgress.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate the autocatalytic reaction orders.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.AutocatalyticProgress.factor">
+<span class="sig-name descname"><span class="pre">factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conversion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#AutocatalyticProgress.factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.AutocatalyticProgress.factor" title="Link to this definition"></a></dt>
+<dd><p>Return the reaction progress factor.</p>
+<p>The reaction context is accepted for interface compatibility
+but is not used by this model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conversion</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>context</strong> (<a class="reference internal" href="reactions.html#liiontr.reactions.context.ReactionContext" title="liiontr.reactions.context.ReactionContext"><em>ReactionContext</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.AutocatalyticProgress.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">autocatalytic_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remaining_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.kinetics.progress.AutocatalyticProgress.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>autocatalytic_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>remaining_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.ThresholdProgress">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.kinetics.progress.</span></span><span class="sig-name descname"><span class="pre">ThresholdProgress</span></span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#ThresholdProgress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.ThresholdProgress" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#liiontr.kinetics.progress.ProgressModel" title="liiontr.kinetics.progress.ProgressModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProgressModel</span></code></a></p>
+<p>Progress model activated by the state of another reaction.</p>
+<p>The wrapped progress model is active only when the remaining
+fraction of the specified reaction is below a threshold.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.ThresholdProgress.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#ThresholdProgress.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.ThresholdProgress.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate the remaining-fraction activation threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.ThresholdProgress.factor">
+<span class="sig-name descname"><span class="pre">factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conversion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#ThresholdProgress.factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.ThresholdProgress.factor" title="Link to this definition"></a></dt>
+<dd><p>Return the wrapped progress factor when the threshold is met.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conversion</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>context</strong> (<a class="reference internal" href="reactions.html#liiontr.reactions.context.ReactionContext" title="liiontr.reactions.context.ReactionContext"><em>ReactionContext</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.ThresholdProgress.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">progress_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remaining_below</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.kinetics.progress.ThresholdProgress.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>progress_model</strong> (<a class="reference internal" href="#liiontr.kinetics.progress.ProgressModel" title="liiontr.kinetics.progress.ProgressModel"><em>ProgressModel</em></a>)</p></li>
+<li><p><strong>reaction_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>remaining_below</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.ExponentialInhibitionProgress">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.kinetics.progress.</span></span><span class="sig-name descname"><span class="pre">ExponentialInhibitionProgress</span></span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#ExponentialInhibitionProgress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.ExponentialInhibitionProgress" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#liiontr.kinetics.progress.ProgressModel" title="liiontr.kinetics.progress.ProgressModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProgressModel</span></code></a></p>
+<p>Progress model with exponential inhibition.</p>
+<dl class="simple">
+<dt>f(alpha, context) =</dt><dd><p>f_base(alpha, context) * exp(-x)</p>
+</dd>
+</dl>
+<p>where x is obtained from a ReactionContext variable.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.ExponentialInhibitionProgress.factor">
+<span class="sig-name descname"><span class="pre">factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conversion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/progress.html#ExponentialInhibitionProgress.factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.progress.ExponentialInhibitionProgress.factor" title="Link to this definition"></a></dt>
+<dd><p>Return the exponentially inhibited progress factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conversion</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>context</strong> (<a class="reference internal" href="reactions.html#liiontr.reactions.context.ReactionContext" title="liiontr.reactions.context.ReactionContext"><em>ReactionContext</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.progress.ExponentialInhibitionProgress.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">progress_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.kinetics.progress.ExponentialInhibitionProgress.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>progress_model</strong> (<a class="reference internal" href="#liiontr.kinetics.progress.ProgressModel" title="liiontr.kinetics.progress.ProgressModel"><em>ProgressModel</em></a>)</p></li>
+<li><p><strong>variable_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.kinetics.threshold">
+<span id="temperature-thresholds"></span><h2>Temperature Thresholds<a class="headerlink" href="#module-liiontr.kinetics.threshold" title="Link to this heading"></a></h2>
+<p>Temperature-threshold wrappers for kinetic models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.kinetics.threshold.TemperatureThresholdKinetics">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.kinetics.threshold.</span></span><span class="sig-name descname"><span class="pre">TemperatureThresholdKinetics</span></span><a class="reference internal" href="../_modules/liiontr/kinetics/threshold.html#TemperatureThresholdKinetics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.threshold.TemperatureThresholdKinetics" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#liiontr.kinetics.model.KineticModel" title="liiontr.kinetics.model.KineticModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">KineticModel</span></code></a></p>
+<p>Kinetic model activated above a minimum temperature.</p>
+<p>The wrapped kinetic model is inactive below the specified
+temperature threshold.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.threshold.TemperatureThresholdKinetics.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/threshold.html#TemperatureThresholdKinetics.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.threshold.TemperatureThresholdKinetics.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate the minimum activation temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.threshold.TemperatureThresholdKinetics.rate">
+<span class="sig-name descname"><span class="pre">rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/kinetics/threshold.html#TemperatureThresholdKinetics.rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.kinetics.threshold.TemperatureThresholdKinetics.rate" title="Link to this definition"></a></dt>
+<dd><p>Return the temperature-dependent kinetic rate.</p>
+<p>The rate is zero below the activation threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.kinetics.threshold.TemperatureThresholdKinetics.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kinetics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_temperature</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.kinetics.threshold.TemperatureThresholdKinetics.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kinetics</strong> (<a class="reference internal" href="#liiontr.kinetics.model.KineticModel" title="liiontr.kinetics.model.KineticModel"><em>KineticModel</em></a>)</p></li>
+<li><p><strong>minimum_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="geometry.html" class="btn btn-neutral float-left" title="Geometry" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="library.html" class="btn btn-neutral float-right" title="Model Library" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

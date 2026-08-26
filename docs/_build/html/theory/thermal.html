@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thermal Model &mdash; LiionTR Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reaction Kinetics" href="kinetics.html" />
+    <link rel="prev" title="Physical and Mathematical Theory" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LiionTR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Physical and Mathematical Theory</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Thermal Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#energy-balance">Energy Balance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#definitions">Definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thermal-capacity">Thermal Capacity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#heat-generation">Heat Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#convective-heat-transfer">Convective Heat Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lumped-capacitance-assumption">Lumped-Capacitance Assumption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#current-assumptions">Current Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limitations">Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html">Reaction Kinetics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinetics.html#progress-models">Progress Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reactions.html">Reaction Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html">Gas Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pressure.html">Gas Pressure Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="venting.html">Vent Flow Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hu2020.html">Hu et al. (2020) Thermal Runaway Model</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LiionTR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Physical and Mathematical Theory</a></li>
+      <li class="breadcrumb-item active">Thermal Model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/thermal.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="thermal-model">
+<h1>Thermal Model<a class="headerlink" href="#thermal-model" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>LiionTR currently uses a zero-dimensional lumped-capacitance thermal
+model for individual battery cells.</p>
+<p>The model assumes that the temperature is spatially uniform throughout
+the cell. Internal heat generation is balanced by heat transfer from the
+cell surface to the surrounding environment.</p>
+<p>The thermal model is intentionally separated from the reaction models.
+Reaction kinetics determine the internal heat-generation rate, while the
+thermal model converts the net heat flow into a cell temperature rate.</p>
+</section>
+<section id="energy-balance">
+<h2>Energy Balance<a class="headerlink" href="#energy-balance" title="Link to this heading"></a></h2>
+<p>The cell energy balance is</p>
+<div class="math notranslate nohighlight">
+\[C_{\mathrm{th}} \frac{dT}{dt}
+=
+\dot{Q}_{\mathrm{gen}}
+-
+\dot{Q}_{\mathrm{loss}},\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\dot{Q}_{\mathrm{loss}}
+=
+h A (T - T_{\infty}).\]</div>
+<p>The resulting temperature evolution equation is therefore</p>
+<div class="math notranslate nohighlight">
+\[\frac{dT}{dt}
+=
+\frac{
+    \dot{Q}_{\mathrm{gen}}
+    -
+    h A (T - T_{\infty})
+}{
+    C_{\mathrm{th}}
+}.\]</div>
+</section>
+<section id="definitions">
+<h2>Definitions<a class="headerlink" href="#definitions" title="Link to this heading"></a></h2>
+<p>The quantities appearing in the thermal balance are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23.5%" />
+<col style="width: 52.9%" />
+<col style="width: 23.5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>SI unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(T\)</span></p></td>
+<td><p>Uniform cell temperature</p></td>
+<td><p>K</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(T_{\infty}\)</span></p></td>
+<td><p>Ambient temperature</p></td>
+<td><p>K</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\dot{Q}_{\mathrm{gen}}\)</span></p></td>
+<td><p>Total internal heat-generation rate</p></td>
+<td><p>W</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\dot{Q}_{\mathrm{loss}}\)</span></p></td>
+<td><p>Heat-loss rate to the surroundings</p></td>
+<td><p>W</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(h\)</span></p></td>
+<td><p>Convective heat-transfer coefficient</p></td>
+<td><p>W m<sup>-2</sup> K<sup>-1</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(A\)</span></p></td>
+<td><p>External cell surface area</p></td>
+<td><p>m<sup>2</sup></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(C_{\mathrm{th}}\)</span></p></td>
+<td><p>Cell thermal capacity</p></td>
+<td><p>J K<sup>-1</sup></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="thermal-capacity">
+<h2>Thermal Capacity<a class="headerlink" href="#thermal-capacity" title="Link to this heading"></a></h2>
+<p>LiionTR evaluates the lumped thermal capacity as</p>
+<div class="math notranslate nohighlight">
+\[C_{\mathrm{th}}
+=
+m c_p,\]</div>
+<p>where <span class="math notranslate nohighlight">\(m\)</span> is the cell mass and <span class="math notranslate nohighlight">\(c_p\)</span> is the effective
+specific heat capacity of the cell material.</p>
+<p>For the current cell implementation,</p>
+<div class="math notranslate nohighlight">
+\[m
+=
+\rho V,\]</div>
+<p>so that</p>
+<div class="math notranslate nohighlight">
+\[C_{\mathrm{th}}
+=
+\rho V c_p.\]</div>
+<p>The current implementation evaluates density and heat capacity at
+298.15 K when calculating cell mass and thermal capacity.</p>
+<p>This treatment therefore assumes constant effective thermophysical
+properties during the simulation.</p>
+</section>
+<section id="heat-generation">
+<h2>Heat Generation<a class="headerlink" href="#heat-generation" title="Link to this heading"></a></h2>
+<p>The thermal model receives the total internal heat-generation rate</p>
+<div class="math notranslate nohighlight">
+\[\dot{Q}_{\mathrm{gen}}\]</div>
+<p>from the chemistry or reaction backend.</p>
+<p>For a reaction-network model, the total heat-generation rate may be
+written conceptually as</p>
+<div class="math notranslate nohighlight">
+\[\dot{Q}_{\mathrm{gen}}
+=
+m_{\mathrm{cell}}
+\sum_i
+\dot{q}_i,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\dot{q}_i\)</span> is the mass-specific heat-generation rate of
+reaction <span class="math notranslate nohighlight">\(i\)</span>.</p>
+<p>The thermal model itself does not determine reaction kinetics or
+reaction enthalpies. This separation allows the same thermal model to be
+used with different thermal-runaway reaction mechanisms.</p>
+</section>
+<section id="convective-heat-transfer">
+<h2>Convective Heat Transfer<a class="headerlink" href="#convective-heat-transfer" title="Link to this heading"></a></h2>
+<p>Heat loss to the surroundings is currently represented using Newton’s
+law of cooling,</p>
+<div class="math notranslate nohighlight">
+\[\dot{Q}_{\mathrm{conv}}
+=
+h A (T - T_{\infty}).\]</div>
+<p>When</p>
+<div class="math notranslate nohighlight">
+\[T &gt; T_{\infty},\]</div>
+<p>the term is positive and removes heat from the cell.</p>
+<p>When</p>
+<div class="math notranslate nohighlight">
+\[T &lt; T_{\infty},\]</div>
+<p>the same formulation produces a negative heat-loss term and therefore
+represents heating of the cell by the environment.</p>
+</section>
+<section id="lumped-capacitance-assumption">
+<h2>Lumped-Capacitance Assumption<a class="headerlink" href="#lumped-capacitance-assumption" title="Link to this heading"></a></h2>
+<p>The lumped model assumes that internal temperature gradients are
+negligible and that the entire cell can be represented using a single
+temperature state.</p>
+<p>A conventional criterion for assessing this approximation is the Biot
+number,</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{Bi}
+=
+\frac{h L_c}{k},\]</div>
+<p>where <span class="math notranslate nohighlight">\(L_c\)</span> is a characteristic length and <span class="math notranslate nohighlight">\(k\)</span> is the
+effective thermal conductivity of the cell.</p>
+<p>The lumped-capacitance approximation is generally most appropriate when</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{Bi} \ll 1.\]</div>
+<p>LiionTR does not currently enforce a Biot-number validity criterion.
+Users are responsible for determining whether the lumped approximation
+is appropriate for a particular cell geometry, heat-transfer condition,
+and thermal-runaway regime.</p>
+</section>
+<section id="current-assumptions">
+<h2>Current Assumptions<a class="headerlink" href="#current-assumptions" title="Link to this heading"></a></h2>
+<p>The present thermal model makes the following assumptions:</p>
+<ul class="simple">
+<li><p>the cell temperature is spatially uniform;</p></li>
+<li><p>effective material properties are constant;</p></li>
+<li><p>heat transfer to the environment is purely convective;</p></li>
+<li><p>the convection coefficient is uniform over the complete cell surface;</p></li>
+<li><p>the ambient temperature is constant;</p></li>
+<li><p>radiative heat transfer is neglected;</p></li>
+<li><p>conductive coupling to neighbouring cells or structures is neglected;</p></li>
+<li><p>phase changes are not represented explicitly;</p></li>
+<li><p>internal thermal gradients are not represented.</p></li>
+</ul>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h2>
+<p>The lumped approximation is useful for model development, parameter
+studies, and coupling thermal runaway chemistry to gas and pressure
+models, but it cannot reproduce spatially resolved temperature
+distributions.</p>
+<p>During severe thermal runaway, large internal temperature gradients may
+develop because reaction rates can increase strongly with temperature.
+For such conditions, a spatially resolved thermal model may eventually
+be required.</p>
+<p>Future extensions may therefore include:</p>
+<ul class="simple">
+<li><p>temperature-dependent thermophysical properties;</p></li>
+<li><p>radiative heat transfer;</p></li>
+<li><p>conductive heat transfer between cells;</p></li>
+<li><p>spatially resolved one-dimensional or multidimensional thermal models;</p></li>
+<li><p>thermal propagation between neighbouring cells;</p></li>
+<li><p>coupling to phase-change and venting enthalpy effects.</p></li>
+</ul>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>The lumped thermal balance is implemented by</p>
+<p><a class="reference internal" href="../api/thermal.html#liiontr.thermal.lumped.LumpedThermalModel" title="liiontr.thermal.lumped.LumpedThermalModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.thermal.lumped.LumpedThermalModel</span></code></a>.</p>
+<p>The corresponding abstract interface is</p>
+<p><a class="reference internal" href="../api/thermal.html#liiontr.thermal.model.ThermalModel" title="liiontr.thermal.model.ThermalModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.thermal.model.ThermalModel</span></code></a>.</p>
+<p>The thermal model returns the temperature derivative in K/s to the
+numerical solver.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Physical and Mathematical Theory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="kinetics.html" class="btn btn-neutral float-right" title="Reaction Kinetics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, François Dion.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
