@@ -1,0 +1,438 @@
+The reaction subsystem combines kinetic laws, reaction-progress models,
+reaction enthalpies, and reacting-material inventories into physical
+thermal runaway reactions.
+
+Each reaction contributes both a progress rate and a heat-generation
+rate to the coupled system.
+
+
+\subsection{Standard reaction model}
+
+For a standard reaction, the progress rate is
+
+\begin{equation}
+    \dot{\alpha}
+    =
+    k(T)
+    f
+    \left(
+        \alpha,
+        \boldsymbol{\alpha}
+    \right),
+    \label{eq:reaction_progress}
+\end{equation}
+
+where $k(T)$ is the kinetic rate and $f$ is the reaction-progress
+function.
+
+If the reaction occupies an effective mass fraction $w$ of the total
+cell mass and releases a specific enthalpy $\Delta H$, the
+mass-specific heat-generation rate relative to total cell mass is
+
+\begin{equation}
+    \dot{q}
+    =
+    w
+    \Delta H
+    \dot{\alpha}.
+    \label{eq:reaction_heat_specific}
+\end{equation}
+
+The total heat-generation rate for a cell of mass $m_{\mathrm{cell}}$
+is therefore
+
+\begin{equation}
+    \dot{Q}
+    =
+    m_{\mathrm{cell}}
+    w
+    \Delta H
+    \dot{\alpha}.
+    \label{eq:reaction_heat_total}
+\end{equation}
+
+
+\subsection{Reaction enthalpy convention}
+
+The parameter $\Delta H$ represents the effective heat release per unit
+mass of reacting material.
+
+For the reduced-order exothermic reactions currently implemented,
+$\Delta H$ is treated as a positive heat-release quantity.
+
+The resulting heat-generation term is therefore positive when
+
+\begin{equation}
+    \dot{\alpha} > 0.
+\end{equation}
+
+This convention avoids embedding thermodynamic sign conventions directly
+into the thermal balance and is consistent with the current LiionTR
+reaction implementation.
+
+
+\subsection{Reaction mass fraction}
+
+The parameter $w$ represents the effective fraction of total cell mass
+participating in a particular reaction.
+
+For literature models that report a volumetric reactant content
+$W_r$ in \si{\kilogram\per\meter\cubed}, LiionTR converts this quantity
+to a cell mass fraction using
+
+\begin{equation}
+    w
+    =
+    \frac{
+        W_r
+    }{
+        \rho_{\mathrm{cell}}
+    },
+    \label{eq:volumetric_to_mass_fraction}
+\end{equation}
+
+where $\rho_{\mathrm{cell}}$ is the effective cell density.
+
+This conversion enables literature models reported on a volumetric basis
+to be used consistently within the cell-mass-based thermal formulation.
+
+
+\subsection{Reaction context}
+
+Individual reactions may depend on the state of other reactions.
+
+LiionTR therefore constructs a reaction context containing the complete
+reaction state
+
+\begin{equation}
+    \boldsymbol{\alpha}
+    =
+    \left[
+        \alpha_1,
+        \ldots,
+        \alpha_N
+    \right]^{\mathrm{T}}.
+\end{equation}
+
+The context provides access to quantities such as
+
+\begin{equation}
+    \alpha_j
+\end{equation}
+
+and
+
+\begin{equation}
+    1-\alpha_j,
+\end{equation}
+
+as well as transformed or normalized context variables.
+
+This permits reaction coupling without storing mutable integration state
+inside individual reaction objects.
+
+
+\subsection{Multi-channel reactions}
+
+Some literature models represent one physical decomposition process
+using several parallel kinetic channels.
+
+LiionTR represents these processes with a common conversion variable and
+multiple kinetic channels.
+
+The shared reaction progress rate is obtained from the sum of the
+individual kinetic channels,
+
+\begin{equation}
+    \dot{\alpha}
+    =
+    f
+    \left(
+        \alpha,
+        \boldsymbol{\alpha}
+    \right)
+    \sum_{j=1}^{N_c}
+    k_j(T).
+    \label{eq:multichannel_progress}
+\end{equation}
+
+For $N_c$ channels sharing a conversion $\alpha$, the heat-generation
+rate can be written conceptually as
+
+
+\begin{equation}
+    \dot{q}
+    =
+    w
+    f
+    \left(
+        \alpha,
+        \boldsymbol{\alpha}
+    \right)
+    \sum_{j=1}^{N_c}
+    \Delta H_j
+    k_j(T).
+    \label{eq:multichannel_heat}
+\end{equation}
+
+Each channel therefore contributes independently to heat generation,
+while the physical reaction retains only one integrated progress state.
+
+
+\subsection{Shared reaction progress}
+
+The use of a shared conversion is physically distinct from representing
+each kinetic channel as an independent reaction.
+
+For a multi-channel decomposition mechanism, all channels consume the
+same effective reactant inventory.
+
+The model therefore integrates
+
+\begin{equation}
+    \alpha
+\end{equation}
+
+rather than introducing separate conversions
+
+\begin{equation}
+    \alpha_1,
+    \alpha_2,
+    \ldots,
+    \alpha_{N_c}.
+\end{equation}
+
+This distinction is important for preserving a consistent reacting mass
+inventory.
+
+
+\subsection{Reaction network}
+
+A thermal runaway mechanism is assembled as a network containing
+multiple reactions.
+
+For $N$ reactions, the conversion vector is
+
+\begin{equation}
+    \boldsymbol{\alpha}
+    =
+    \left[
+        \alpha_1,
+        \alpha_2,
+        \ldots,
+        \alpha_N
+    \right]^{\mathrm{T}}.
+\end{equation}
+
+The corresponding progress-rate vector is
+
+\begin{equation}
+    \dot{\boldsymbol{\alpha}}
+    =
+    \left[
+        \dot{\alpha}_1,
+        \dot{\alpha}_2,
+        \ldots,
+        \dot{\alpha}_N
+    \right]^{\mathrm{T}}.
+\end{equation}
+
+Each reaction is evaluated using the current temperature and current
+reaction-network state.
+
+
+\subsection{Network heat generation}
+
+The total mass-specific heat-generation rate is
+
+\begin{equation}
+    \dot{q}_{\mathrm{total}}
+    =
+    \sum_{i=1}^{N}
+    \dot{q}_i.
+    \label{eq:network_specific_heat}
+\end{equation}
+
+The corresponding total cell heat-generation rate is
+
+\begin{equation}
+    \dot{Q}_{\mathrm{gen}}
+    =
+    m_{\mathrm{cell}}
+    \dot{q}_{\mathrm{total}}.
+    \label{eq:network_total_heat}
+\end{equation}
+
+This quantity is passed to the thermal model.
+
+
+\subsection{Coupled thermal-reaction system}
+
+The reaction network and thermal model form a strongly coupled
+nonlinear system,
+
+\begin{equation}
+    \frac{dT}{dt}
+    =
+    \frac{
+        m_{\mathrm{cell}}
+        \displaystyle\sum_{i=1}^{N}
+        \dot{q}_i
+        -
+        hA
+        \left(
+            T-T_{\infty}
+        \right)
+    }{
+        C_{\mathrm{th}}
+    },
+    \label{eq:coupled_temperature}
+\end{equation}
+
+with
+
+\begin{equation}
+    \frac{d\alpha_i}{dt}
+    =
+    k_i(T)
+    f_i
+    \left(
+        \alpha_i,
+        \boldsymbol{\alpha}
+    \right),
+    \qquad
+    i=1,\ldots,N.
+    \label{eq:coupled_reactions}
+\end{equation}
+
+The reaction rates depend on temperature, while temperature depends on
+reaction heat generation.
+
+This bidirectional coupling produces the positive feedback characteristic
+of thermal runaway.
+
+
+\subsection{Initial reaction state}
+
+Each reaction requires an initial conversion
+
+\begin{equation}
+    \alpha_{i,0}.
+\end{equation}
+
+The complete initial reaction state is
+
+\begin{equation}
+    \boldsymbol{\alpha}_0
+    =
+    \left[
+        \alpha_{1,0},
+        \ldots,
+        \alpha_{N,0}
+    \right]^{\mathrm{T}}.
+\end{equation}
+
+When a literature model reports an initial remaining fraction $r_0$,
+LiionTR converts it using
+
+\begin{equation}
+    \alpha_0
+    =
+    1-r_0.
+    \label{eq:remaining_to_conversion}
+\end{equation}
+
+
+\subsection{Software representation}
+
+The physical organization of the reaction subsystem can be summarized
+using the conceptual structure shown in
+Figure~\ref{fig:reaction_architecture}.
+
+\begin{figure}[htbp]
+    \centering
+
+    \begin{tikzpicture}[
+        node distance=1.6cm and 2.0cm,
+        block/.style={
+            rectangle,
+            rounded corners,
+            draw,
+            align=center,
+            minimum width=3.1cm,
+            minimum height=0.95cm
+        },
+        line/.style={
+            -{Latex[length=3mm]},
+            thick
+        }
+    ]
+
+    \node[block] (kinetic) {Kinetic model\\$k(T)$};
+    \node[block, right=of kinetic] (progress) {Progress model\\$f(\alpha,\mathbf{\alpha})$};
+
+    \node[block, below=of $(kinetic)!0.5!(progress)$] (reaction)
+        {Reaction};
+
+    \node[block, below=of reaction] (network)
+        {Reaction network};
+
+    \node[block, below left=of network] (rates)
+        {Progress rates\\$\dot{\boldsymbol{\alpha}}$};
+
+    \node[block, below right=of network] (heat)
+        {Heat generation\\$\dot{Q}_{\mathrm{gen}}$};
+
+    \draw[line] (kinetic) -- (reaction);
+    \draw[line] (progress) -- (reaction);
+    \draw[line] (reaction) -- (network);
+    \draw[line] (network) -- (rates);
+    \draw[line] (network) -- (heat);
+
+    \end{tikzpicture}
+
+    \caption{
+        Conceptual organization of the LiionTR reaction subsystem.
+        Kinetic and progress models are combined into reaction models,
+        which are assembled into a reaction network that supplies
+        reaction progress rates and total heat generation.
+    }
+    \label{fig:reaction_architecture}
+\end{figure}
+
+
+\subsection{Current assumptions}
+
+The current reaction framework assumes that:
+
+\begin{itemize}
+    \item every integrated reaction is represented by a scalar conversion;
+    \item reaction states are spatially uniform;
+    \item reaction enthalpies are effective constant quantities;
+    \item reacting-material mass fractions remain fixed;
+    \item pressure dependence is absent unless explicitly introduced by a
+          custom model;
+    \item reaction products are not automatically determined from
+          chemical equilibrium;
+    \item transport limitations are not explicitly resolved.
+\end{itemize}
+
+
+\subsection{Future extensions}
+
+The modular reaction architecture is intended to support more detailed
+physical descriptions.
+
+Potential extensions include:
+
+\begin{itemize}
+    \item temperature-dependent reaction enthalpies;
+    \item pressure-dependent kinetics;
+    \item transport-limited reactions;
+    \item competing reaction mechanisms;
+    \item reaction-derived elemental source inventories;
+    \item thermochemical equilibrium using Cantera;
+    \item electrochemical-state-dependent kinetics;
+    \item calibration against ARC and DSC measurements;
+    \item parameter uncertainty and sensitivity analysis.
+\end{itemize}

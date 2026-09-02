@@ -1,0 +1,523 @@
+LiionTR formulates thermal runaway as a coupled system of ordinary
+differential equations integrated in time.
+
+The numerical solver owns the complete dynamic state and evaluates the
+physical models only as functions of the current state. This avoids
+hidden mutable state inside the thermal, reaction, gas, pressure, and
+venting models.
+
+
+\subsection{State vector}
+
+For a problem containing $N_r$ reaction states and $N_s$ gas species,
+the integrated state vector is
+
+\begin{equation}
+    \mathbf{y}
+    =
+    \begin{bmatrix}
+        T &
+        \alpha_1 &
+        \cdots &
+        \alpha_{N_r} &
+        n_1 &
+        \cdots &
+        n_{N_s}
+    \end{bmatrix}^{\mathrm{T}}.
+    \label{eq:numerical_state_vector}
+\end{equation}
+
+The first component is the lumped cell temperature.
+
+The following $N_r$ components contain reaction conversions,
+
+\begin{equation}
+    \boldsymbol{\alpha}
+    =
+    \begin{bmatrix}
+        \alpha_1 &
+        \cdots &
+        \alpha_{N_r}
+    \end{bmatrix}^{\mathrm{T}},
+\end{equation}
+
+while the final $N_s$ components contain the gas-species inventories,
+
+\begin{equation}
+    \mathbf{n}
+    =
+    \begin{bmatrix}
+        n_1 &
+        \cdots &
+        n_{N_s}
+    \end{bmatrix}^{\mathrm{T}}.
+\end{equation}
+
+When gas generation is disabled, the gas portion of the state vector is
+absent.
+
+
+\subsection{Initial conditions}
+
+The initial numerical state is assembled from the configured thermal
+problem.
+
+The temperature is initialized as
+
+\begin{equation}
+    T(0)
+    =
+    T_0.
+\end{equation}
+
+Each reaction is initialized according to its prescribed initial
+conversion,
+
+\begin{equation}
+    \alpha_i(0)
+    =
+    \alpha_{i,0}.
+\end{equation}
+
+When gas modeling is enabled, the initial gas inventory is determined
+from the configured species inventory or from the pressure model.
+
+The complete initial state is therefore
+
+\begin{equation}
+    \mathbf{y}(0)
+    =
+    \mathbf{y}_0.
+\end{equation}
+
+
+\subsection{Right-hand-side evaluation}
+
+At every solver evaluation, the current state vector is unpacked into
+temperature, reaction conversions, and gas inventories.
+
+The reaction context is constructed from the current conversion vector,
+
+\begin{equation}
+    \boldsymbol{\alpha}(t).
+\end{equation}
+
+The reaction network then evaluates
+
+\begin{equation}
+    \dot{\boldsymbol{\alpha}}
+    =
+    \mathbf{f}_{\alpha}
+    \left(
+        T,
+        \boldsymbol{\alpha}
+    \right).
+    \label{eq:rhs_reaction_rates}
+\end{equation}
+
+The corresponding total reaction heat is
+
+\begin{equation}
+    \dot{Q}_{\mathrm{gen}}
+    =
+    \dot{Q}_{\mathrm{gen}}
+    \left(
+        T,
+        \boldsymbol{\alpha}
+    \right).
+\end{equation}
+
+The thermal model evaluates
+
+\begin{equation}
+    \dot{T}
+    =
+    \frac{
+        \dot{Q}_{\mathrm{gen}}
+        -
+        hA(T-T_{\infty})
+    }{
+        C_{\mathrm{th}}
+    }.
+    \label{eq:rhs_temperature}
+\end{equation}
+
+
+\subsection{Gas-generation contribution}
+
+If a gas-generation model is present, the reaction rates are also used
+to determine species-generation rates,
+
+\begin{equation}
+    \dot{\mathbf{n}}_{\mathrm{gen}}
+    =
+    \mathbf{f}_{\mathrm{gas}}
+    \left(
+        \dot{\boldsymbol{\alpha}}
+    \right).
+    \label{eq:rhs_gas_generation}
+\end{equation}
+
+Before vent opening,
+
+\begin{equation}
+    \dot{\mathbf{n}}
+    =
+    \dot{\mathbf{n}}_{\mathrm{gen}}.
+    \label{eq:rhs_closed_gas}
+\end{equation}
+
+
+\subsection{Pressure reconstruction}
+
+Internal pressure is not integrated as an independent state variable.
+
+Instead, it is reconstructed algebraically from the instantaneous gas
+inventory and temperature,
+
+\begin{equation}
+    P
+    =
+    P
+    \left(
+        T,
+        \mathbf{n}
+    \right).
+    \label{eq:pressure_algebraic_state}
+\end{equation}
+
+For the current ideal-gas formulation,
+
+\begin{equation}
+    P
+    =
+    \frac{
+        R T
+        \displaystyle\sum_s n_s
+    }{
+        V_{\mathrm{free}}
+    }.
+\end{equation}
+
+Avoiding pressure as an additional integrated variable ensures direct
+consistency between pressure and gas inventory.
+
+
+\subsection{Vent-opening event}
+
+When venting is enabled, the closed-cell integration defines an event
+function
+
+\begin{equation}
+    g_{\mathrm{vent}}
+    \left(
+        t,
+        \mathbf{y}
+    \right)
+    =
+    P
+    \left(
+        T,
+        \mathbf{n}
+    \right)
+    -
+    P_{\mathrm{vent}}.
+    \label{eq:vent_event_function}
+\end{equation}
+
+Vent opening occurs when
+
+\begin{equation}
+    g_{\mathrm{vent}}
+    =
+    0.
+\end{equation}
+
+The event terminates the closed-cell integration.
+
+
+\subsection{Two-phase integration}
+
+The current solver represents irreversible vent opening using two
+successive numerical integrations.
+
+The first phase solves the closed-cell system,
+
+\begin{equation}
+    \dot{\mathbf{y}}
+    =
+    \mathbf{F}_{\mathrm{closed}}
+    \left(
+        t,
+        \mathbf{y}
+    \right),
+\end{equation}
+
+until either the final time or a terminating event is reached.
+
+If the vent-opening event occurs, the state at the event time
+
+\begin{equation}
+    \mathbf{y}_{\mathrm{vent}}
+\end{equation}
+
+becomes the initial condition of the second phase.
+
+The second integration solves
+
+\begin{equation}
+    \dot{\mathbf{y}}
+    =
+    \mathbf{F}_{\mathrm{open}}
+    \left(
+        t,
+        \mathbf{y}
+    \right),
+\end{equation}
+
+where the gas balance is modified to include vent discharge,
+
+\begin{equation}
+    \dot{\mathbf{n}}
+    =
+    \dot{\mathbf{n}}_{\mathrm{gen}}
+    -
+    \dot{\mathbf{n}}_{\mathrm{vent}}.
+    \label{eq:rhs_open_gas}
+\end{equation}
+
+
+\subsection{Solver flow}
+
+The numerical sequence is summarized in
+\cref{fig:solver_flow}.
+
+\begin{figure}[htbp]
+    \centering
+
+    \begin{tikzpicture}[
+        node distance=1.25cm and 2.0cm,
+        block/.style={
+            rectangle,
+            rounded corners,
+            draw,
+            align=center,
+            minimum width=4.0cm,
+            minimum height=0.9cm
+        },
+        decision/.style={
+            diamond,
+            draw,
+            align=center,
+            aspect=2.2,
+            inner sep=1pt
+        },
+        line/.style={
+            -{Latex[length=3mm]},
+            thick
+        }
+    ]
+
+    \node[block] (initial)
+        {Construct initial state $\mathbf{y}_0$};
+
+    \node[block, below=of initial] (closed)
+        {Integrate closed-cell system};
+
+    \node[decision, below=of closed] (ventevent)
+        {Vent event?};
+
+    \node[block, below left=1.5cm and 2.0cm of ventevent] (finish)
+        {Assemble result};
+
+    \node[block, below right=1.5cm and 2.0cm of ventevent] (open)
+        {Restart from event state\\
+         Integrate open-cell system};
+
+    \node[block, below=of open] (merge)
+        {Concatenate closed and open solutions};
+
+    \draw[line] (initial) -- (closed);
+    \draw[line] (closed) -- (ventevent);
+
+    \draw[line]
+        (ventevent)
+        --
+        node[above left] {No}
+        (finish);
+
+    \draw[line]
+        (ventevent)
+        --
+        node[above right] {Yes}
+        (open);
+
+    \draw[line] (open) -- (merge);
+    \draw[line] (merge.west) -| (finish.south);
+
+    \end{tikzpicture}
+
+    \caption{
+        Numerical integration strategy used for irreversible vent
+        opening in the current LiionTR solver.
+    }
+    \label{fig:solver_flow}
+\end{figure}
+
+
+\subsection{Maximum-temperature event}
+
+A maximum permitted temperature may be specified as
+
+\begin{equation}
+    T_{\max}.
+\end{equation}
+
+The corresponding event function is
+
+\begin{equation}
+    g_T
+    =
+    T-T_{\max}.
+    \label{eq:max_temperature_event}
+\end{equation}
+
+The integration terminates when the event crosses zero in the prescribed
+direction.
+
+
+\subsection{Maximum-pressure event}
+
+Similarly, a maximum-pressure event is represented by
+
+\begin{equation}
+    g_P
+    =
+    P-P_{\max}.
+    \label{eq:max_pressure_event}
+\end{equation}
+
+This event can terminate either the closed or open phase of the
+simulation.
+
+
+\subsection{Stiff numerical integration}
+
+Thermal runaway kinetics frequently contain strongly temperature-sensitive
+Arrhenius terms spanning several orders of magnitude.
+
+The coupled equations can consequently become stiff, particularly during
+the rapid acceleration preceding thermal runaway.
+
+The default LiionTR solver therefore uses the backward differentiation
+formula method available through SciPy's \texttt{solve\_ivp} interface
+\parencite{virtanen2020scipy}.
+
+The BDF method is an implicit variable-order integration method suitable
+for stiff ordinary differential equations.
+
+
+\subsection{Adaptive time stepping}
+
+The solver automatically adjusts its internal time step according to
+local error estimates.
+
+The user may specify relative and absolute tolerances,
+
+\begin{equation}
+    \mathrm{rtol}
+\end{equation}
+
+and
+
+\begin{equation}
+    \mathrm{atol},
+\end{equation}
+
+as well as an optional maximum time step.
+
+The internal time-step size can become substantially smaller during the
+rapid thermal runaway phase than during the initial slow-heating period.
+
+
+\subsection{State reconstruction}
+
+After numerical integration, the resulting solver state is separated
+into physically meaningful output quantities.
+
+These include
+
+\begin{itemize}
+    \item time;
+    \item cell temperature;
+    \item individual reaction conversions;
+    \item reaction progress rates;
+    \item heat-generation rates;
+    \item gas-species inventories;
+    \item total gas amount;
+    \item gas composition;
+    \item pressure;
+    \item vent status.
+\end{itemize}
+
+For vented simulations, the two numerical phases are concatenated into a
+single continuous simulation result.
+
+
+\subsection{Numerical architecture}
+
+The numerical solver acts as the orchestration layer between the
+individual physical models.
+
+Conceptually,
+
+\begin{equation}
+    \mathbf{y}
+    \longrightarrow
+    \begin{cases}
+        \text{reaction model},\\
+        \text{thermal model},\\
+        \text{gas model},\\
+        \text{pressure model},\\
+        \text{vent model}
+    \end{cases}
+    \longrightarrow
+    \dot{\mathbf{y}}.
+\end{equation}
+
+Individual physical components therefore remain independent of the
+specific numerical integration algorithm.
+
+
+\subsection{Current limitations}
+
+The current numerical formulation assumes:
+
+\begin{itemize}
+    \item a single lumped temperature state;
+    \item scalar reaction conversions;
+    \item species-resolved gas inventories;
+    \item pressure reconstructed algebraically;
+    \item instantaneous transition from closed to fully open vent;
+    \item no resealing after vent opening;
+    \item no differential-algebraic constraints beyond algebraic
+          reconstruction of derived quantities;
+    \item no spatial discretization.
+\end{itemize}
+
+
+\subsection{Future numerical extensions}
+
+Future developments may include:
+
+\begin{itemize}
+    \item alternative stiff and non-stiff integrators;
+    \item explicit Jacobian evaluation;
+    \item sparse Jacobian support;
+    \item differential-algebraic formulations;
+    \item adaptive vent-opening models;
+    \item integration of internal energy instead of temperature;
+    \item spatial thermal discretization;
+    \item cell-to-cell propagation systems;
+    \item sensitivity equations and parameter estimation.
+\end{itemize}

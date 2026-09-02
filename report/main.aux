@@ -1,0 +1,435 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\abx@aux@refcontext{none/global//global/global/global}
+\gdef \LT@i {\LT@entry 
+    {1}{47.58716pt}\LT@entry 
+    {1}{248.15796pt}\LT@entry 
+    {3}{61.64285pt}}
+\@writefile{toc}{\contentsline {section}{Nomenclature}{6}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{8}{section.1}\protected@file@percent }
+\newlabel{sec:introduction}{{1}{8}{Introduction}{section.1}{}}
+\newlabel{sec:introduction@cref}{{[section][1][]1}{[1][8][]8}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Project objectives}{8}{subsection.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Design philosophy}{9}{subsection.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Reduced-order modeling}{9}{subsection.1.3}\protected@file@percent }
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\abx@aux@cite{0}{cantera2025}
+\abx@aux@segm{0}{0}{cantera2025}
+\abx@aux@cite{0}{sulzer2021pybamm}
+\abx@aux@segm{0}{0}{sulzer2021pybamm}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4}Current implementation}{10}{subsection.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.5}Relationship to external scientific software}{10}{subsection.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.6}Scope of this report}{11}{subsection.1.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Physical and Mathematical Framework}{11}{section.2}\protected@file@percent }
+\newlabel{sec:framework}{{2}{11}{Physical and Mathematical Framework}{section.2}{}}
+\newlabel{sec:framework@cref}{{[section][2][]2}{[1][11][]11}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Thermal state}{12}{subsection.2.1}\protected@file@percent }
+\newlabel{eq:general_energy_balance}{{8}{12}{Thermal state}{equation.8}{}}
+\newlabel{eq:general_energy_balance@cref}{{[equation][8][]8}{[1][12][]12}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Reaction states}{12}{subsection.2.2}\protected@file@percent }
+\newlabel{eq:reaction_progress_general}{{10}{12}{Reaction states}{equation.10}{}}
+\newlabel{eq:reaction_progress_general@cref}{{[equation][10][]10}{[1][12][]12}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Heat generation}{12}{subsection.2.3}\protected@file@percent }
+\newlabel{eq:total_heat_generation}{{13}{12}{Heat generation}{equation.13}{}}
+\newlabel{eq:total_heat_generation@cref}{{[equation][13][]13}{[1][12][]12}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Gas-generation states}{12}{subsection.2.4}\protected@file@percent }
+\newlabel{eq:vented_species_balance}{{15}{12}{Gas-generation states}{equation.15}{}}
+\newlabel{eq:vented_species_balance@cref}{{[equation][15][]15}{[1][12][]12}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Pressure state}{13}{subsection.2.5}\protected@file@percent }
+\newlabel{eq:ideal_pressure_framework}{{16}{13}{Pressure state}{equation.16}{}}
+\newlabel{eq:ideal_pressure_framework@cref}{{[equation][16][]16}{[1][13][]13}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Model coupling}{13}{subsection.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}Separation of physical models and state integration}{13}{subsection.2.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces  Conceptual architecture of the current LiionTR framework. Reaction kinetics determine reaction progress, which drives both heat generation and gas generation. Heat generation affects the thermal model, while gas generation affects the gas inventory and therefore the internal pressure. Pressure may eventually trigger venting. }}{14}{figure.1}\protected@file@percent }
+\newlabel{fig:framework_architecture}{{1}{14}{Conceptual architecture of the current LiionTR framework. Reaction kinetics determine reaction progress, which drives both heat generation and gas generation. Heat generation affects the thermal model, while gas generation affects the gas inventory and therefore the internal pressure. Pressure may eventually trigger venting}{figure.1}{}}
+\newlabel{fig:framework_architecture@cref}{{[figure][1][]1}{[1][13][]14}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.8}Scope of the present framework}{15}{subsection.2.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Thermal Model}{15}{section.3}\protected@file@percent }
+\newlabel{sec:thermal}{{3}{15}{Thermal Model}{section.3}{}}
+\newlabel{sec:thermal@cref}{{[section][3][]3}{[1][15][]15}{}{}{}}
+\newlabel{eq:lumped_thermal_balance}{{18}{15}{Thermal Model}{equation.18}{}}
+\newlabel{eq:lumped_thermal_balance@cref}{{[equation][18][]18}{[1][15][]15}{}{}{}}
+\newlabel{eq:lumped_temperature_derivative}{{19}{15}{Thermal Model}{equation.19}{}}
+\newlabel{eq:lumped_temperature_derivative@cref}{{[equation][19][]19}{[1][15][]15}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Cell thermal capacity}{15}{subsection.3.1}\protected@file@percent }
+\newlabel{eq:thermal_capacity}{{20}{15}{Cell thermal capacity}{equation.20}{}}
+\newlabel{eq:thermal_capacity@cref}{{[equation][20][]20}{[1][15][]15}{}{}{}}
+\newlabel{eq:cell_mass}{{21}{15}{Cell thermal capacity}{equation.21}{}}
+\newlabel{eq:cell_mass@cref}{{[equation][21][]21}{[1][15][]15}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Convective heat transfer}{16}{subsection.3.2}\protected@file@percent }
+\newlabel{eq:convective_heat_loss}{{23}{16}{Convective heat transfer}{equation.23}{}}
+\newlabel{eq:convective_heat_loss@cref}{{[equation][23][]23}{[1][16][]16}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Internal heat generation}{16}{subsection.3.3}\protected@file@percent }
+\newlabel{eq:thermal_reaction_heat}{{24}{16}{Internal heat generation}{equation.24}{}}
+\newlabel{eq:thermal_reaction_heat@cref}{{[equation][24][]24}{[1][16][]16}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Thermal runaway feedback}{16}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Validity of the lumped approximation}{16}{subsection.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Current assumptions}{17}{subsection.3.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.7}Limitations and future extensions}{17}{subsection.3.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Reaction Kinetics}{18}{section.4}\protected@file@percent }
+\newlabel{sec:kinetics}{{4}{18}{Reaction Kinetics}{section.4}{}}
+\newlabel{sec:kinetics@cref}{{[section][4][]4}{[1][17][]18}{}{}{}}
+\newlabel{eq:general_kinetics}{{29}{18}{Reaction Kinetics}{equation.29}{}}
+\newlabel{eq:general_kinetics@cref}{{[equation][29][]29}{[1][17][]18}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Reaction conversion}{18}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Arrhenius kinetics}{18}{subsection.4.2}\protected@file@percent }
+\newlabel{eq:arrhenius}{{32}{18}{Arrhenius kinetics}{equation.32}{}}
+\newlabel{eq:arrhenius@cref}{{[equation][32][]32}{[1][18][]18}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Power-law progress}{18}{subsection.4.3}\protected@file@percent }
+\newlabel{eq:power_law_progress}{{33}{18}{Power-law progress}{equation.33}{}}
+\newlabel{eq:power_law_progress@cref}{{[equation][33][]33}{[1][18][]18}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Autocatalytic progress}{19}{subsection.4.4}\protected@file@percent }
+\newlabel{eq:autocatalytic_progress}{{35}{19}{Autocatalytic progress}{equation.35}{}}
+\newlabel{eq:autocatalytic_progress@cref}{{[equation][35][]35}{[1][19][]19}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Temperature thresholds}{19}{subsection.4.5}\protected@file@percent }
+\newlabel{eq:temperature_threshold}{{37}{19}{Temperature thresholds}{equation.37}{}}
+\newlabel{eq:temperature_threshold@cref}{{[equation][37][]37}{[1][19][]19}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Context-dependent reaction progress}{19}{subsection.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}Threshold progress}{19}{subsection.4.7}\protected@file@percent }
+\newlabel{eq:progress_threshold}{{40}{20}{Threshold progress}{equation.40}{}}
+\newlabel{eq:progress_threshold@cref}{{[equation][40][]40}{[1][19][]20}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.8}Exponential inhibition}{20}{subsection.4.8}\protected@file@percent }
+\newlabel{eq:exponential_inhibition}{{41}{20}{Exponential inhibition}{equation.41}{}}
+\newlabel{eq:exponential_inhibition@cref}{{[equation][41][]41}{[1][20][]20}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9}Normalized context variables}{20}{subsection.4.9}\protected@file@percent }
+\newlabel{eq:normalized_remaining_fraction}{{43}{20}{Normalized context variables}{equation.43}{}}
+\newlabel{eq:normalized_remaining_fraction@cref}{{[equation][43][]43}{[1][20][]20}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.10}Separation of kinetics and progress}{20}{subsection.4.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.11}Current limitations}{21}{subsection.4.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Reaction Network}{21}{section.5}\protected@file@percent }
+\newlabel{sec:reactions}{{5}{21}{Reaction Network}{section.5}{}}
+\newlabel{sec:reactions@cref}{{[section][5][]5}{[1][21][]21}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Standard reaction model}{21}{subsection.5.1}\protected@file@percent }
+\newlabel{eq:reaction_progress}{{46}{21}{Standard reaction model}{equation.46}{}}
+\newlabel{eq:reaction_progress@cref}{{[equation][46][]46}{[1][21][]21}{}{}{}}
+\newlabel{eq:reaction_heat_specific}{{47}{21}{Standard reaction model}{equation.47}{}}
+\newlabel{eq:reaction_heat_specific@cref}{{[equation][47][]47}{[1][21][]21}{}{}{}}
+\newlabel{eq:reaction_heat_total}{{48}{21}{Standard reaction model}{equation.48}{}}
+\newlabel{eq:reaction_heat_total@cref}{{[equation][48][]48}{[1][21][]21}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Reaction enthalpy convention}{22}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Reaction mass fraction}{22}{subsection.5.3}\protected@file@percent }
+\newlabel{eq:volumetric_to_mass_fraction}{{50}{22}{Reaction mass fraction}{equation.50}{}}
+\newlabel{eq:volumetric_to_mass_fraction@cref}{{[equation][50][]50}{[1][22][]22}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Reaction context}{22}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Multi-channel reactions}{22}{subsection.5.5}\protected@file@percent }
+\newlabel{eq:multichannel_progress}{{54}{23}{Multi-channel reactions}{equation.54}{}}
+\newlabel{eq:multichannel_progress@cref}{{[equation][54][]54}{[1][23][]23}{}{}{}}
+\newlabel{eq:multichannel_heat}{{55}{23}{Multi-channel reactions}{equation.55}{}}
+\newlabel{eq:multichannel_heat@cref}{{[equation][55][]55}{[1][23][]23}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Shared reaction progress}{23}{subsection.5.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Reaction network}{23}{subsection.5.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Network heat generation}{23}{subsection.5.8}\protected@file@percent }
+\newlabel{eq:network_specific_heat}{{60}{24}{Network heat generation}{equation.60}{}}
+\newlabel{eq:network_specific_heat@cref}{{[equation][60][]60}{[1][23][]24}{}{}{}}
+\newlabel{eq:network_total_heat}{{61}{24}{Network heat generation}{equation.61}{}}
+\newlabel{eq:network_total_heat@cref}{{[equation][61][]61}{[1][24][]24}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.9}Coupled thermal-reaction system}{24}{subsection.5.9}\protected@file@percent }
+\newlabel{eq:coupled_temperature}{{62}{24}{Coupled thermal-reaction system}{equation.62}{}}
+\newlabel{eq:coupled_temperature@cref}{{[equation][62][]62}{[1][24][]24}{}{}{}}
+\newlabel{eq:coupled_reactions}{{63}{24}{Coupled thermal-reaction system}{equation.63}{}}
+\newlabel{eq:coupled_reactions@cref}{{[equation][63][]63}{[1][24][]24}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.10}Initial reaction state}{24}{subsection.5.10}\protected@file@percent }
+\newlabel{eq:remaining_to_conversion}{{66}{24}{Initial reaction state}{equation.66}{}}
+\newlabel{eq:remaining_to_conversion@cref}{{[equation][66][]66}{[1][24][]24}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.11}Software representation}{24}{subsection.5.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.12}Current assumptions}{24}{subsection.5.12}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces  Conceptual organization of the LiionTR reaction subsystem. Kinetic and progress models are combined into reaction models, which are assembled into a reaction network that supplies reaction progress rates and total heat generation. }}{25}{figure.2}\protected@file@percent }
+\newlabel{fig:reaction_architecture}{{2}{25}{Conceptual organization of the LiionTR reaction subsystem. Kinetic and progress models are combined into reaction models, which are assembled into a reaction network that supplies reaction progress rates and total heat generation}{figure.2}{}}
+\newlabel{fig:reaction_architecture@cref}{{[figure][2][]2}{[1][24][]25}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.13}Future extensions}{25}{subsection.5.13}\protected@file@percent }
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Hu et al. (2020) Thermal Runaway Model}{26}{section.6}\protected@file@percent }
+\newlabel{sec:hu2020}{{6}{26}{Hu et al. (2020) Thermal Runaway Model}{section.6}{}}
+\newlabel{sec:hu2020@cref}{{[section][6][]6}{[1][26][]26}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Reaction-state vector}{26}{subsection.6.1}\protected@file@percent }
+\newlabel{eq:hu_state_vector}{{67}{26}{Reaction-state vector}{equation.67}{}}
+\newlabel{eq:hu_state_vector@cref}{{[equation][67][]67}{[1][26][]26}{}{}{}}
+\newlabel{eq:hu_initial_state}{{68}{26}{Reaction-state vector}{equation.68}{}}
+\newlabel{eq:hu_initial_state@cref}{{[equation][68][]68}{[1][26][]26}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Arrhenius formulation}{26}{subsection.6.2}\protected@file@percent }
+\newlabel{eq:hu_arrhenius}{{69}{26}{Arrhenius formulation}{equation.69}{}}
+\newlabel{eq:hu_arrhenius@cref}{{[equation][69][]69}{[1][26][]26}{}{}{}}
+\newlabel{eq:hu_generic_progress}{{70}{27}{Arrhenius formulation}{equation.70}{}}
+\newlabel{eq:hu_generic_progress@cref}{{[equation][70][]70}{[1][26][]27}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}SEI decomposition}{27}{subsection.6.3}\protected@file@percent }
+\newlabel{eq:hu_sei_progress}{{71}{27}{SEI decomposition}{equation.71}{}}
+\newlabel{eq:hu_sei_progress@cref}{{[equation][71][]71}{[1][27][]27}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Anode-electrolyte reaction}{27}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.1}Coupling to SEI decomposition}{28}{subsubsection.6.4.1}\protected@file@percent }
+\newlabel{eq:hu_anode_sei_threshold}{{84}{28}{Coupling to SEI decomposition}{equation.84}{}}
+\newlabel{eq:hu_anode_sei_threshold@cref}{{[equation][84][]84}{[1][28][]28}{}{}{}}
+\newlabel{eq:hu_anode_progress}{{85}{28}{Coupling to SEI decomposition}{equation.85}{}}
+\newlabel{eq:hu_anode_progress@cref}{{[equation][85][]85}{[1][28][]28}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Cathode decomposition}{28}{subsection.6.5}\protected@file@percent }
+\newlabel{eq:hu_cathode_threshold}{{88}{28}{Cathode decomposition}{equation.88}{}}
+\newlabel{eq:hu_cathode_threshold@cref}{{[equation][88][]88}{[1][28][]28}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.5.1}Cathode channel 1}{29}{subsubsection.6.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.5.2}Cathode channel 2}{29}{subsubsection.6.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.5.3}Shared cathode progress}{29}{subsubsection.6.5.3}\protected@file@percent }
+\newlabel{eq:hu_cathode_progress}{{97}{29}{Shared cathode progress}{equation.97}{}}
+\newlabel{eq:hu_cathode_progress@cref}{{[equation][97][]97}{[1][29][]29}{}{}{}}
+\newlabel{eq:hu_cathode_conversion}{{98}{29}{Shared cathode progress}{equation.98}{}}
+\newlabel{eq:hu_cathode_conversion@cref}{{[equation][98][]98}{[1][29][]29}{}{}{}}
+\newlabel{eq:hu_cathode_heat}{{100}{29}{Shared cathode progress}{equation.100}{}}
+\newlabel{eq:hu_cathode_heat@cref}{{[equation][100][]100}{[1][29][]29}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}Electrolyte decomposition}{29}{subsection.6.6}\protected@file@percent }
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\newlabel{eq:hu_electrolyte_threshold}{{101}{30}{Electrolyte decomposition}{equation.101}{}}
+\newlabel{eq:hu_electrolyte_threshold@cref}{{[equation][101][]101}{[1][29][]30}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.7}Summary of model parameters}{30}{subsection.6.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces  Principal kinetic and energetic parameters used in the LiionTR implementation of the thermal runaway model of \blx@tocontentsinit {0}\textcite {hu2020inhibition}. }}{30}{table.2}\protected@file@percent }
+\newlabel{tab:hu_parameters}{{2}{30}{Principal kinetic and energetic parameters used in the LiionTR implementation of the thermal runaway model of \textcite {hu2020inhibition}}{table.2}{}}
+\newlabel{tab:hu_parameters@cref}{{[table][2][]2}{[1][30][]30}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.8}Volumetric content and effective mass fractions}{30}{subsection.6.8}\protected@file@percent }
+\newlabel{eq:hu_mass_fraction}{{109}{30}{Volumetric content and effective mass fractions}{equation.109}{}}
+\newlabel{eq:hu_mass_fraction@cref}{{[equation][109][]109}{[1][30][]30}{}{}{}}
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\newlabel{eq:hu_reaction_heat}{{110}{31}{Volumetric content and effective mass fractions}{equation.110}{}}
+\newlabel{eq:hu_reaction_heat@cref}{{[equation][110][]110}{[1][31][]31}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.9}Complete thermal coupling}{31}{subsection.6.9}\protected@file@percent }
+\newlabel{eq:hu_total_heat}{{111}{31}{Complete thermal coupling}{equation.111}{}}
+\newlabel{eq:hu_total_heat@cref}{{[equation][111][]111}{[1][31][]31}{}{}{}}
+\newlabel{eq:hu_thermal_balance}{{112}{31}{Complete thermal coupling}{equation.112}{}}
+\newlabel{eq:hu_thermal_balance@cref}{{[equation][112][]112}{[1][31][]31}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.10}LiionTR representation}{31}{subsection.6.10}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces  Representation of the Hu et al.\ thermal runaway model within the generic LiionTR reaction-network architecture. }}{31}{figure.3}\protected@file@percent }
+\newlabel{fig:hu_architecture}{{3}{31}{Representation of the Hu et al.\ thermal runaway model within the generic LiionTR reaction-network architecture}{figure.3}{}}
+\newlabel{fig:hu_architecture@cref}{{[figure][3][]3}{[1][31][]31}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.11}Scope of the implementation}{32}{subsection.6.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Gas Generation}{32}{section.7}\protected@file@percent }
+\newlabel{sec:gases}{{7}{32}{Gas Generation}{section.7}{}}
+\newlabel{sec:gases@cref}{{[section][7][]7}{[1][32][]32}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Gas species}{32}{subsection.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Gas inventory}{33}{subsection.7.2}\protected@file@percent }
+\newlabel{eq:gas_total_moles}{{115}{33}{Gas inventory}{equation.115}{}}
+\newlabel{eq:gas_total_moles@cref}{{[equation][115][]115}{[1][32][]33}{}{}{}}
+\newlabel{eq:gas_total_mass}{{116}{33}{Gas inventory}{equation.116}{}}
+\newlabel{eq:gas_total_mass@cref}{{[equation][116][]116}{[1][33][]33}{}{}{}}
+\newlabel{eq:gas_mole_fraction}{{117}{33}{Gas inventory}{equation.117}{}}
+\newlabel{eq:gas_mole_fraction@cref}{{[equation][117][]117}{[1][33][]33}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Mean molar mass}{33}{subsection.7.3}\protected@file@percent }
+\newlabel{eq:mean_molar_mass}{{119}{33}{Mean molar mass}{equation.119}{}}
+\newlabel{eq:mean_molar_mass@cref}{{[equation][119][]119}{[1][33][]33}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Empirical reaction gas yields}{33}{subsection.7.4}\protected@file@percent }
+\newlabel{eq:reacted_material_rate}{{123}{34}{Empirical reaction gas yields}{equation.123}{}}
+\newlabel{eq:reacted_material_rate@cref}{{[equation][123][]123}{[1][34][]34}{}{}{}}
+\newlabel{eq:species_generation_single_reaction}{{124}{34}{Empirical reaction gas yields}{equation.124}{}}
+\newlabel{eq:species_generation_single_reaction@cref}{{[equation][124][]124}{[1][34][]34}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Total species generation rate}{34}{subsection.7.5}\protected@file@percent }
+\newlabel{eq:species_generation_total}{{125}{34}{Total species generation rate}{equation.125}{}}
+\newlabel{eq:species_generation_total@cref}{{[equation][125][]125}{[1][34][]34}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.6}Cumulative gas generation}{34}{subsection.7.6}\protected@file@percent }
+\newlabel{eq:cumulative_gas_generation}{{127}{34}{Cumulative gas generation}{equation.127}{}}
+\newlabel{eq:cumulative_gas_generation@cref}{{[equation][127][]127}{[1][34][]34}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.7}Closed-cell gas balance}{34}{subsection.7.7}\protected@file@percent }
+\newlabel{eq:closed_gas_balance}{{128}{34}{Closed-cell gas balance}{equation.128}{}}
+\newlabel{eq:closed_gas_balance@cref}{{[equation][128][]128}{[1][34][]34}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.8}Gas balance after vent opening}{35}{subsection.7.8}\protected@file@percent }
+\newlabel{eq:open_gas_balance}{{130}{35}{Gas balance after vent opening}{equation.130}{}}
+\newlabel{eq:open_gas_balance@cref}{{[equation][130][]130}{[1][35][]35}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.9}Coupling to pressure}{35}{subsection.7.9}\protected@file@percent }
+\newlabel{eq:gases_pressure_coupling}{{131}{35}{Coupling to pressure}{equation.131}{}}
+\newlabel{eq:gases_pressure_coupling@cref}{{[equation][131][]131}{[1][35][]35}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.10}Coupling to venting}{35}{subsection.7.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.11}Current assumptions}{35}{subsection.7.11}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces  Coupling between reaction-driven gas generation, the gas inventory, pressure, mixture properties, and vent discharge in the current LiionTR formulation. }}{36}{figure.4}\protected@file@percent }
+\newlabel{fig:gas_architecture}{{4}{36}{Coupling between reaction-driven gas generation, the gas inventory, pressure, mixture properties, and vent discharge in the current LiionTR formulation}{figure.4}{}}
+\newlabel{fig:gas_architecture@cref}{{[figure][4][]4}{[1][35][]36}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.12}Limitations of fixed species yields}{36}{subsection.7.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.13}Future thermochemical formulation}{36}{subsection.7.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Pressure and Venting}{37}{section.8}\protected@file@percent }
+\newlabel{sec:pressure-venting}{{8}{37}{Pressure and Venting}{section.8}{}}
+\newlabel{sec:pressure-venting@cref}{{[section][8][]8}{[1][37][]37}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Ideal-gas pressure}{37}{subsection.8.1}\protected@file@percent }
+\newlabel{eq:pressure_ideal}{{136}{37}{Ideal-gas pressure}{equation.136}{}}
+\newlabel{eq:pressure_ideal@cref}{{[equation][136][]136}{[1][37][]37}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Initial gas inventory}{37}{subsection.8.2}\protected@file@percent }
+\newlabel{eq:initial_gas_moles}{{137}{37}{Initial gas inventory}{equation.137}{}}
+\newlabel{eq:initial_gas_moles@cref}{{[equation][137][]137}{[1][37][]37}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Pressure-temperature coupling}{37}{subsection.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.4}Vent-opening criterion}{38}{subsection.8.4}\protected@file@percent }
+\newlabel{eq:vent_open_condition}{{140}{38}{Vent-opening criterion}{equation.140}{}}
+\newlabel{eq:vent_open_condition@cref}{{[equation][140][]140}{[1][38][]38}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.5}Maximum-pressure criterion}{38}{subsection.8.5}\protected@file@percent }
+\newlabel{eq:max_pressure_condition}{{142}{38}{Maximum-pressure criterion}{equation.142}{}}
+\newlabel{eq:max_pressure_condition@cref}{{[equation][142][]142}{[1][38][]38}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.6}Compressible vent flow}{38}{subsection.8.6}\protected@file@percent }
+\newlabel{eq:pressure_ratio}{{145}{38}{Compressible vent flow}{equation.145}{}}
+\newlabel{eq:pressure_ratio@cref}{{[equation][145][]145}{[1][38][]38}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.7}Specific gas constant}{39}{subsection.8.7}\protected@file@percent }
+\newlabel{eq:specific_gas_constant}{{146}{39}{Specific gas constant}{equation.146}{}}
+\newlabel{eq:specific_gas_constant@cref}{{[equation][146][]146}{[1][39][]39}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.8}Heat-capacity ratio}{39}{subsection.8.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.9}Critical pressure ratio}{39}{subsection.8.9}\protected@file@percent }
+\newlabel{eq:critical_pressure_ratio}{{148}{39}{Critical pressure ratio}{equation.148}{}}
+\newlabel{eq:critical_pressure_ratio@cref}{{[equation][148][]148}{[1][39][]39}{}{}{}}
+\newlabel{eq:choked_condition}{{149}{39}{Critical pressure ratio}{equation.149}{}}
+\newlabel{eq:choked_condition@cref}{{[equation][149][]149}{[1][39][]39}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.10}Choked mass flow}{39}{subsection.8.10}\protected@file@percent }
+\newlabel{eq:choked_mass_flow}{{150}{39}{Choked mass flow}{equation.150}{}}
+\newlabel{eq:choked_mass_flow@cref}{{[equation][150][]150}{[1][39][]39}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.11}Unchoked mass flow}{39}{subsection.8.11}\protected@file@percent }
+\newlabel{eq:unchoked_mass_flow}{{152}{40}{Unchoked mass flow}{equation.152}{}}
+\newlabel{eq:unchoked_mass_flow@cref}{{[equation][152][]152}{[1][39][]40}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.12}Reverse flow}{40}{subsection.8.12}\protected@file@percent }
+\newlabel{eq:no_reverse_flow}{{153}{40}{Reverse flow}{equation.153}{}}
+\newlabel{eq:no_reverse_flow@cref}{{[equation][153][]153}{[1][40][]40}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.13}Molar vent flow}{40}{subsection.8.13}\protected@file@percent }
+\newlabel{eq:total_molar_vent_flow}{{154}{40}{Molar vent flow}{equation.154}{}}
+\newlabel{eq:total_molar_vent_flow@cref}{{[equation][154][]154}{[1][40][]40}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.14}Species vent rates}{40}{subsection.8.14}\protected@file@percent }
+\newlabel{eq:species_vent_flow}{{155}{40}{Species vent rates}{equation.155}{}}
+\newlabel{eq:species_vent_flow@cref}{{[equation][155][]155}{[1][40][]40}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.15}Closed and open governing equations}{40}{subsection.8.15}\protected@file@percent }
+\newlabel{eq:vent_closed_phase}{{157}{40}{Closed and open governing equations}{equation.157}{}}
+\newlabel{eq:vent_closed_phase@cref}{{[equation][157][]157}{[1][40][]40}{}{}{}}
+\newlabel{eq:vent_open_phase}{{158}{40}{Closed and open governing equations}{equation.158}{}}
+\newlabel{eq:vent_open_phase@cref}{{[equation][158][]158}{[1][40][]40}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.16}Irreversible vent transition}{40}{subsection.8.16}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces  Irreversible vent-state transition used by the current LiionTR solver. }}{41}{figure.5}\protected@file@percent }
+\newlabel{fig:vent_state_machine}{{5}{41}{Irreversible vent-state transition used by the current LiionTR solver}{figure.5}{}}
+\newlabel{fig:vent_state_machine@cref}{{[figure][5][]5}{[1][41][]41}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.17}Coupled pressure-vent feedback}{41}{subsection.8.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.18}Current assumptions}{41}{subsection.8.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.19}Limitations}{42}{subsection.8.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.20}Future extensions}{42}{subsection.8.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Numerical Method}{43}{section.9}\protected@file@percent }
+\newlabel{sec:numerical-method}{{9}{43}{Numerical Method}{section.9}{}}
+\newlabel{sec:numerical-method@cref}{{[section][9][]9}{[1][42][]43}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}State vector}{43}{subsection.9.1}\protected@file@percent }
+\newlabel{eq:numerical_state_vector}{{163}{43}{State vector}{equation.163}{}}
+\newlabel{eq:numerical_state_vector@cref}{{[equation][163][]163}{[1][43][]43}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Initial conditions}{43}{subsection.9.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}Right-hand-side evaluation}{43}{subsection.9.3}\protected@file@percent }
+\newlabel{eq:rhs_reaction_rates}{{170}{44}{Right-hand-side evaluation}{equation.170}{}}
+\newlabel{eq:rhs_reaction_rates@cref}{{[equation][170][]170}{[1][44][]44}{}{}{}}
+\newlabel{eq:rhs_temperature}{{172}{44}{Right-hand-side evaluation}{equation.172}{}}
+\newlabel{eq:rhs_temperature@cref}{{[equation][172][]172}{[1][44][]44}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.4}Gas-generation contribution}{44}{subsection.9.4}\protected@file@percent }
+\newlabel{eq:rhs_gas_generation}{{173}{44}{Gas-generation contribution}{equation.173}{}}
+\newlabel{eq:rhs_gas_generation@cref}{{[equation][173][]173}{[1][44][]44}{}{}{}}
+\newlabel{eq:rhs_closed_gas}{{174}{44}{Gas-generation contribution}{equation.174}{}}
+\newlabel{eq:rhs_closed_gas@cref}{{[equation][174][]174}{[1][44][]44}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.5}Pressure reconstruction}{44}{subsection.9.5}\protected@file@percent }
+\newlabel{eq:pressure_algebraic_state}{{175}{44}{Pressure reconstruction}{equation.175}{}}
+\newlabel{eq:pressure_algebraic_state@cref}{{[equation][175][]175}{[1][44][]44}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.6}Vent-opening event}{44}{subsection.9.6}\protected@file@percent }
+\newlabel{eq:vent_event_function}{{177}{44}{Vent-opening event}{equation.177}{}}
+\newlabel{eq:vent_event_function@cref}{{[equation][177][]177}{[1][44][]44}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.7}Two-phase integration}{45}{subsection.9.7}\protected@file@percent }
+\newlabel{eq:rhs_open_gas}{{182}{45}{Two-phase integration}{equation.182}{}}
+\newlabel{eq:rhs_open_gas@cref}{{[equation][182][]182}{[1][45][]45}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.8}Solver flow}{45}{subsection.9.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.9}Maximum-temperature event}{45}{subsection.9.9}\protected@file@percent }
+\newlabel{eq:max_temperature_event}{{184}{45}{Maximum-temperature event}{equation.184}{}}
+\newlabel{eq:max_temperature_event@cref}{{[equation][184][]184}{[1][45][]45}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.10}Maximum-pressure event}{45}{subsection.9.10}\protected@file@percent }
+\newlabel{eq:max_pressure_event}{{185}{45}{Maximum-pressure event}{equation.185}{}}
+\newlabel{eq:max_pressure_event@cref}{{[equation][185][]185}{[1][45][]45}{}{}{}}
+\abx@aux@cite{0}{virtanen2020scipy}
+\abx@aux@segm{0}{0}{virtanen2020scipy}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  Numerical integration strategy used for irreversible vent opening in the current LiionTR solver. }}{46}{figure.6}\protected@file@percent }
+\newlabel{fig:solver_flow}{{6}{46}{Numerical integration strategy used for irreversible vent opening in the current LiionTR solver}{figure.6}{}}
+\newlabel{fig:solver_flow@cref}{{[figure][6][]6}{[1][45][]46}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.11}Stiff numerical integration}{46}{subsection.9.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.12}Adaptive time stepping}{46}{subsection.9.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.13}State reconstruction}{47}{subsection.9.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.14}Numerical architecture}{47}{subsection.9.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.15}Current limitations}{48}{subsection.9.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.16}Future numerical extensions}{48}{subsection.9.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10}Verification}{48}{section.10}\protected@file@percent }
+\newlabel{sec:verification}{{10}{48}{Verification}{section.10}{}}
+\newlabel{sec:verification@cref}{{[section][10][]10}{[1][48][]48}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.1}Unit-level verification}{49}{subsection.10.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.2}Dimensional consistency}{49}{subsection.10.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.3}Reaction-energy consistency}{50}{subsection.10.3}\protected@file@percent }
+\newlabel{eq:verification_expected_energy}{{197}{50}{Reaction-energy consistency}{equation.197}{}}
+\newlabel{eq:verification_expected_energy@cref}{{[equation][197][]197}{[1][50][]50}{}{}{}}
+\newlabel{eq:verification_total_energy}{{198}{50}{Reaction-energy consistency}{equation.198}{}}
+\newlabel{eq:verification_total_energy@cref}{{[equation][198][]198}{[1][50][]50}{}{}{}}
+\newlabel{eq:verification_integrated_energy}{{199}{50}{Reaction-energy consistency}{equation.199}{}}
+\newlabel{eq:verification_integrated_energy@cref}{{[equation][199][]199}{[1][50][]50}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.4}Hu model energy check}{50}{subsection.10.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5}Thermal-response consistency}{50}{subsection.10.5}\protected@file@percent }
+\newlabel{eq:verification_adiabatic_temperature}{{202}{50}{Thermal-response consistency}{equation.202}{}}
+\newlabel{eq:verification_adiabatic_temperature@cref}{{[equation][202][]202}{[1][50][]50}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.6}Gas-generation conservation}{51}{subsection.10.6}\protected@file@percent }
+\newlabel{eq:verification_gas_conservation}{{203}{51}{Gas-generation conservation}{equation.203}{}}
+\newlabel{eq:verification_gas_conservation@cref}{{[equation][203][]203}{[1][51][]51}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.7}Pressure verification}{51}{subsection.10.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.8}Vent-flow verification}{51}{subsection.10.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.9}Vented coupled simulation}{51}{subsection.10.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.10}Regression testing}{52}{subsection.10.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.11}Verification hierarchy}{52}{subsection.10.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.12}Experimental validation}{52}{subsection.10.12}\protected@file@percent }
+\abx@aux@cite{0}{hu2020inhibition}
+\abx@aux@segm{0}{0}{hu2020inhibition}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  Verification and validation hierarchy intended for LiionTR. Experimental validation represents a future development stage following verification of the numerical implementation. }}{53}{figure.7}\protected@file@percent }
+\newlabel{fig:verification_hierarchy}{{7}{53}{Verification and validation hierarchy intended for LiionTR. Experimental validation represents a future development stage following verification of the numerical implementation}{figure.7}{}}
+\newlabel{fig:verification_hierarchy@cref}{{[figure][7][]7}{[1][52][]53}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {11}Reference Simulation Results}{53}{section.11}\protected@file@percent }
+\newlabel{sec:results}{{11}{53}{Reference Simulation Results}{section.11}{}}
+\newlabel{sec:results@cref}{{[section][11][]11}{[1][53][]53}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.1}Reference simulation conditions}{54}{subsection.11.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Conditions used for the Hu et al.\ reference simulation.}}{54}{table.3}\protected@file@percent }
+\newlabel{tab:reference_simulation_conditions}{{3}{54}{Conditions used for the Hu et al.\ reference simulation}{table.3}{}}
+\newlabel{tab:reference_simulation_conditions@cref}{{[table][3][]3}{[1][54][]54}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.2}Temperature evolution}{54}{subsection.11.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  Cell temperature predicted by LiionTR for the Hu et al.\ reference thermal runaway simulation. }}{54}{figure.8}\protected@file@percent }
+\newlabel{fig:hu_temperature_result}{{8}{54}{Cell temperature predicted by LiionTR for the Hu et al.\^^Mreference thermal runaway simulation}{figure.8}{}}
+\newlabel{fig:hu_temperature_result@cref}{{[figure][8][]8}{[1][54][]54}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.3}Reaction progression}{54}{subsection.11.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.4}Reaction heat generation}{54}{subsection.11.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {11.5}Integrated reaction energy}{54}{subsection.11.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces  Evolution of the SEI, anode-electrolyte, cathode, and electrolyte reaction conversions during the reference simulation. }}{55}{figure.9}\protected@file@percent }
+\newlabel{fig:hu_conversion_result}{{9}{55}{Evolution of the SEI, anode-electrolyte, cathode, and electrolyte reaction conversions during the reference simulation}{figure.9}{}}
+\newlabel{fig:hu_conversion_result@cref}{{[figure][9][]9}{[1][54][]55}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces  Mass-specific heat-generation rates associated with the thermal runaway reactions in the Hu et al.\ reference simulation. }}{55}{figure.10}\protected@file@percent }
+\newlabel{fig:hu_heat_result}{{10}{55}{Mass-specific heat-generation rates associated with the thermal runaway reactions in the Hu et al.\ reference simulation}{figure.10}{}}
+\newlabel{fig:hu_heat_result@cref}{{[figure][10][]10}{[1][54][]55}{}{}{}}
+\newlabel{eq:results_integrated_heat}{{209}{56}{Integrated reaction energy}{equation.209}{}}
+\newlabel{eq:results_integrated_heat@cref}{{[equation][209][]209}{[1][54][]56}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {12}Future Development}{56}{section.12}\protected@file@percent }
+\newlabel{sec:future-work}{{12}{56}{Future Development}{section.12}{}}
+\newlabel{sec:future-work@cref}{{[section][12][]12}{[1][56][]56}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.1}Thermochemical gas modeling}{56}{subsection.12.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.2}Cantera integration}{56}{subsection.12.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.3}Energy-consistent thermochemistry}{57}{subsection.12.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.4}Electrochemical coupling}{57}{subsection.12.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.5}Calorimetric parameter estimation}{58}{subsection.12.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.6}Sensitivity and uncertainty analysis}{58}{subsection.12.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.7}Temperature-dependent material properties}{59}{subsection.12.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.8}Spatial thermal models}{59}{subsection.12.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.9}Cell-to-cell propagation}{59}{subsection.12.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.10}Mechanical venting and rupture}{59}{subsection.12.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.11}Multiphase venting}{60}{subsection.12.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.12}External vent-jet and combustion models}{60}{subsection.12.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.13}Validation database}{61}{subsection.12.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.14}Software development}{61}{subsection.12.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.15}Long-term architecture}{62}{subsection.12.15}\protected@file@percent }
+\abx@aux@read@bbl@mdfivesum{D87ECF50E4DB8E4A5F1512BD14AD7501}
+\abx@aux@defaultrefcontext{0}{hu2020inhibition}{none/global//global/global/global}
+\abx@aux@defaultrefcontext{0}{cantera2025}{none/global//global/global/global}
+\abx@aux@defaultrefcontext{0}{sulzer2021pybamm}{none/global//global/global/global}
+\abx@aux@defaultrefcontext{0}{virtanen2020scipy}{none/global//global/global/global}
+\gdef \@abspage@last{63}

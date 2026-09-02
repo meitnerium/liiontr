@@ -1,0 +1,234 @@
+The current LiionTR thermal formulation uses a zero-dimensional
+lumped-capacitance model. The complete battery cell is represented by a
+single temperature state, such that internal spatial temperature
+gradients are neglected.
+
+The thermal energy balance is
+
+\begin{equation}
+    C_{\mathrm{th}}
+    \frac{dT}{dt}
+    =
+    \dot{Q}_{\mathrm{gen}}
+    -
+    h A
+    \left(
+        T - T_{\infty}
+    \right),
+    \label{eq:lumped_thermal_balance}
+\end{equation}
+
+where $C_{\mathrm{th}}$ is the cell thermal capacity,
+$\dot{Q}_{\mathrm{gen}}$ is the total internal heat-generation rate,
+$h$ is the convective heat-transfer coefficient, $A$ is the external
+cell surface area, and $T_{\infty}$ is the ambient temperature.
+
+The resulting temperature derivative is
+
+\begin{equation}
+    \frac{dT}{dt}
+    =
+    \frac{
+        \dot{Q}_{\mathrm{gen}}
+        -
+        h A
+        \left(
+            T-T_{\infty}
+        \right)
+    }{
+        C_{\mathrm{th}}
+    }.
+    \label{eq:lumped_temperature_derivative}
+\end{equation}
+
+
+\subsection{Cell thermal capacity}
+
+The effective thermal capacity is calculated as
+
+\begin{equation}
+    C_{\mathrm{th}}
+    =
+    m_{\mathrm{cell}}
+    c_p,
+    \label{eq:thermal_capacity}
+\end{equation}
+
+where $c_p$ is the effective specific heat capacity of the cell.
+
+The cell mass is calculated from the effective density and geometry,
+
+\begin{equation}
+    m_{\mathrm{cell}}
+    =
+    \rho V,
+    \label{eq:cell_mass}
+\end{equation}
+
+leading to
+
+\begin{equation}
+    C_{\mathrm{th}}
+    =
+    \rho V c_p.
+\end{equation}
+
+In the present implementation, density and specific heat capacity are
+evaluated at \SI{298.15}{\kelvin} when cell mass and thermal capacity
+are constructed. These quantities are therefore constant during a
+simulation.
+
+
+\subsection{Convective heat transfer}
+
+Heat exchange with the environment is currently represented using
+Newton's law of cooling,
+
+\begin{equation}
+    \dot{Q}_{\mathrm{conv}}
+    =
+    h A
+    \left(
+        T - T_{\infty}
+    \right).
+    \label{eq:convective_heat_loss}
+\end{equation}
+
+When $T>T_{\infty}$, this term removes heat from the cell.
+
+If $T<T_{\infty}$, the same expression becomes negative and therefore
+represents heating of the cell by the surrounding environment.
+
+
+\subsection{Internal heat generation}
+
+Internal heat generation is supplied to the thermal model by the
+configured chemistry backend.
+
+For a reaction network containing $N$ thermal runaway reactions,
+
+\begin{equation}
+    \dot{Q}_{\mathrm{gen}}
+    =
+    m_{\mathrm{cell}}
+    \sum_{i=1}^{N}
+    w_i
+    \Delta H_i
+    \dot{\alpha}_i.
+    \label{eq:thermal_reaction_heat}
+\end{equation}
+
+The thermal model is therefore independent from the detailed kinetic
+mechanism. Different reaction networks can be coupled to the same
+thermal formulation.
+
+
+\subsection{Thermal runaway feedback}
+
+The coupling between reaction kinetics and temperature introduces a
+positive feedback mechanism.
+
+For Arrhenius kinetics,
+
+\begin{equation}
+    k(T)
+    =
+    A
+    \exp
+    \left(
+        -\frac{E_a}{RT}
+    \right).
+\end{equation}
+
+As temperature rises, the reaction rate generally increases. This
+increases heat generation, which produces further temperature increase.
+
+Conceptually,
+
+\begin{equation}
+    T
+    \uparrow
+    \quad \Longrightarrow \quad
+    k(T)
+    \uparrow
+    \quad \Longrightarrow \quad
+    \dot{Q}_{\mathrm{gen}}
+    \uparrow
+    \quad \Longrightarrow \quad
+    T
+    \uparrow.
+\end{equation}
+
+This feedback constitutes the principal mechanism of thermal runaway in
+the present reduced-order framework.
+
+
+\subsection{Validity of the lumped approximation}
+
+The lumped-capacitance approximation assumes that the internal
+temperature field equilibrates sufficiently rapidly compared with heat
+transfer across the external boundary.
+
+A conventional criterion is the Biot number,
+
+\begin{equation}
+    \mathrm{Bi}
+    =
+    \frac{
+        h L_c
+    }{
+        k
+    },
+\end{equation}
+
+where $L_c$ is a characteristic cell length and $k$ is the effective
+thermal conductivity.
+
+The lumped approximation is generally most appropriate when
+
+\begin{equation}
+    \mathrm{Bi}
+    \ll
+    1.
+\end{equation}
+
+LiionTR does not currently enforce a Biot-number criterion. Consequently,
+the validity of the lumped approximation must be assessed for the
+geometry, boundary conditions, and thermal runaway regime being
+simulated.
+
+
+\subsection{Current assumptions}
+
+The present thermal formulation assumes:
+
+\begin{itemize}
+    \item a spatially uniform cell temperature;
+    \item constant effective thermophysical properties;
+    \item constant ambient temperature;
+    \item uniform convection over the complete external cell surface;
+    \item no radiative heat transfer;
+    \item no explicit conductive coupling to neighbouring cells or
+          structures;
+    \item no explicit phase-change enthalpy;
+    \item no internal thermal gradients.
+\end{itemize}
+
+
+\subsection{Limitations and future extensions}
+
+A single-temperature model cannot reproduce internal hot spots or
+temperature gradients that may develop during severe thermal runaway.
+
+Future thermal-model developments may therefore include:
+
+\begin{itemize}
+    \item temperature-dependent density, heat capacity, and thermal
+          conductivity;
+    \item radiative heat transfer;
+    \item conductive coupling between cells;
+    \item one-dimensional or multidimensional thermal models;
+    \item cell-to-cell thermal propagation;
+    \item latent-heat and phase-change effects;
+    \item energy coupling to vented material and gas enthalpy.
+\end{itemize}

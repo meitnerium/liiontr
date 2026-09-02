@@ -1,0 +1,389 @@
+Verification of LiionTR focuses on determining whether the implemented
+numerical models reproduce their intended mathematical formulations.
+
+This distinction is important:
+
+\begin{itemize}
+    \item \emph{verification} evaluates whether the equations are solved
+          and implemented correctly;
+    \item \emph{validation} evaluates whether those equations reproduce
+          physical experimental behavior.
+\end{itemize}
+
+The current development stage places primary emphasis on verification.
+
+
+\subsection{Unit-level verification}
+
+Individual LiionTR components are tested independently wherever
+possible.
+
+The test suite includes checks for:
+
+\begin{itemize}
+    \item geometric quantities;
+    \item material properties;
+    \item cell mass and thermal capacity;
+    \item kinetic-rate calculations;
+    \item reaction-progress laws;
+    \item reaction heat generation;
+    \item reaction-network aggregation;
+    \item gas inventory properties;
+    \item gas-generation rates;
+    \item ideal-gas pressure;
+    \item choked and unchoked vent flow;
+    \item event handling;
+    \item coupled numerical simulations.
+\end{itemize}
+
+Unit-level testing is particularly important because the modular
+architecture permits most physical components to be evaluated without
+running a complete thermal runaway simulation.
+
+
+\subsection{Dimensional consistency}
+
+All internal physical quantities are represented in SI units.
+
+Typical units include
+
+\begin{align}
+    T &: \si{\kelvin},
+    \\
+    P &: \si{\pascal},
+    \\
+    E_a &: \si{\joule\per\mole},
+    \\
+    \Delta H &: \si{\joule\per\kilogram},
+    \\
+    W &: \si{\kilogram\per\meter\cubed},
+    \\
+    \dot{Q} &: \si{\watt},
+    \\
+    n &: \si{\mole}.
+\end{align}
+
+Literature parameters reported in alternative units are explicitly
+converted before construction of the corresponding LiionTR models.
+
+
+\subsection{Reaction-energy consistency}
+
+For a reaction with effective mass fraction $w$, reaction enthalpy
+$\Delta H$, and conversion change
+
+\begin{equation}
+    \Delta \alpha
+    =
+    \alpha_f-\alpha_0,
+\end{equation}
+
+the expected specific energy release relative to total cell mass is
+
+\begin{equation}
+    q_{\mathrm{expected}}
+    =
+    w
+    \Delta H
+    \Delta\alpha.
+    \label{eq:verification_expected_energy}
+\end{equation}
+
+For a complete reaction network,
+
+\begin{equation}
+    q_{\mathrm{expected,total}}
+    =
+    \sum_i
+    w_i
+    \Delta H_i
+    \Delta\alpha_i,
+    \label{eq:verification_total_energy}
+\end{equation}
+
+with the appropriate extension for multi-channel reactions.
+
+Numerically integrating the heat-generation rate provides
+
+\begin{equation}
+    q_{\mathrm{integrated}}
+    =
+    \frac{1}{m_{\mathrm{cell}}}
+    \int
+    \dot{Q}_{\mathrm{gen}}
+    \,dt.
+    \label{eq:verification_integrated_energy}
+\end{equation}
+
+Agreement between
+\cref{eq:verification_total_energy,eq:verification_integrated_energy}
+provides an important consistency check between reaction progress and
+heat generation.
+
+
+\subsection{Hu model energy check}
+
+A representative numerical simulation of the implemented Hu et al.\
+reaction network was performed from an elevated initial temperature in
+order to activate the thermal runaway mechanism.
+
+For the tested case, the integrated specific reaction energy was
+
+\begin{equation}
+    q_{\mathrm{integrated}}
+    \approx
+    \SI{386.6}{\kilo\joule\per\kilogram}.
+\end{equation}
+
+The integrated heat release was consistent with the energy obtained from
+the change in reaction states and the corresponding reaction
+enthalpies.
+
+This test verifies the internal consistency of the implemented reaction
+network and heat-generation calculation. It should not be interpreted as
+experimental validation of the Hu model.
+
+
+\subsection{Thermal-response consistency}
+
+For an adiabatic system with constant heat capacity and no heat loss,
+
+\begin{equation}
+    C_{\mathrm{th}}
+    \frac{dT}{dt}
+    =
+    \dot{Q}_{\mathrm{gen}}.
+\end{equation}
+
+Integrating gives
+
+\begin{equation}
+    \Delta T
+    =
+    \frac{
+        Q_{\mathrm{gen}}
+    }{
+        C_{\mathrm{th}}
+    }.
+    \label{eq:verification_adiabatic_temperature}
+\end{equation}
+
+This relationship provides a direct verification target for simplified
+thermal problems.
+
+
+\subsection{Gas-generation conservation}
+
+For a closed system with no venting, the numerically integrated gas
+inventory should agree with the cumulative reaction-yield relation.
+
+For species $s$,
+
+\begin{equation}
+    n_s(t)
+    -
+    n_s(0)
+    =
+    \sum_i
+    Y_{i,s}
+    m_{\mathrm{cell}}
+    w_i
+    \left[
+        \alpha_i(t)-\alpha_i(0)
+    \right].
+    \label{eq:verification_gas_conservation}
+\end{equation}
+
+Agreement verifies consistency between reaction progress, gas-generation
+rates, and integrated species inventories.
+
+
+\subsection{Pressure verification}
+
+For a closed ideal-gas problem, pressure reconstructed from the numerical
+state must satisfy
+
+\begin{equation}
+    P
+    =
+    \frac{
+        n_{\mathrm{tot}}RT
+    }{
+        V_{\mathrm{free}}
+    }.
+\end{equation}
+
+Synthetic problems with constant temperature or constant gas amount can
+therefore be compared directly against analytical pressure evolution.
+
+
+\subsection{Vent-flow verification}
+
+The venting implementation is tested separately in both compressible-flow
+regimes.
+
+For
+
+\begin{equation}
+    \frac{P_d}{P_u}
+    \leq
+    r_{\mathrm{crit}},
+\end{equation}
+
+the choked-flow expression must be selected.
+
+For
+
+\begin{equation}
+    \frac{P_d}{P_u}
+    >
+    r_{\mathrm{crit}},
+\end{equation}
+
+the unchoked-flow expression must be selected.
+
+The model also verifies that
+
+\begin{equation}
+    P_u
+    \leq
+    P_d
+\end{equation}
+
+produces zero outward discharge.
+
+
+\subsection{Vented coupled simulation}
+
+A synthetic coupled simulation has been used to verify the complete
+sequence
+
+\begin{equation}
+    \text{reaction}
+    \rightarrow
+    \text{heat}
+    \rightarrow
+    T
+    \rightarrow
+    \text{gas generation}
+    \rightarrow
+    P
+    \rightarrow
+    \text{vent opening}
+    \rightarrow
+    \text{gas discharge}.
+\end{equation}
+
+The test demonstrates that:
+
+\begin{enumerate}
+    \item reaction progress generates heat;
+    \item heat generation increases temperature;
+    \item reaction progress generates gas;
+    \item gas accumulation and heating increase pressure;
+    \item the vent opens when the prescribed pressure is reached;
+    \item the solver transitions irreversibly to the open-vent system;
+    \item gas discharge reduces the internal inventory;
+    \item pressure approaches the downstream pressure after the dominant
+          gas-generation period.
+\end{enumerate}
+
+This synthetic problem is designed to verify model coupling and event
+handling rather than reproduce a particular commercial battery cell.
+
+
+\subsection{Regression testing}
+
+Automated regression tests are used to detect unintended changes in
+physical behavior as the codebase evolves.
+
+This is particularly important for coupled models because a local
+software modification can alter:
+
+\begin{itemize}
+    \item reaction rates;
+    \item integrated reaction energy;
+    \item event times;
+    \item maximum temperature;
+    \item pressure evolution;
+    \item vent discharge.
+\end{itemize}
+
+Regression tests therefore complement analytical unit tests.
+
+
+\subsection{Verification hierarchy}
+
+The current verification strategy follows the hierarchy illustrated in
+\cref{fig:verification_hierarchy}.
+
+\begin{figure}[htbp]
+    \centering
+
+    \begin{tikzpicture}[
+        node distance=1.2cm,
+        block/.style={
+            rectangle,
+            rounded corners,
+            draw,
+            align=center,
+            minimum width=5.3cm,
+            minimum height=0.9cm
+        },
+        line/.style={
+            -{Latex[length=3mm]},
+            thick
+        }
+    ]
+
+    \node[block] (units)
+        {Individual model unit tests};
+
+    \node[block, below=of units] (analytic)
+        {Analytical consistency checks};
+
+    \node[block, below=of analytic] (coupled)
+        {Coupled synthetic simulations};
+
+    \node[block, below=of coupled] (regression)
+        {Automated regression testing};
+
+    \node[block, below=of regression] (validation)
+        {Experimental validation};
+
+    \draw[line] (units) -- (analytic);
+    \draw[line] (analytic) -- (coupled);
+    \draw[line] (coupled) -- (regression);
+    \draw[line] (regression) -- (validation);
+
+    \end{tikzpicture}
+
+    \caption{
+        Verification and validation hierarchy intended for LiionTR.
+        Experimental validation represents a future development stage
+        following verification of the numerical implementation.
+    }
+    \label{fig:verification_hierarchy}
+\end{figure}
+
+
+\subsection{Experimental validation}
+
+Experimental validation remains an essential future step.
+
+Relevant validation data may include:
+
+\begin{itemize}
+    \item differential scanning calorimetry measurements;
+    \item accelerating rate calorimetry measurements;
+    \item cell-surface temperature histories;
+    \item pressure measurements;
+    \item vent-opening times;
+    \item total vented gas quantities;
+    \item gas-composition measurements;
+    \item abuse-test thermal runaway onset temperatures.
+\end{itemize}
+
+The modular structure of LiionTR is intended to allow kinetic,
+thermochemical, pressure, and venting submodels to be calibrated and
+validated independently before complete-cell validation is attempted.

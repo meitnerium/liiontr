@@ -1,0 +1,543 @@
+The gas-generation subsystem is coupled to internal pressure and venting
+models in order to represent cell pressurization and subsequent gas
+discharge.
+
+The current formulation combines an ideal-gas pressure model with
+compressible single-phase vent flow.
+
+
+\subsection{Ideal-gas pressure}
+
+The cell gas pressure is calculated using
+
+\begin{equation}
+    P
+    V_{\mathrm{free}}
+    =
+    n_{\mathrm{tot}}
+    R
+    T,
+\end{equation}
+
+or
+
+\begin{equation}
+    P
+    =
+    \frac{
+        n_{\mathrm{tot}}RT
+    }{
+        V_{\mathrm{free}}
+    },
+    \label{eq:pressure_ideal}
+\end{equation}
+
+where $V_{\mathrm{free}}$ is the available gas volume.
+
+All pressures are treated as absolute pressures.
+
+
+\subsection{Initial gas inventory}
+
+The initial gas amount is calculated from the specified initial pressure
+$P_0$, initial temperature $T_0$, and free volume:
+
+\begin{equation}
+    n_0
+    =
+    \frac{
+        P_0 V_{\mathrm{free}}
+    }{
+        R T_0
+    }.
+    \label{eq:initial_gas_moles}
+\end{equation}
+
+Before venting, the total amount of gas can be represented as the sum of
+the initial inventory and generated gas.
+
+During venting, however, pressure must be reconstructed directly from the
+instantaneous integrated species inventories.
+
+
+\subsection{Pressure-temperature coupling}
+
+For fixed volume,
+
+\begin{equation}
+    P
+    \propto
+    n_{\mathrm{tot}} T.
+\end{equation}
+
+Cell pressure can therefore rise because of both
+
+\begin{enumerate}
+    \item gas generation, which increases $n_{\mathrm{tot}}$;
+    \item thermal runaway, which increases $T$.
+\end{enumerate}
+
+The pressure response is thus strongly coupled to the thermal and
+reaction subsystems.
+
+
+\subsection{Vent-opening criterion}
+
+A vent-opening pressure
+
+\begin{equation}
+    P_{\mathrm{vent}}
+\end{equation}
+
+may be specified as part of the thermal problem.
+
+The vent-opening event occurs when
+
+\begin{equation}
+    P
+    =
+    P_{\mathrm{vent}}.
+    \label{eq:vent_open_condition}
+\end{equation}
+
+Before this condition is reached, the gas system is treated as closed.
+
+After the event, the vent is considered permanently open.
+
+
+\subsection{Maximum-pressure criterion}
+
+An independent maximum-pressure threshold may also be specified,
+
+\begin{equation}
+    P_{\max}.
+\end{equation}
+
+This condition may be used to terminate numerical integration when
+
+\begin{equation}
+    P
+    =
+    P_{\max}.
+    \label{eq:max_pressure_condition}
+\end{equation}
+
+The maximum-pressure threshold is distinct from the vent-opening
+pressure and may represent a numerical safety criterion or a simplified
+containment-failure limit.
+
+
+\subsection{Compressible vent flow}
+
+Gas discharge through the vent is represented using compressible
+ideal-gas flow.
+
+The upstream pressure is
+
+\begin{equation}
+    P_u
+    =
+    P_{\mathrm{cell}},
+\end{equation}
+
+while the downstream pressure is typically the ambient pressure,
+
+\begin{equation}
+    P_d
+    =
+    P_{\mathrm{ambient}}.
+\end{equation}
+
+The pressure ratio is
+
+\begin{equation}
+    r_p
+    =
+    \frac{
+        P_d
+    }{
+        P_u
+    }.
+    \label{eq:pressure_ratio}
+\end{equation}
+
+
+\subsection{Specific gas constant}
+
+The specific gas constant of the mixture is calculated as
+
+\begin{equation}
+    R_s
+    =
+    \frac{
+        R
+    }{
+        \overline{M}
+    },
+    \label{eq:specific_gas_constant}
+\end{equation}
+
+where $\overline{M}$ is the instantaneous mean molar mass of the gas
+mixture.
+
+
+\subsection{Heat-capacity ratio}
+
+The current vent model uses a prescribed heat-capacity ratio
+
+\begin{equation}
+    \gamma
+    =
+    \frac{
+        c_p
+    }{
+        c_v
+    }.
+\end{equation}
+
+In the present implementation, $\gamma$ is treated as constant rather
+than being recomputed from the instantaneous gas composition.
+
+
+\subsection{Critical pressure ratio}
+
+For ideal-gas isentropic flow, the critical downstream-to-upstream
+pressure ratio is
+
+\begin{equation}
+    r_{\mathrm{crit}}
+    =
+    \left(
+        \frac{
+            2
+        }{
+            \gamma+1
+        }
+    \right)^{
+        \frac{
+            \gamma
+        }{
+            \gamma-1
+        }
+    }.
+    \label{eq:critical_pressure_ratio}
+\end{equation}
+
+The flow is considered choked when
+
+\begin{equation}
+    \frac{P_d}{P_u}
+    \leq
+    r_{\mathrm{crit}}.
+    \label{eq:choked_condition}
+\end{equation}
+
+
+\subsection{Choked mass flow}
+
+For choked flow, the mass discharge rate is
+
+\begin{equation}
+    \dot{m}_{\mathrm{vent}}
+    =
+    C_d A_v P_u
+    \sqrt{
+        \frac{\gamma}{R_s T}
+    }
+    \left(
+        \frac{2}{\gamma+1}
+    \right)^{
+        \frac{\gamma+1}{2(\gamma-1)}
+    }.
+    \label{eq:choked_mass_flow}
+\end{equation}
+
+where $C_d$ is the discharge coefficient and $A_v$ is the effective vent
+area.
+
+Once the flow is choked, decreasing downstream pressure further does not
+increase the mass flow predicted by this relation.
+
+
+\subsection{Unchoked mass flow}
+
+When
+
+\begin{equation}
+    \frac{P_d}{P_u}
+    >
+    r_{\mathrm{crit}},
+\end{equation}
+
+the discharge is treated as unchoked.
+
+The mass flow rate is
+
+\begin{equation}
+    \dot{m}_{\mathrm{vent}}
+    =
+    C_d A_v P_u
+    \sqrt{
+        \frac{2\gamma}
+             {R_s T(\gamma-1)}
+        \left[
+            \left(
+                \frac{P_d}{P_u}
+            \right)^{2/\gamma}
+            -
+            \left(
+                \frac{P_d}{P_u}
+            \right)^{(\gamma+1)/\gamma}
+        \right]
+    }.
+    \label{eq:unchoked_mass_flow}
+\end{equation}
+
+As $P_d$ approaches $P_u$, the predicted discharge rate approaches zero.
+
+
+\subsection{Reverse flow}
+
+The current formulation does not represent inward flow through the vent.
+
+Consequently,
+
+\begin{equation}
+    P_u
+    \leq
+    P_d
+    \quad
+    \Longrightarrow
+    \quad
+    \dot{m}_{\mathrm{vent}}
+    =
+    0.
+    \label{eq:no_reverse_flow}
+\end{equation}
+
+
+\subsection{Molar vent flow}
+
+The total mass discharge rate is converted to a molar flow rate using
+
+\begin{equation}
+    \dot{n}_{\mathrm{vent}}
+    =
+    \frac{
+        \dot{m}_{\mathrm{vent}}
+    }{
+        \overline{M}
+    }.
+    \label{eq:total_molar_vent_flow}
+\end{equation}
+
+
+\subsection{Species vent rates}
+
+The current model assumes a well-mixed gas inventory.
+
+The vented gas therefore has the same mole fractions as the gas
+remaining inside the modeled free volume.
+
+For species $s$,
+
+\begin{equation}
+    \dot{n}_{s,\mathrm{vent}}
+    =
+    x_s
+    \dot{n}_{\mathrm{vent}}.
+    \label{eq:species_vent_flow}
+\end{equation}
+
+Summing over species gives
+
+\begin{equation}
+    \sum_s
+    \dot{n}_{s,\mathrm{vent}}
+    =
+    \dot{n}_{\mathrm{vent}}.
+\end{equation}
+
+
+\subsection{Closed and open governing equations}
+
+The vent model creates two distinct gas-balance phases.
+
+Before vent opening,
+
+\begin{equation}
+    \frac{dn_s}{dt}
+    =
+    \dot{n}_{s,\mathrm{gen}}.
+    \label{eq:vent_closed_phase}
+\end{equation}
+
+After vent opening,
+
+\begin{equation}
+    \frac{dn_s}{dt}
+    =
+    \dot{n}_{s,\mathrm{gen}}
+    -
+    \dot{n}_{s,\mathrm{vent}}.
+    \label{eq:vent_open_phase}
+\end{equation}
+
+
+\subsection{Irreversible vent transition}
+
+The current LiionTR implementation treats vent opening as an irreversible
+state transition,
+
+\begin{equation}
+    \mathrm{CLOSED}
+    \longrightarrow
+    \mathrm{OPEN}.
+\end{equation}
+
+The vent does not reseal if pressure subsequently falls below
+$P_{\mathrm{vent}}$.
+
+The numerical interpretation of this transition is illustrated in
+\cref{fig:vent_state_machine}.
+
+\begin{figure}[htbp]
+    \centering
+
+    \begin{tikzpicture}[
+        node distance=4.0cm,
+        state/.style={
+            rectangle,
+            rounded corners,
+            draw,
+            align=center,
+            minimum width=3.5cm,
+            minimum height=1.3cm
+        },
+        line/.style={
+            -{Latex[length=3mm]},
+            thick
+        }
+    ]
+
+    \node[state] (closed)
+        {Vent closed\\
+         $\dot{n}_s=\dot{n}_{s,\mathrm{gen}}$};
+
+    \node[state, right=of closed] (open)
+        {Vent open\\
+         $\dot{n}_s=
+         \dot{n}_{s,\mathrm{gen}}
+         -
+         \dot{n}_{s,\mathrm{vent}}$};
+
+    \draw[line]
+        (closed)
+        --
+        node[above, align=center]
+        {$P=P_{\mathrm{vent}}$}
+        (open);
+
+    \end{tikzpicture}
+
+    \caption{
+        Irreversible vent-state transition used by the current LiionTR
+        solver.
+    }
+    \label{fig:vent_state_machine}
+\end{figure}
+
+
+\subsection{Coupled pressure-vent feedback}
+
+After vent opening, pressure determines the vent-flow rate, while the
+vent-flow rate modifies the gas inventory and therefore pressure.
+
+This feedback may be represented as
+
+\begin{equation}
+    P
+    \longrightarrow
+    \dot{n}_{\mathrm{vent}}
+    \longrightarrow
+    n_{\mathrm{tot}}
+    \longrightarrow
+    P.
+\end{equation}
+
+Gas generation and temperature continue to evolve simultaneously.
+
+The pressure response therefore depends on the competition between
+
+\begin{equation}
+    \dot{n}_{\mathrm{gen}}
+\end{equation}
+
+and
+
+\begin{equation}
+    \dot{n}_{\mathrm{vent}},
+\end{equation}
+
+together with the evolving thermal state.
+
+
+\subsection{Current assumptions}
+
+The pressure and venting formulation assumes:
+
+\begin{itemize}
+    \item ideal-gas behavior;
+    \item constant free volume;
+    \item uniform gas pressure;
+    \item gas temperature equal to the lumped cell temperature;
+    \item single-phase gas discharge;
+    \item quasi-steady compressible vent flow;
+    \item fixed effective vent area;
+    \item constant discharge coefficient;
+    \item constant heat-capacity ratio;
+    \item a well-mixed gas inventory;
+    \item no preferential species transport through the vent;
+    \item no reverse flow;
+    \item irreversible vent opening.
+\end{itemize}
+
+
+\subsection{Limitations}
+
+Real lithium-ion battery venting can involve considerably more complex
+behavior than represented by the present model.
+
+The discharged material may contain
+
+\begin{itemize}
+    \item permanent gases;
+    \item electrolyte vapor;
+    \item liquid droplets;
+    \item aerosols;
+    \item condensed particles;
+    \item decomposed electrode and separator material.
+\end{itemize}
+
+The physical vent may also deform progressively, resulting in a
+time-dependent effective flow area.
+
+These mechanisms are outside the scope of the present reduced-order
+model.
+
+
+\subsection{Future extensions}
+
+Future developments may include:
+
+\begin{itemize}
+    \item gas properties obtained dynamically from Cantera;
+    \item temperature- and composition-dependent $\gamma$;
+    \item variable vent geometry;
+    \item progressive vent opening;
+    \item mechanical rupture models;
+    \item two-phase and multiphase discharge;
+    \item electrolyte flashing;
+    \item vent-jet momentum models;
+    \item combustion and fire models downstream of the vent.
+\end{itemize}

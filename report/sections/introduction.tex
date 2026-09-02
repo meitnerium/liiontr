@@ -1,0 +1,216 @@
+Lithium-ion batteries are used extensively in transportation, portable
+electronics, aerospace systems, stationary energy storage, and numerous
+other applications requiring high energy density and rechargeable
+electrochemical storage.
+
+Despite their advantages, lithium-ion cells can undergo thermal runaway
+when subjected to sufficiently severe thermal, electrical, mechanical,
+or internal abuse conditions. Thermal runaway is characterized by a
+self-accelerating sequence of exothermic reactions that can produce rapid
+temperature increase, gas generation, internal pressurization, venting,
+fire, and, under some conditions, propagation to neighbouring cells.
+
+The physical processes involved span several strongly coupled domains,
+including
+
+\begin{itemize}
+    \item electrochemical state evolution;
+    \item decomposition reaction kinetics;
+    \item heat generation and heat transfer;
+    \item gas production;
+    \item thermochemical gas-phase reactions;
+    \item internal pressure evolution;
+    \item venting and structural failure;
+    \item external combustion;
+    \item cell-to-cell thermal propagation.
+\end{itemize}
+
+A single mathematical model rarely represents all of these phenomena
+with the same level of fidelity. Thermal runaway simulations therefore
+often rely on reduced-order models calibrated against calorimetric,
+abuse-test, or literature data.
+
+LiionTR is being developed as a modular scientific framework for
+constructing and solving such models while preserving a clear separation
+between individual physical mechanisms.
+
+
+\subsection{Project objectives}
+
+The primary objective of LiionTR is to provide a reusable computational
+framework for lithium-ion battery thermal runaway research.
+
+The framework is designed to support:
+
+\begin{itemize}
+    \item multiple thermal runaway reaction mechanisms;
+    \item reusable kinetic and reaction-progress laws;
+    \item configurable battery-cell geometries and materials;
+    \item thermal energy balances;
+    \item empirical and future thermochemical gas-generation models;
+    \item internal gas-pressure calculations;
+    \item compressible venting;
+    \item numerical event handling;
+    \item model verification and validation;
+    \item future cell-to-cell propagation models.
+\end{itemize}
+
+
+\subsection{Design philosophy}
+
+A central design principle is the separation of physical models from
+numerical integration.
+
+For example, an Arrhenius model defines a temperature-dependent kinetic
+rate but does not know how the corresponding reaction state is
+integrated.
+
+Similarly, a pressure model evaluates pressure from thermodynamic state
+variables but does not advance those variables in time.
+
+The numerical solver acts as the orchestration layer that assembles these
+individual components into the complete governing system.
+
+This separation is intended to improve
+
+\begin{itemize}
+    \item physical transparency;
+    \item software maintainability;
+    \item testability;
+    \item reuse of scientific models;
+    \item comparison between alternative formulations.
+\end{itemize}
+
+
+\subsection{Reduced-order modeling}
+
+The current LiionTR formulation is primarily zero-dimensional.
+
+A battery cell is represented using a lumped temperature state and a set
+of scalar reaction-progress variables.
+
+The thermal runaway process is described conceptually by
+
+\begin{equation}
+    \text{temperature}
+    \rightarrow
+    \text{reaction rates}
+    \rightarrow
+    \text{heat generation}
+    \rightarrow
+    \text{temperature},
+\end{equation}
+
+forming the fundamental positive feedback loop responsible for thermal
+runaway.
+
+Additional coupling can be introduced through
+
+\begin{equation}
+    \text{reaction progress}
+    \rightarrow
+    \text{gas generation}
+    \rightarrow
+    \text{pressure}
+    \rightarrow
+    \text{venting}.
+\end{equation}
+
+These reduced-order models are computationally inexpensive compared with
+fully spatial electrochemical, thermal, mechanical, or computational
+fluid dynamics models. They are therefore useful for parameter studies,
+model development, sensitivity analysis, and safety-oriented system
+simulations.
+
+
+\subsection{Current implementation}
+
+The present framework includes:
+
+\begin{itemize}
+    \item generic cell, geometry, and material representations;
+    \item Arrhenius and threshold kinetic models;
+    \item multiple reaction-progress formulations;
+    \item context-dependent reaction coupling;
+    \item standard and multi-channel reactions;
+    \item reaction networks;
+    \item a lumped thermal model;
+    \item empirical reaction-based gas generation;
+    \item species-resolved gas inventories;
+    \item an ideal-gas pressure model;
+    \item choked and unchoked compressible vent flow;
+    \item irreversible vent-opening events;
+    \item stiff numerical integration.
+\end{itemize}
+
+The framework also includes an implementation of the reduced-order
+thermal runaway reaction model reported by
+\textcite{hu2020inhibition}.
+
+
+\subsection{Relationship to external scientific software}
+
+LiionTR is not intended to reproduce capabilities that are already
+provided by specialized scientific software.
+
+Instead, external scientific packages may eventually be incorporated as
+backends.
+
+Two particularly relevant examples are Cantera and PyBaMM.
+
+Cantera provides thermodynamic, chemical-kinetic, and transport
+capabilities and is a candidate backend for equilibrium gas composition
+and temperature-dependent mixture properties
+\parencite{cantera2025}.
+
+PyBaMM provides a framework for physics-based battery modeling and may
+supply electrochemical states ranging from reduced-order models to
+porous-electrode formulations
+\parencite{sulzer2021pybamm}.
+
+The intended long-term relationship is therefore
+
+\begin{equation}
+    \text{PyBaMM}
+    \rightarrow
+    \text{electrochemical state},
+\end{equation}
+
+\begin{equation}
+    \text{Cantera}
+    \rightarrow
+    \text{thermochemical state},
+\end{equation}
+
+and
+
+\begin{equation}
+    \text{LiionTR}
+    \rightarrow
+    \text{thermal runaway and safety coupling}.
+\end{equation}
+
+
+\subsection{Scope of this report}
+
+This report documents the mathematical formulation and current software
+architecture of LiionTR.
+
+The following sections describe:
+
+\begin{enumerate}
+    \item the general physical and mathematical framework;
+    \item the lumped thermal formulation;
+    \item reaction kinetics and progress models;
+    \item reaction-network construction;
+    \item implementation of the Hu et al.\ thermal runaway model;
+    \item gas generation;
+    \item pressure and venting;
+    \item numerical integration;
+    \item verification strategy;
+    \item planned future development.
+\end{enumerate}
+
+The report describes the current state of the framework and therefore
+distinguishes between implemented capabilities and planned future
+extensions.

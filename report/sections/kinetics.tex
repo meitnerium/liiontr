@@ -1,0 +1,333 @@
+Thermal runaway reactions are represented using reduced-order kinetic
+models that relate reaction progress to temperature and reaction state.
+
+For reaction $i$, the general progress equation is
+
+\begin{equation}
+    \frac{d\alpha_i}{dt}
+    =
+    k_i(T)
+    f_i
+    \left(
+        \alpha_i,
+        \mathbf{\alpha}
+    \right),
+    \label{eq:general_kinetics}
+\end{equation}
+
+where $\alpha_i$ is the dimensionless reaction conversion,
+$k_i(T)$ is the intrinsic temperature-dependent rate coefficient, and
+$f_i$ is a progress function that may depend on the state of the
+complete reaction network.
+
+
+\subsection{Reaction conversion}
+
+Reaction progress is represented by a conversion variable satisfying
+
+\begin{equation}
+    0
+    \leq
+    \alpha
+    \leq
+    1.
+\end{equation}
+
+The unreacted or remaining fraction is therefore
+
+\begin{equation}
+    r
+    =
+    1-\alpha.
+\end{equation}
+
+An unreacted state corresponds to $\alpha=0$, while a fully reacted
+state corresponds to $\alpha=1$.
+
+
+\subsection{Arrhenius kinetics}
+
+The principal kinetic model currently implemented in LiionTR is the
+Arrhenius relation,
+
+\begin{equation}
+    k(T)
+    =
+    A
+    \exp
+    \left(
+        -\frac{E_a}{RT}
+    \right),
+    \label{eq:arrhenius}
+\end{equation}
+
+where $A$ is the pre-exponential factor, $E_a$ is the activation energy,
+$R$ is the universal gas constant, and $T$ is the absolute temperature.
+
+For first-order kinetics, $A$ has units of \si{\per\second}, while
+$E_a$ is expressed in \si{\joule\per\mole}.
+
+The exponential temperature dependence is central to thermal runaway.
+A relatively modest increase in temperature can produce a large increase
+in reaction rate, thereby increasing heat generation and further
+accelerating the thermal response.
+
+
+\subsection{Power-law progress}
+
+A common progress model is based on the remaining reactant fraction,
+
+\begin{equation}
+    f(\alpha)
+    =
+    \left(
+        1-\alpha
+    \right)^n,
+    \label{eq:power_law_progress}
+\end{equation}
+
+where $n$ is the reaction order.
+
+The complete progress equation becomes
+
+\begin{equation}
+    \frac{d\alpha}{dt}
+    =
+    A
+    \exp
+    \left(
+        -\frac{E_a}{RT}
+    \right)
+    \left(
+        1-\alpha
+    \right)^n.
+\end{equation}
+
+For $n=1$, the reaction rate decreases linearly with the remaining
+reactant fraction.
+
+
+\subsection{Autocatalytic progress}
+
+LiionTR also supports autocatalytic progress laws of the general form
+
+\begin{equation}
+    f(\alpha)
+    =
+    \alpha^m
+    \left(
+        1-\alpha
+    \right)^n,
+    \label{eq:autocatalytic_progress}
+\end{equation}
+
+where $m$ and $n$ control the dependence on reacted and unreacted
+material, respectively.
+
+Such a formulation can represent reactions that accelerate as reaction
+products or active sites accumulate before eventually slowing as the
+reactant is depleted.
+
+A frequently used special case is
+
+\begin{equation}
+    f(\alpha)
+    =
+    \alpha
+    \left(
+        1-\alpha
+    \right).
+\end{equation}
+
+
+\subsection{Temperature thresholds}
+
+Some reduced-order models assume that a reaction is inactive below a
+prescribed onset temperature.
+
+LiionTR represents this using a thresholded kinetic rate,
+
+\begin{equation}
+    k_{\mathrm{th}}(T)
+    =
+    \begin{cases}
+        0,
+        & T < T_{\mathrm{th}},
+        \\[6pt]
+        k(T),
+        & T \geq T_{\mathrm{th}}.
+    \end{cases}
+    \label{eq:temperature_threshold}
+\end{equation}
+
+This formulation is useful when reproducing empirical literature models
+that prescribe an explicit reaction onset temperature.
+
+
+\subsection{Context-dependent reaction progress}
+
+Thermal runaway reactions are not always independent.
+
+The progress of one reaction may depend on the state of another
+reaction, such as the depletion of a protective layer or the formation
+of reactive products.
+
+LiionTR therefore allows a progress model to depend on a reaction
+context containing the complete conversion vector,
+
+\begin{equation}
+    \boldsymbol{\alpha}
+    =
+    \left[
+        \alpha_1,
+        \alpha_2,
+        \ldots,
+        \alpha_N
+    \right]^{\mathrm{T}}.
+\end{equation}
+
+The progress equation can therefore be written more generally as
+
+\begin{equation}
+    \frac{d\alpha_i}{dt}
+    =
+    k_i(T)
+    f_i
+    \left(
+        \alpha_i,
+        \boldsymbol{\alpha}
+    \right).
+\end{equation}
+
+
+\subsection{Threshold progress}
+
+A context-dependent reaction may be activated only when another state
+variable satisfies a prescribed condition.
+
+For a context variable $x$, a generic threshold progress model may be
+written as
+
+\begin{equation}
+    f_{\mathrm{th}}
+    =
+    \begin{cases}
+        0,
+        & x > x_{\mathrm{th}},
+        \\[6pt]
+        f(\alpha),
+        & x \leq x_{\mathrm{th}}.
+    \end{cases}
+    \label{eq:progress_threshold}
+\end{equation}
+
+This formulation is used to represent sequential or conditionally
+activated thermal runaway mechanisms.
+
+
+\subsection{Exponential inhibition}
+
+LiionTR also provides an exponential inhibition mechanism,
+
+\begin{equation}
+    f_{\mathrm{inh}}
+    =
+    f(\alpha)
+    \exp(-x),
+    \label{eq:exponential_inhibition}
+\end{equation}
+
+where $x$ is a context-dependent inhibition variable.
+
+As $x$ increases, the effective reaction rate decreases exponentially.
+
+Such a formulation can represent the influence of a protective layer or
+other inhibiting material on a subsequent reaction.
+
+
+\subsection{Normalized context variables}
+
+A context variable may be constructed from the conversion or remaining
+fraction of another reaction.
+
+For example, the remaining fraction of reaction $j$ is
+
+\begin{equation}
+    r_j
+    =
+    1-\alpha_j.
+\end{equation}
+
+A normalized remaining-fraction variable may then be defined as
+
+\begin{equation}
+    x_j
+    =
+    \frac{
+        r_j
+    }{
+        r_{\mathrm{ref}}
+    },
+    \label{eq:normalized_remaining_fraction}
+\end{equation}
+
+where $r_{\mathrm{ref}}$ is a prescribed reference value.
+
+This provides a flexible mechanism for reproducing coupling terms
+reported in reduced-order thermal runaway models.
+
+
+\subsection{Separation of kinetics and progress}
+
+LiionTR deliberately separates the intrinsic kinetic law from the
+reaction-progress model.
+
+The kinetic model determines how temperature affects the intrinsic rate,
+
+\begin{equation}
+    T
+    \longrightarrow
+    k(T),
+\end{equation}
+
+while the progress model determines how reaction state modifies that
+rate,
+
+\begin{equation}
+    \boldsymbol{\alpha}
+    \longrightarrow
+    f
+    \left(
+        \alpha,
+        \boldsymbol{\alpha}
+    \right).
+\end{equation}
+
+The complete progress rate is obtained only after combining both terms.
+
+This separation permits a common kinetic model, such as Arrhenius
+kinetics, to be reused with multiple progress laws.
+
+
+\subsection{Current limitations}
+
+The present kinetic framework is intended primarily for reduced-order
+thermal runaway modeling.
+
+Current limitations include:
+
+\begin{itemize}
+    \item no explicit pressure dependence in the standard kinetic laws;
+    \item no transport-limited reaction formulation;
+    \item no explicit dependence on electrode potential or lithium
+          concentration;
+    \item no uncertainty propagation for kinetic parameters;
+    \item no automatic kinetic parameter estimation from calorimetric
+          data;
+    \item no automatic competition between alternative reaction
+          mechanisms.
+\end{itemize}
+
+Future developments may include parameter calibration using ARC or DSC
+data, uncertainty quantification, and coupling to electrochemical state
+variables supplied by PyBaMM.

@@ -1,0 +1,154 @@
+\contentsline {section}{Nomenclature}{6}{section*.2}%
+\contentsline {section}{\numberline {1}Introduction}{8}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Project objectives}{8}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Design philosophy}{9}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Reduced-order modeling}{9}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Current implementation}{10}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Relationship to external scientific software}{10}{subsection.1.5}%
+\contentsline {subsection}{\numberline {1.6}Scope of this report}{11}{subsection.1.6}%
+\contentsline {section}{\numberline {2}Physical and Mathematical Framework}{11}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Thermal state}{12}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Reaction states}{12}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Heat generation}{12}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Gas-generation states}{12}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Pressure state}{13}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Model coupling}{13}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}Separation of physical models and state integration}{13}{subsection.2.7}%
+\contentsline {subsection}{\numberline {2.8}Scope of the present framework}{15}{subsection.2.8}%
+\contentsline {section}{\numberline {3}Thermal Model}{15}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Cell thermal capacity}{15}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Convective heat transfer}{16}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Internal heat generation}{16}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Thermal runaway feedback}{16}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Validity of the lumped approximation}{16}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Current assumptions}{17}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Limitations and future extensions}{17}{subsection.3.7}%
+\contentsline {section}{\numberline {4}Reaction Kinetics}{18}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Reaction conversion}{18}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Arrhenius kinetics}{18}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Power-law progress}{18}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Autocatalytic progress}{19}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Temperature thresholds}{19}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Context-dependent reaction progress}{19}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Threshold progress}{19}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.8}Exponential inhibition}{20}{subsection.4.8}%
+\contentsline {subsection}{\numberline {4.9}Normalized context variables}{20}{subsection.4.9}%
+\contentsline {subsection}{\numberline {4.10}Separation of kinetics and progress}{20}{subsection.4.10}%
+\contentsline {subsection}{\numberline {4.11}Current limitations}{21}{subsection.4.11}%
+\contentsline {section}{\numberline {5}Reaction Network}{21}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Standard reaction model}{21}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Reaction enthalpy convention}{22}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Reaction mass fraction}{22}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Reaction context}{22}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Multi-channel reactions}{22}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Shared reaction progress}{23}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Reaction network}{23}{subsection.5.7}%
+\contentsline {subsection}{\numberline {5.8}Network heat generation}{23}{subsection.5.8}%
+\contentsline {subsection}{\numberline {5.9}Coupled thermal-reaction system}{24}{subsection.5.9}%
+\contentsline {subsection}{\numberline {5.10}Initial reaction state}{24}{subsection.5.10}%
+\contentsline {subsection}{\numberline {5.11}Software representation}{24}{subsection.5.11}%
+\contentsline {subsection}{\numberline {5.12}Current assumptions}{24}{subsection.5.12}%
+\contentsline {subsection}{\numberline {5.13}Future extensions}{25}{subsection.5.13}%
+\contentsline {section}{\numberline {6}Hu et al. (2020) Thermal Runaway Model}{26}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Reaction-state vector}{26}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Arrhenius formulation}{26}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}SEI decomposition}{27}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Anode-electrolyte reaction}{27}{subsection.6.4}%
+\contentsline {subsubsection}{\numberline {6.4.1}Coupling to SEI decomposition}{28}{subsubsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.5}Cathode decomposition}{28}{subsection.6.5}%
+\contentsline {subsubsection}{\numberline {6.5.1}Cathode channel 1}{29}{subsubsection.6.5.1}%
+\contentsline {subsubsection}{\numberline {6.5.2}Cathode channel 2}{29}{subsubsection.6.5.2}%
+\contentsline {subsubsection}{\numberline {6.5.3}Shared cathode progress}{29}{subsubsection.6.5.3}%
+\contentsline {subsection}{\numberline {6.6}Electrolyte decomposition}{29}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7}Summary of model parameters}{30}{subsection.6.7}%
+\contentsline {subsection}{\numberline {6.8}Volumetric content and effective mass fractions}{30}{subsection.6.8}%
+\contentsline {subsection}{\numberline {6.9}Complete thermal coupling}{31}{subsection.6.9}%
+\contentsline {subsection}{\numberline {6.10}LiionTR representation}{31}{subsection.6.10}%
+\contentsline {subsection}{\numberline {6.11}Scope of the implementation}{32}{subsection.6.11}%
+\contentsline {section}{\numberline {7}Gas Generation}{32}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Gas species}{32}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Gas inventory}{33}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Mean molar mass}{33}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Empirical reaction gas yields}{33}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Total species generation rate}{34}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}Cumulative gas generation}{34}{subsection.7.6}%
+\contentsline {subsection}{\numberline {7.7}Closed-cell gas balance}{34}{subsection.7.7}%
+\contentsline {subsection}{\numberline {7.8}Gas balance after vent opening}{35}{subsection.7.8}%
+\contentsline {subsection}{\numberline {7.9}Coupling to pressure}{35}{subsection.7.9}%
+\contentsline {subsection}{\numberline {7.10}Coupling to venting}{35}{subsection.7.10}%
+\contentsline {subsection}{\numberline {7.11}Current assumptions}{35}{subsection.7.11}%
+\contentsline {subsection}{\numberline {7.12}Limitations of fixed species yields}{36}{subsection.7.12}%
+\contentsline {subsection}{\numberline {7.13}Future thermochemical formulation}{36}{subsection.7.13}%
+\contentsline {section}{\numberline {8}Pressure and Venting}{37}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Ideal-gas pressure}{37}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Initial gas inventory}{37}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Pressure-temperature coupling}{37}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Vent-opening criterion}{38}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Maximum-pressure criterion}{38}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}Compressible vent flow}{38}{subsection.8.6}%
+\contentsline {subsection}{\numberline {8.7}Specific gas constant}{39}{subsection.8.7}%
+\contentsline {subsection}{\numberline {8.8}Heat-capacity ratio}{39}{subsection.8.8}%
+\contentsline {subsection}{\numberline {8.9}Critical pressure ratio}{39}{subsection.8.9}%
+\contentsline {subsection}{\numberline {8.10}Choked mass flow}{39}{subsection.8.10}%
+\contentsline {subsection}{\numberline {8.11}Unchoked mass flow}{39}{subsection.8.11}%
+\contentsline {subsection}{\numberline {8.12}Reverse flow}{40}{subsection.8.12}%
+\contentsline {subsection}{\numberline {8.13}Molar vent flow}{40}{subsection.8.13}%
+\contentsline {subsection}{\numberline {8.14}Species vent rates}{40}{subsection.8.14}%
+\contentsline {subsection}{\numberline {8.15}Closed and open governing equations}{40}{subsection.8.15}%
+\contentsline {subsection}{\numberline {8.16}Irreversible vent transition}{40}{subsection.8.16}%
+\contentsline {subsection}{\numberline {8.17}Coupled pressure-vent feedback}{41}{subsection.8.17}%
+\contentsline {subsection}{\numberline {8.18}Current assumptions}{41}{subsection.8.18}%
+\contentsline {subsection}{\numberline {8.19}Limitations}{42}{subsection.8.19}%
+\contentsline {subsection}{\numberline {8.20}Future extensions}{42}{subsection.8.20}%
+\contentsline {section}{\numberline {9}Numerical Method}{43}{section.9}%
+\contentsline {subsection}{\numberline {9.1}State vector}{43}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Initial conditions}{43}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Right-hand-side evaluation}{43}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Gas-generation contribution}{44}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}Pressure reconstruction}{44}{subsection.9.5}%
+\contentsline {subsection}{\numberline {9.6}Vent-opening event}{44}{subsection.9.6}%
+\contentsline {subsection}{\numberline {9.7}Two-phase integration}{45}{subsection.9.7}%
+\contentsline {subsection}{\numberline {9.8}Solver flow}{45}{subsection.9.8}%
+\contentsline {subsection}{\numberline {9.9}Maximum-temperature event}{45}{subsection.9.9}%
+\contentsline {subsection}{\numberline {9.10}Maximum-pressure event}{45}{subsection.9.10}%
+\contentsline {subsection}{\numberline {9.11}Stiff numerical integration}{46}{subsection.9.11}%
+\contentsline {subsection}{\numberline {9.12}Adaptive time stepping}{46}{subsection.9.12}%
+\contentsline {subsection}{\numberline {9.13}State reconstruction}{47}{subsection.9.13}%
+\contentsline {subsection}{\numberline {9.14}Numerical architecture}{47}{subsection.9.14}%
+\contentsline {subsection}{\numberline {9.15}Current limitations}{48}{subsection.9.15}%
+\contentsline {subsection}{\numberline {9.16}Future numerical extensions}{48}{subsection.9.16}%
+\contentsline {section}{\numberline {10}Verification}{48}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Unit-level verification}{49}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Dimensional consistency}{49}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Reaction-energy consistency}{50}{subsection.10.3}%
+\contentsline {subsection}{\numberline {10.4}Hu model energy check}{50}{subsection.10.4}%
+\contentsline {subsection}{\numberline {10.5}Thermal-response consistency}{50}{subsection.10.5}%
+\contentsline {subsection}{\numberline {10.6}Gas-generation conservation}{51}{subsection.10.6}%
+\contentsline {subsection}{\numberline {10.7}Pressure verification}{51}{subsection.10.7}%
+\contentsline {subsection}{\numberline {10.8}Vent-flow verification}{51}{subsection.10.8}%
+\contentsline {subsection}{\numberline {10.9}Vented coupled simulation}{51}{subsection.10.9}%
+\contentsline {subsection}{\numberline {10.10}Regression testing}{52}{subsection.10.10}%
+\contentsline {subsection}{\numberline {10.11}Verification hierarchy}{52}{subsection.10.11}%
+\contentsline {subsection}{\numberline {10.12}Experimental validation}{52}{subsection.10.12}%
+\contentsline {section}{\numberline {11}Reference Simulation Results}{53}{section.11}%
+\contentsline {subsection}{\numberline {11.1}Reference simulation conditions}{54}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}Temperature evolution}{54}{subsection.11.2}%
+\contentsline {subsection}{\numberline {11.3}Reaction progression}{54}{subsection.11.3}%
+\contentsline {subsection}{\numberline {11.4}Reaction heat generation}{54}{subsection.11.4}%
+\contentsline {subsection}{\numberline {11.5}Integrated reaction energy}{54}{subsection.11.5}%
+\contentsline {section}{\numberline {12}Future Development}{56}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Thermochemical gas modeling}{56}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Cantera integration}{56}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Energy-consistent thermochemistry}{57}{subsection.12.3}%
+\contentsline {subsection}{\numberline {12.4}Electrochemical coupling}{57}{subsection.12.4}%
+\contentsline {subsection}{\numberline {12.5}Calorimetric parameter estimation}{58}{subsection.12.5}%
+\contentsline {subsection}{\numberline {12.6}Sensitivity and uncertainty analysis}{58}{subsection.12.6}%
+\contentsline {subsection}{\numberline {12.7}Temperature-dependent material properties}{59}{subsection.12.7}%
+\contentsline {subsection}{\numberline {12.8}Spatial thermal models}{59}{subsection.12.8}%
+\contentsline {subsection}{\numberline {12.9}Cell-to-cell propagation}{59}{subsection.12.9}%
+\contentsline {subsection}{\numberline {12.10}Mechanical venting and rupture}{59}{subsection.12.10}%
+\contentsline {subsection}{\numberline {12.11}Multiphase venting}{60}{subsection.12.11}%
+\contentsline {subsection}{\numberline {12.12}External vent-jet and combustion models}{60}{subsection.12.12}%
+\contentsline {subsection}{\numberline {12.13}Validation database}{61}{subsection.12.13}%
+\contentsline {subsection}{\numberline {12.14}Software development}{61}{subsection.12.14}%
+\contentsline {subsection}{\numberline {12.15}Long-term architecture}{62}{subsection.12.15}%

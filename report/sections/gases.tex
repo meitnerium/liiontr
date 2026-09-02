@@ -1,0 +1,424 @@
+Thermal runaway reactions can produce substantial quantities of gas.
+LiionTR currently represents gas generation using a reduced-order
+empirical formulation in which prescribed species yields are associated
+with reaction progress.
+
+This formulation provides the coupling required to study gas inventory,
+internal pressure, and venting while keeping the gas-generation model
+independent from the reaction kinetics and numerical solver.
+
+
+\subsection{Gas species}
+
+Each gas species $s$ is characterized by a molar mass
+
+\begin{equation}
+    M_s,
+\end{equation}
+
+expressed in \si{\kilogram\per\mole}.
+
+The instantaneous gas state is represented by the mole inventory
+
+\begin{equation}
+    n_s,
+\end{equation}
+
+for each species.
+
+
+\subsection{Gas inventory}
+
+For a mixture containing $N_s$ species, the total gas amount is
+
+\begin{equation}
+    n_{\mathrm{tot}}
+    =
+    \sum_{s=1}^{N_s}
+    n_s.
+    \label{eq:gas_total_moles}
+\end{equation}
+
+The total gas mass is
+
+\begin{equation}
+    m_{\mathrm{gas}}
+    =
+    \sum_{s=1}^{N_s}
+    n_s M_s.
+    \label{eq:gas_total_mass}
+\end{equation}
+
+The mole fraction of species $s$ is
+
+\begin{equation}
+    x_s
+    =
+    \frac{
+        n_s
+    }{
+        n_{\mathrm{tot}}
+    },
+    \label{eq:gas_mole_fraction}
+\end{equation}
+
+such that
+
+\begin{equation}
+    \sum_{s=1}^{N_s}
+    x_s
+    =
+    1
+\end{equation}
+
+for a nonempty gas inventory.
+
+
+\subsection{Mean molar mass}
+
+The current venting model uses the mole-weighted mean molar mass
+
+\begin{equation}
+    \overline{M}
+    =
+    \sum_{s=1}^{N_s}
+    x_s M_s.
+    \label{eq:mean_molar_mass}
+\end{equation}
+
+Equivalently,
+
+\begin{equation}
+    \overline{M}
+    =
+    \frac{
+        \displaystyle
+        \sum_{s=1}^{N_s}
+        n_s M_s
+    }{
+        \displaystyle
+        \sum_{s=1}^{N_s}
+        n_s
+    }.
+\end{equation}
+
+This effective property provides the connection between the
+species-resolved gas inventory and the single-mixture compressible-flow
+model.
+
+
+\subsection{Empirical reaction gas yields}
+
+The current LiionTR gas-generation model assigns prescribed gas yields to
+individual thermal runaway reactions.
+
+For reaction $i$ and species $s$, the gas yield is denoted
+
+\begin{equation}
+    Y_{i,s},
+\end{equation}
+
+with units of
+
+\begin{equation}
+    \si{\mole\per\kilogram}
+\end{equation}
+
+of reacted material.
+
+If reaction $i$ occupies an effective mass fraction $w_i$ of a cell with
+mass $m_{\mathrm{cell}}$, the corresponding reacted-material rate is
+
+\begin{equation}
+    \frac{dm_{i,\mathrm{reacted}}}{dt}
+    =
+    m_{\mathrm{cell}}
+    w_i
+    \frac{d\alpha_i}{dt}.
+    \label{eq:reacted_material_rate}
+\end{equation}
+
+The generation rate of species $s$ from reaction $i$ is therefore
+
+\begin{equation}
+    \dot{n}_{i,s}
+    =
+    Y_{i,s}
+    m_{\mathrm{cell}}
+    w_i
+    \dot{\alpha}_i.
+    \label{eq:species_generation_single_reaction}
+\end{equation}
+
+
+\subsection{Total species generation rate}
+
+When multiple reactions generate the same gas species, their
+contributions are summed.
+
+The total generation rate of species $s$ is
+
+\begin{equation}
+    \dot{n}_{s,\mathrm{gen}}
+    =
+    \sum_{i=1}^{N_r}
+    Y_{i,s}
+    m_{\mathrm{cell}}
+    w_i
+    \dot{\alpha}_i,
+    \label{eq:species_generation_total}
+\end{equation}
+
+where $N_r$ is the number of thermal runaway reactions.
+
+
+\subsection{Cumulative gas generation}
+
+If reaction $i$ evolves from an initial conversion
+$\alpha_{i,0}$ to $\alpha_i$, the corresponding conversion change is
+
+\begin{equation}
+    \Delta \alpha_i
+    =
+    \alpha_i-\alpha_{i,0}.
+\end{equation}
+
+The cumulative gas amount associated with species $s$ is then
+
+\begin{equation}
+    n_{s,\mathrm{generated}}
+    =
+    \sum_{i=1}^{N_r}
+    Y_{i,s}
+    m_{\mathrm{cell}}
+    w_i
+    \left(
+        \alpha_i-\alpha_{i,0}
+    \right).
+    \label{eq:cumulative_gas_generation}
+\end{equation}
+
+This expression is useful for closed-system calculations and for
+verification of the integrated gas-generation rates.
+
+
+\subsection{Closed-cell gas balance}
+
+Before vent opening, all generated gas remains inside the modeled free
+volume.
+
+The species balance is
+
+\begin{equation}
+    \frac{dn_s}{dt}
+    =
+    \dot{n}_{s,\mathrm{gen}}.
+    \label{eq:closed_gas_balance}
+\end{equation}
+
+The total mole inventory therefore increases according to
+
+\begin{equation}
+    \frac{dn_{\mathrm{tot}}}{dt}
+    =
+    \sum_s
+    \dot{n}_{s,\mathrm{gen}}.
+\end{equation}
+
+
+\subsection{Gas balance after vent opening}
+
+After vent opening, gas generation and gas discharge occur
+simultaneously.
+
+The species balance becomes
+
+\begin{equation}
+    \frac{dn_s}{dt}
+    =
+    \dot{n}_{s,\mathrm{gen}}
+    -
+    \dot{n}_{s,\mathrm{vent}}.
+    \label{eq:open_gas_balance}
+\end{equation}
+
+The instantaneous gas composition may therefore evolve because of both
+reaction-driven generation and removal through the vent.
+
+
+\subsection{Coupling to pressure}
+
+The gas inventory supplies the total gas amount used by the pressure
+model.
+
+For the current ideal-gas formulation,
+
+\begin{equation}
+    P
+    =
+    \frac{
+        n_{\mathrm{tot}} R T
+    }{
+        V_{\mathrm{free}}
+    }.
+    \label{eq:gases_pressure_coupling}
+\end{equation}
+
+Thus, both gas generation and temperature evolution contribute directly
+to cell pressurization.
+
+
+\subsection{Coupling to venting}
+
+The gas inventory also provides the mixture composition required by the
+vent-flow model.
+
+The mean molar mass is calculated using
+\cref{eq:mean_molar_mass}, and the total molar discharge rate is
+distributed between species according to their instantaneous mole
+fractions.
+
+This coupling is represented schematically in
+\cref{fig:gas_architecture}.
+
+\begin{figure}[htbp]
+    \centering
+
+    \begin{tikzpicture}[
+        node distance=1.5cm and 2.3cm,
+        block/.style={
+            rectangle,
+            rounded corners,
+            draw,
+            align=center,
+            minimum width=3.2cm,
+            minimum height=0.95cm
+        },
+        line/.style={
+            -{Latex[length=3mm]},
+            thick
+        }
+    ]
+
+    \node[block] (reaction)
+        {Reaction progress\\$\dot{\boldsymbol{\alpha}}$};
+
+    \node[block, below=of reaction] (generation)
+        {Gas generation\\$\dot{n}_{s,\mathrm{gen}}$};
+
+    \node[block, below=of generation] (inventory)
+        {Gas inventory\\$n_s$};
+
+    \node[block, below left=of inventory] (pressure)
+        {Pressure\\$P$};
+
+    \node[block, below right=of inventory] (properties)
+        {Mixture properties\\$x_s,\overline{M}$};
+
+    \node[block, below=of $(pressure)!0.5!(properties)$] (vent)
+        {Vent flow\\$\dot{n}_{s,\mathrm{vent}}$};
+
+    \draw[line] (reaction) -- (generation);
+    \draw[line] (generation) -- (inventory);
+    \draw[line] (inventory) -- (pressure);
+    \draw[line] (inventory) -- (properties);
+
+    \draw[line] (pressure) -- (vent);
+    \draw[line] (properties) -- (vent);
+
+    \draw[line]
+        (vent.east)
+        -- ++(1.0,0)
+        |- (inventory.east);
+
+    \end{tikzpicture}
+
+    \caption{
+        Coupling between reaction-driven gas generation, the gas
+        inventory, pressure, mixture properties, and vent discharge in
+        the current LiionTR formulation.
+    }
+    \label{fig:gas_architecture}
+\end{figure}
+
+
+\subsection{Current assumptions}
+
+The empirical gas-generation formulation assumes that:
+
+\begin{itemize}
+    \item gas yields are prescribed directly for individual reactions;
+    \item species yields remain constant during each reaction;
+    \item gas yields do not explicitly depend on temperature or pressure;
+    \item gas-phase secondary chemistry is not represented;
+    \item the gas mixture is spatially homogeneous;
+    \item all gas species share a common temperature;
+    \item the gas temperature is equal to the lumped cell temperature;
+    \item condensation and phase separation are neglected;
+    \item gas dissolution into condensed phases is neglected.
+\end{itemize}
+
+
+\subsection{Limitations of fixed species yields}
+
+Thermal runaway gas composition can depend strongly on battery chemistry,
+electrolyte composition, state of charge, temperature, pressure, and
+secondary reactions.
+
+Actual vent gases may contain, among other species,
+
+\begin{equation}
+    \mathrm{
+        H_2,\,
+        H_2O,\,
+        CO,\,
+        CO_2,\,
+        CH_4,\,
+        C_2H_4
+    }.
+\end{equation}
+
+Additional fluorinated or phosphorus-containing species may also be
+important depending on electrolyte chemistry.
+
+A fixed species-yield model cannot generally predict these composition
+changes from first principles.
+
+
+\subsection{Future thermochemical formulation}
+
+The intended long-term thermochemical architecture is to replace or
+complement direct species yields with elemental source inventories.
+
+Conceptually,
+
+\begin{equation}
+    \text{reaction progress}
+    \longrightarrow
+    \text{element inventory}
+    \longrightarrow
+    \text{chemical equilibrium}
+    \longrightarrow
+    \text{gas composition}.
+\end{equation}
+
+Relevant elemental inventories may include
+
+\begin{equation}
+    \mathrm{
+        C,\,
+        H,\,
+        O,\,
+        N,\,
+        F,\,
+        P,\,
+        Li
+    }.
+\end{equation}
+
+A thermochemical backend such as Cantera could then provide equilibrium
+composition and mixture properties.
+
+The present empirical implementation is retained because it provides a
+simple, deterministic, and independently testable formulation while the
+thermochemical architecture is developed.

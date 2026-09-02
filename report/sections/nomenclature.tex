@@ -1,0 +1,304 @@
+\section*{Nomenclature}
+\addcontentsline{toc}{section}{Nomenclature}
+
+\renewcommand{\arraystretch}{1.15}
+
+\begin{longtable}{
+    >{$}l<{$}
+    p{8.3cm}
+    l
+}
+    \toprule
+    \text{Symbol} & \text{Description} & \text{Unit} \\
+    \midrule
+    \endfirsthead
+
+    \toprule
+    \text{Symbol} & \text{Description} & \text{Unit} \\
+    \midrule
+    \endhead
+
+    A
+    & Arrhenius pre-exponential factor
+    & \si{\per\second}
+    \\
+
+    A_v
+    & Effective vent flow area
+    & \si{\meter\squared}
+    \\
+
+    A_{\mathrm{cell}}
+    & External cell surface area
+    & \si{\meter\squared}
+    \\
+
+    C_d
+    & Vent discharge coefficient
+    & --
+    \\
+
+    C_{\mathrm{th}}
+    & Effective cell thermal capacity
+    & \si{\joule\per\kelvin}
+    \\
+
+    c_p
+    & Specific heat capacity
+    & \si{\joule\per\kilogram\per\kelvin}
+    \\
+
+    c_v
+    & Constant-volume specific heat capacity
+    & \si{\joule\per\kilogram\per\kelvin}
+    \\
+
+    E_a
+    & Activation energy
+    & \si{\joule\per\mole}
+    \\
+
+    f
+    & Reaction-progress function
+    & --
+    \\
+
+    h
+    & Convective heat-transfer coefficient
+    & \si{\watt\per\meter\squared\per\kelvin}
+    \\
+
+    k(T)
+    & Temperature-dependent kinetic rate coefficient
+    & \si{\per\second}
+    \\
+
+    k
+    & Effective thermal conductivity
+    & \si{\watt\per\meter\per\kelvin}
+    \\
+
+    L_c
+    & Characteristic thermal length
+    & \si{\meter}
+    \\
+
+    m_{\mathrm{cell}}
+    & Battery-cell mass
+    & \si{\kilogram}
+    \\
+
+    m_{\mathrm{gas}}
+    & Total gas mass
+    & \si{\kilogram}
+    \\
+
+    \dot{m}_{\mathrm{vent}}
+    & Vent mass-flow rate
+    & \si{\kilogram\per\second}
+    \\
+
+    M_s
+    & Molar mass of gas species $s$
+    & \si{\kilogram\per\mole}
+    \\
+
+    \overline{M}
+    & Mean molar mass of the gas mixture
+    & \si{\kilogram\per\mole}
+    \\
+
+    n_s
+    & Mole inventory of gas species $s$
+    & \si{\mole}
+    \\
+
+    n_{\mathrm{tot}}
+    & Total gas mole inventory
+    & \si{\mole}
+    \\
+
+    \dot{n}_{s,\mathrm{gen}}
+    & Generation rate of gas species $s$
+    & \si{\mole\per\second}
+    \\
+
+    \dot{n}_{s,\mathrm{vent}}
+    & Vent rate of gas species $s$
+    & \si{\mole\per\second}
+    \\
+
+    P
+    & Absolute internal gas pressure
+    & \si{\pascal}
+    \\
+
+    P_0
+    & Initial pressure
+    & \si{\pascal}
+    \\
+
+    P_d
+    & Downstream pressure
+    & \si{\pascal}
+    \\
+
+    P_u
+    & Upstream pressure
+    & \si{\pascal}
+    \\
+
+    P_{\mathrm{vent}}
+    & Vent-opening pressure
+    & \si{\pascal}
+    \\
+
+    P_{\max}
+    & Maximum permitted pressure
+    & \si{\pascal}
+    \\
+
+    \dot{Q}_{\mathrm{gen}}
+    & Total internal heat-generation rate
+    & \si{\watt}
+    \\
+
+    \dot{Q}_{\mathrm{loss}}
+    & Heat-loss rate
+    & \si{\watt}
+    \\
+
+    \dot{q}
+    & Mass-specific heat-generation rate
+    & \si{\watt\per\kilogram}
+    \\
+
+    R
+    & Universal gas constant
+    & \si{\joule\per\mole\per\kelvin}
+    \\
+
+    R_s
+    & Specific gas constant
+    & \si{\joule\per\kilogram\per\kelvin}
+    \\
+
+    r
+    & Remaining reaction fraction, $1-\alpha$
+    & --
+    \\
+
+    r_p
+    & Downstream-to-upstream pressure ratio
+    & --
+    \\
+
+    r_{\mathrm{crit}}
+    & Critical pressure ratio for choked flow
+    & --
+    \\
+
+    T
+    & Lumped cell temperature
+    & \si{\kelvin}
+    \\
+
+    T_0
+    & Initial cell temperature
+    & \si{\kelvin}
+    \\
+
+    T_{\infty}
+    & Ambient temperature
+    & \si{\kelvin}
+    \\
+
+    T_{\mathrm{th}}
+    & Reaction threshold temperature
+    & \si{\kelvin}
+    \\
+
+    T_{\max}
+    & Maximum permitted temperature
+    & \si{\kelvin}
+    \\
+
+    V
+    & Cell volume
+    & \si{\meter\cubed}
+    \\
+
+    V_{\mathrm{free}}
+    & Internal free gas volume
+    & \si{\meter\cubed}
+    \\
+
+    W_i
+    & Volumetric reacting-material content of reaction $i$
+    & \si{\kilogram\per\meter\cubed}
+    \\
+
+    w_i
+    & Effective cell mass fraction associated with reaction $i$
+    & --
+    \\
+
+    x_s
+    & Mole fraction of gas species $s$
+    & --
+    \\
+
+    Y_{i,s}
+    & Yield of gas species $s$ from reaction $i$
+    & \si{\mole\per\kilogram}
+    \\
+
+    \alpha_i
+    & Conversion of thermal runaway reaction $i$
+    & --
+    \\
+
+    \alpha_{i,0}
+    & Initial conversion of reaction $i$
+    & --
+    \\
+
+    \gamma
+    & Gas heat-capacity ratio, $c_p/c_v$
+    & --
+    \\
+
+    \Delta H_i
+    & Effective specific heat release of reaction $i$
+    & \si{\joule\per\kilogram}
+    \\
+
+    \rho
+    & Effective cell density
+    & \si{\kilogram\per\meter\cubed}
+    \\
+
+    \boldsymbol{\alpha}
+    & Vector of reaction conversions
+    & --
+    \\
+
+    \mathbf{n}
+    & Vector of gas-species mole inventories
+    & \si{\mole}
+    \\
+
+    \mathbf{y}
+    & Numerical state vector
+    & --
+    \\
+
+    \mathrm{Bi}
+    & Biot number
+    & --
+    \\
+
+    \bottomrule
+\end{longtable}
+
+\renewcommand{\arraystretch}{1}

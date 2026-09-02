@@ -1,0 +1,144 @@
+\input{generated/hu2020_results}
+
+The behavior of the implemented thermal runaway framework is illustrated
+using a reference simulation based on the reaction network of
+Hu et al.~\cite{hu2020inhibition}.
+
+The purpose of this simulation is to demonstrate the coupled response of
+the implemented reaction and thermal models. The calculation is not
+intended as an independent experimental validation of the original model.
+
+
+\subsection{Reference simulation conditions}
+
+The simulation is initialized at an elevated temperature in order to
+activate the thermal runaway reaction network within a short numerical
+time interval.
+
+The principal simulation conditions are summarized in
+\cref{tab:reference_simulation_conditions}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Conditions used for the Hu et al.\ reference simulation.}
+    \label{tab:reference_simulation_conditions}
+
+    \begin{tabular}{lll}
+        \toprule
+        Parameter & Value & Unit \\
+        \midrule
+        Initial temperature
+        & 480
+        & \si{\kelvin}
+        \\
+
+        Simulation duration
+        & 20
+        & \si{\second}
+        \\
+
+        Convective heat-transfer coefficient
+        & 10
+        & \si{\watt\per\meter\squared\per\kelvin}
+        \\
+
+        Maximum permitted temperature
+        & 1200
+        & \si{\kelvin}
+        \\
+
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+\subsection{Temperature evolution}
+
+The simulated temperature evolution is shown in
+\cref{fig:hu_temperature_result}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[
+        width=0.78\textwidth
+    ]{hu2020_temperature.pdf}
+
+    \caption{
+        Cell temperature predicted by LiionTR for the Hu et al.\
+        reference thermal runaway simulation.
+    }
+    \label{fig:hu_temperature_result}
+\end{figure}
+
+
+\subsection{Reaction progression}
+
+The evolution of the four reaction conversions is shown in
+\cref{fig:hu_conversion_result}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[
+        width=0.82\textwidth
+    ]{hu2020_conversion.pdf}
+
+    \caption{
+        Evolution of the SEI, anode-electrolyte, cathode, and electrolyte
+        reaction conversions during the reference simulation.
+    }
+    \label{fig:hu_conversion_result}
+\end{figure}
+
+
+\subsection{Reaction heat generation}
+
+The individual reaction contributions to heat generation are shown in
+\cref{fig:hu_heat_result}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[
+        width=0.82\textwidth
+    ]{hu2020_heat_generation.pdf}
+
+    \caption{
+        Mass-specific heat-generation rates associated with the thermal
+        runaway reactions in the Hu et al.\ reference simulation.
+    }
+    \label{fig:hu_heat_result}
+\end{figure}
+
+
+\subsection{Integrated reaction energy}
+
+The total specific reaction energy is calculated from
+
+\begin{equation}
+    q_{\mathrm{reaction}}
+    =
+    \int
+    \dot{q}_{\mathrm{total}}
+    \,dt.
+    \label{eq:results_integrated_heat}
+\end{equation}
+
+For the present reference calculation, the integrated reaction energy is
+approximately
+
+\begin{equation}
+    q_{\mathrm{reaction}}
+    =
+    \SI{\HuIntegratedEnergy}{\kilo\joule\per\kilogram}.
+\end{equation}
+
+The final simulated cell temperature is approximately
+
+\begin{equation}
+    T_f
+    =
+    \SI{\HuFinalTemperature}{\kelvin}.
+\end{equation}
+
+These values characterize the selected numerical reference case and
+should not be interpreted as general thermal runaway characteristics of
+lithium-ion cells.

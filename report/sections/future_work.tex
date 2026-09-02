@@ -1,0 +1,433 @@
+LiionTR is currently a reduced-order thermal runaway framework with
+explicit models for reaction kinetics, heat generation, gas generation,
+pressure, and venting.
+
+Several extensions are required before the framework can represent the
+full range of physical processes relevant to lithium-ion battery failure.
+
+Development priorities are described below.
+
+
+\subsection{Thermochemical gas modeling}
+
+The current gas-generation formulation uses prescribed species yields.
+
+This approach is useful for empirical models and verification but cannot
+predict gas composition from the chemical state of the reacting battery
+materials.
+
+A future thermochemical formulation will represent reaction products in
+terms of elemental inventories.
+
+Conceptually,
+
+\begin{equation}
+    \text{thermal decomposition}
+    \rightarrow
+    \text{element source terms}
+    \rightarrow
+    \text{element inventory}
+    \rightarrow
+    \text{thermochemical equilibrium}.
+\end{equation}
+
+Relevant elements may include
+
+\begin{equation}
+    \mathrm{
+        C,\,
+        H,\,
+        O,\,
+        N,\,
+        F,\,
+        P,\,
+        Li
+    }.
+\end{equation}
+
+A thermochemical equilibrium backend can then determine gas composition
+subject to specified thermodynamic constraints.
+
+
+\subsection{Cantera integration}
+
+Cantera is a strong candidate for the thermochemical backend.
+
+A future LiionTR interface may provide a generic abstraction such as
+
+\begin{equation}
+    \texttt{GasEquilibriumBackend},
+\end{equation}
+
+with a Cantera implementation responsible for
+
+\begin{itemize}
+    \item equilibrium gas composition;
+    \item mixture molar mass;
+    \item heat capacities;
+    \item enthalpy and internal energy;
+    \item heat-capacity ratio;
+    \item other thermodynamic properties required by venting.
+\end{itemize}
+
+The initial implementation may use constant-volume, constant-temperature
+equilibrium calculations.
+
+More advanced formulations may require coupled energy-conserving
+equilibrium calculations.
+
+
+\subsection{Energy-consistent thermochemistry}
+
+The current thermal state is temperature.
+
+This is convenient for reduced-order calculations but may become
+insufficient when significant energy is redistributed through chemical
+equilibrium, vaporization, gas discharge, or phase change.
+
+A future formulation may therefore evolve internal energy,
+
+\begin{equation}
+    U,
+\end{equation}
+
+rather than temperature directly.
+
+Temperature would then be reconstructed from the thermodynamic state,
+
+\begin{equation}
+    T
+    =
+    T
+    \left(
+        U,
+        V,
+        \mathbf{n}
+    \right).
+\end{equation}
+
+Such a formulation would provide a more rigorous basis for energetic
+coupling between condensed reactions and gas-phase thermochemistry.
+
+
+\subsection{Electrochemical coupling}
+
+Thermal runaway behavior depends strongly on the electrochemical state
+of the cell.
+
+Relevant quantities include
+
+\begin{itemize}
+    \item state of charge;
+    \item electrode lithium concentration;
+    \item electrode potential;
+    \item current;
+    \item irreversible electrochemical heating;
+    \item reversible entropic heating.
+\end{itemize}
+
+PyBaMM may eventually provide these quantities to LiionTR.
+
+The intended coupling is not to replace PyBaMM electrochemistry, but to
+allow electrochemical state variables to modify thermal runaway kinetics,
+reaction inventories, or onset conditions.
+
+
+\subsection{Calorimetric parameter estimation}
+
+Thermal runaway kinetic parameters are often derived from differential
+scanning calorimetry or accelerating rate calorimetry measurements.
+
+LiionTR may therefore include tools for fitting model parameters to
+experimental data.
+
+Potential parameters include
+
+\begin{equation}
+    A,
+    \qquad
+    E_a,
+    \qquad
+    \Delta H,
+    \qquad
+    n,
+    \qquad
+    \alpha_0.
+\end{equation}
+
+Parameter estimation could be formulated as an optimization problem,
+
+\begin{equation}
+    \boldsymbol{\theta}^{*}
+    =
+    \arg\min_{\boldsymbol{\theta}}
+    J
+    \left(
+        \boldsymbol{\theta}
+    \right),
+\end{equation}
+
+where $\boldsymbol{\theta}$ is the parameter vector and $J$ measures the
+difference between simulation and experiment.
+
+
+\subsection{Sensitivity and uncertainty analysis}
+
+Published thermal runaway parameters can vary substantially between
+cells, chemistries, measurement methods, and states of charge.
+
+Future development should therefore consider parameter uncertainty.
+
+Relevant outputs may include sensitivities of
+
+\begin{itemize}
+    \item thermal runaway onset time;
+    \item maximum temperature;
+    \item maximum pressure;
+    \item vent-opening time;
+    \item total gas generation;
+    \item total energy release.
+\end{itemize}
+
+Both local sensitivity analysis and Monte Carlo uncertainty propagation
+may be useful.
+
+
+\subsection{Temperature-dependent material properties}
+
+The current cell thermal properties are effectively constant.
+
+Future material models may support
+
+\begin{equation}
+    c_p
+    =
+    c_p(T),
+\end{equation}
+
+\begin{equation}
+    k
+    =
+    k(T),
+\end{equation}
+
+and potentially
+
+\begin{equation}
+    \rho
+    =
+    \rho(T).
+\end{equation}
+
+Phase transitions and latent-heat effects may also be relevant at severe
+thermal runaway temperatures.
+
+
+\subsection{Spatial thermal models}
+
+The present lumped formulation cannot reproduce internal temperature
+gradients.
+
+A natural extension is a one-dimensional radial model for cylindrical
+cells,
+
+\begin{equation}
+    \rho c_p
+    \frac{\partial T}{\partial t}
+    =
+    \frac{1}{r}
+    \frac{\partial}{\partial r}
+    \left(
+        k r
+        \frac{\partial T}{\partial r}
+    \right)
+    +
+    \dot{q}_{\mathrm{gen}}.
+\end{equation}
+
+More general finite-volume or finite-element formulations could later
+support cylindrical, prismatic, and pouch cells.
+
+
+\subsection{Cell-to-cell propagation}
+
+Battery-module safety analysis requires coupling between multiple cells.
+
+For cell $i$, a generic thermal balance may be written as
+
+\begin{equation}
+    C_i
+    \frac{dT_i}{dt}
+    =
+    \dot{Q}_{i,\mathrm{gen}}
+    -
+    \dot{Q}_{i,\mathrm{ambient}}
+    +
+    \sum_j
+    \dot{Q}_{j\rightarrow i}.
+\end{equation}
+
+The inter-cell term
+
+\begin{equation}
+    \dot{Q}_{j\rightarrow i}
+\end{equation}
+
+may include conduction, radiation, convection, or heat transfer from
+vent gases and flames.
+
+The modular cell representation already provides a basis for this
+extension.
+
+
+\subsection{Mechanical venting and rupture}
+
+The current vent-opening model uses a prescribed pressure threshold and
+instantaneous transition to a fixed vent area.
+
+More realistic models may include
+
+\begin{itemize}
+    \item progressive vent displacement;
+    \item pressure-dependent vent area;
+    \item burst-disk failure;
+    \item casing deformation;
+    \item rupture;
+    \item multiple vent paths.
+\end{itemize}
+
+A mechanical model could therefore determine
+
+\begin{equation}
+    A_v
+    =
+    A_v
+    \left(
+        P,
+        T,
+        t
+    \right)
+\end{equation}
+
+instead of treating vent area as constant.
+
+
+\subsection{Multiphase venting}
+
+Real battery vent products may contain gases, vapor, droplets, aerosols,
+and solid particles.
+
+The current single-phase ideal-gas discharge model does not represent
+these phenomena.
+
+Future formulations may require
+
+\begin{itemize}
+    \item electrolyte vaporization;
+    \item flashing flow;
+    \item liquid entrainment;
+    \item aerosol transport;
+    \item multiphase choking criteria.
+\end{itemize}
+
+
+\subsection{External vent-jet and combustion models}
+
+Once material leaves the cell, additional physical processes may occur
+outside the battery.
+
+These include
+
+\begin{itemize}
+    \item turbulent jet formation;
+    \item mixing with ambient air;
+    \item ignition;
+    \item flame propagation;
+    \item radiant heat transfer;
+    \item toxic-species transport.
+\end{itemize}
+
+These processes are outside the current LiionTR domain but could
+eventually be represented through interfaces to combustion or
+computational-fluid-dynamics tools.
+
+
+\subsection{Validation database}
+
+A robust thermal runaway framework requires systematic comparison with
+experimental measurements.
+
+A future validation database could contain
+
+\begin{itemize}
+    \item battery-cell metadata;
+    \item chemistry;
+    \item geometry;
+    \item nominal capacity;
+    \item state of charge;
+    \item abuse condition;
+    \item ARC data;
+    \item DSC data;
+    \item temperature histories;
+    \item pressure histories;
+    \item vent gas composition;
+    \item vented mass;
+    \item photographs or high-speed imaging metadata.
+\end{itemize}
+
+Standardized datasets would permit repeatable comparison between
+alternative LiionTR models.
+
+
+\subsection{Software development}
+
+In addition to physical-model development, several software improvements
+are anticipated:
+
+\begin{itemize}
+    \item stable public APIs;
+    \item structured serialization of simulations;
+    \item model configuration files;
+    \item reproducible simulation metadata;
+    \item plotting and post-processing utilities;
+    \item parameter databases;
+    \item expanded example simulations;
+    \item automated benchmarking;
+    \item optional parallel parameter studies.
+\end{itemize}
+
+
+\subsection{Long-term architecture}
+
+The long-term architecture can be summarized conceptually as
+
+\begin{equation}
+    \boxed{
+    \begin{array}{c}
+        \text{Electrochemistry} \\
+        \text{PyBaMM}
+    \end{array}
+    }
+    \longrightarrow
+    \boxed{
+    \begin{array}{c}
+        \text{Thermal runaway} \\
+        \text{LiionTR}
+    \end{array}
+    }
+    \longrightarrow
+    \boxed{
+    \begin{array}{c}
+        \text{Thermochemistry} \\
+        \text{Cantera}
+    \end{array}
+    }.
+\end{equation}
+
+LiionTR is intended to remain the layer responsible for coordinating
+battery-safety-specific physics, thermal runaway reactions, gas
+generation, pressure, venting, and propagation.
+
+The framework should therefore remain modular enough that increasing the
+fidelity of one physical subsystem does not require redesigning the
+complete simulation architecture.

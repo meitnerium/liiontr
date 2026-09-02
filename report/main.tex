@@ -1,0 +1,204 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------------------------------------------------------------------------
+% Encoding and typography
+% ---------------------------------------------------------------------------
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ---------------------------------------------------------------------------
+% Page layout
+% ---------------------------------------------------------------------------
+
+\usepackage[
+    margin=2.5cm
+]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing
+
+% ---------------------------------------------------------------------------
+% Mathematics
+% ---------------------------------------------------------------------------
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+% ---------------------------------------------------------------------------
+% Units
+% ---------------------------------------------------------------------------
+
+\usepackage{siunitx}
+
+\sisetup{
+    per-mode = symbol,
+    separate-uncertainty = true
+}
+
+% ---------------------------------------------------------------------------
+% Tables and figures
+% ---------------------------------------------------------------------------
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+
+\graphicspath{{figures/}}
+
+% ---------------------------------------------------------------------------
+% Lists
+% ---------------------------------------------------------------------------
+
+\usepackage{enumitem}
+
+% ---------------------------------------------------------------------------
+% Colors and links
+% ---------------------------------------------------------------------------
+
+\usepackage{xcolor}
+
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+]{hyperref}
+
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+
+% ---------------------------------------------------------------------------
+% tikz
+% ---------------------------------------------------------------------------
+
+
+\usepackage{tikz}
+\usetikzlibrary{
+    arrows.meta,
+    positioning,
+    shapes.geometric,
+    calc
+}
+
+% ---------------------------------------------------------------------------
+% Bibliography
+% ---------------------------------------------------------------------------
+
+\usepackage[
+    backend=biber,
+    style=numeric-comp,
+    sorting=none,
+    maxbibnames=99
+]{biblatex}
+
+\addbibresource{../references.bib}
+
+% ---------------------------------------------------------------------------
+% Document metadata
+% ---------------------------------------------------------------------------
+
+\title{
+    \textbf{LiionTR}\\[0.5em]
+    A Modular Scientific Framework for Lithium-Ion Battery Thermal Runaway Modeling
+}
+
+\author{François Dion}
+
+\date{\today}
+
+% ---------------------------------------------------------------------------
+% Document
+% ---------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+LiionTR is a modular scientific Python framework for the simulation of
+lithium-ion battery thermal runaway. The framework separates thermal
+runaway reaction kinetics, heat generation, gas generation, internal
+pressure, venting, and numerical integration into independent physical
+components.
+
+The present formulation uses a lumped thermal model coupled to a network
+of reduced-order thermal runaway reactions. Gas generation, ideal-gas
+pressurization, and compressible vent flow can be incorporated into the
+same numerical problem. The architecture is designed to support future
+integration with thermochemical equilibrium calculations through Cantera
+and electrochemical models through PyBaMM.
+
+This report describes the mathematical formulation, software
+architecture, implemented thermal runaway models, numerical methods,
+verification strategy, current limitations, and planned extensions of
+LiionTR.
+
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+\input{sections/nomenclature}
+
+\newpage
+
+\section{Introduction}
+\label{sec:introduction}
+\input{sections/introduction}
+
+\section{Physical and Mathematical Framework}
+\label{sec:framework}
+\input{sections/framework}
+
+\section{Thermal Model}
+\label{sec:thermal}
+\input{sections/thermal_model}
+
+\section{Reaction Kinetics}
+\label{sec:kinetics}
+\input{sections/kinetics}
+
+\section{Reaction Network}
+\label{sec:reactions}
+\input{sections/reactions}
+
+\section{Hu et al. (2020) Thermal Runaway Model}
+\label{sec:hu2020}
+\input{sections/hu2020}
+
+\section{Gas Generation}
+\label{sec:gases}
+\input{sections/gases}
+
+\section{Pressure and Venting}
+\label{sec:pressure-venting}
+\input{sections/pressure_venting}
+
+\section{Numerical Method}
+\label{sec:numerical-method}
+\input{sections/numerical_method}
+
+\section{Verification}
+\label{sec:verification}
+\input{sections/verification}
+
+\section{Reference Simulation Results}
+\label{sec:results}
+\input{sections/results}
+
+\section{Future Development}
+\label{sec:future-work}
+\input{sections/future_work}
+
+\newpage
+
+\printbibliography
+
+\end{document}

@@ -1,0 +1,300 @@
+LiionTR is organized around a modular formulation in which physical
+models are separated from numerical integration. The objective is to
+represent lithium-ion battery thermal runaway using a set of independent
+but coupled subsystems describing reaction kinetics, heat generation,
+gas generation, pressure evolution, and venting.
+
+The state of a zero-dimensional LiionTR simulation can be written
+conceptually as
+
+\begin{equation}
+    \mathbf{y}
+    =
+    \left[
+        T,
+        \alpha_1,
+        \ldots,
+        \alpha_N,
+        n_1,
+        \ldots,
+        n_M
+    \right]^{\mathrm{T}},
+\end{equation}
+
+where $T$ is the lumped cell temperature, $\alpha_i$ is the conversion
+of thermal runaway reaction $i$, and $n_s$ is the amount of gas species
+$s$ contained in the cell free volume.
+
+The governing system may therefore be expressed as
+
+\begin{equation}
+    \frac{d\mathbf{y}}{dt}
+    =
+    \mathbf{F}
+    \left(
+        t,
+        \mathbf{y}
+    \right),
+\end{equation}
+
+where the right-hand side is assembled from the thermal, reaction,
+gas-generation, pressure, and vent-flow models.
+
+
+\subsection{Thermal state}
+
+The cell temperature evolves according to an energy balance,
+
+\begin{equation}
+    C_{\mathrm{th}}
+    \frac{dT}{dt}
+    =
+    \dot{Q}_{\mathrm{gen}}
+    -
+    \dot{Q}_{\mathrm{loss}},
+    \label{eq:general_energy_balance}
+\end{equation}
+
+where $C_{\mathrm{th}}$ is the effective cell thermal capacity,
+$\dot{Q}_{\mathrm{gen}}$ is the total internal heat-generation rate, and
+$\dot{Q}_{\mathrm{loss}}$ is the heat-transfer rate from the cell to its
+environment.
+
+
+\subsection{Reaction states}
+
+Each thermal runaway reaction is represented using a scalar conversion,
+
+\begin{equation}
+    0
+    \leq
+    \alpha_i
+    \leq
+    1.
+\end{equation}
+
+The corresponding reaction rate is represented by
+
+\begin{equation}
+    \frac{d\alpha_i}{dt}
+    =
+    k_i(T)
+    f_i
+    \left(
+        \alpha_i,
+        \mathbf{\alpha}
+    \right),
+    \label{eq:reaction_progress_general}
+\end{equation}
+
+where $k_i(T)$ describes the intrinsic temperature dependence and
+$f_i$ describes the dependence on reaction progress and, when required,
+the state of other reactions.
+
+The complete reaction-state vector is
+
+\begin{equation}
+    \boldsymbol{\alpha}
+    =
+    \left[
+        \alpha_1,
+        \alpha_2,
+        \ldots,
+        \alpha_N
+    \right]^{\mathrm{T}}.
+\end{equation}
+
+
+\subsection{Heat generation}
+
+For a reaction occupying an effective cell mass fraction $w_i$ and
+releasing a specific enthalpy $\Delta H_i$, the mass-specific
+heat-generation rate is written as
+
+\begin{equation}
+    \dot{q}_i
+    =
+    w_i
+    \Delta H_i
+    \frac{d\alpha_i}{dt}.
+\end{equation}
+
+The total heat-generation rate for a cell of mass $m_{\mathrm{cell}}$
+is then
+
+\begin{equation}
+    \dot{Q}_{\mathrm{gen}}
+    =
+    m_{\mathrm{cell}}
+    \sum_{i=1}^{N}
+    \dot{q}_i.
+    \label{eq:total_heat_generation}
+\end{equation}
+
+
+\subsection{Gas-generation states}
+
+When gas generation is enabled, each gas species is represented by a
+mole inventory $n_s$.
+
+Before vent opening,
+
+\begin{equation}
+    \frac{dn_s}{dt}
+    =
+    \dot{n}_{s,\mathrm{gen}},
+\end{equation}
+
+where $\dot{n}_{s,\mathrm{gen}}$ is the molar gas-generation rate.
+
+After vent opening,
+
+\begin{equation}
+    \frac{dn_s}{dt}
+    =
+    \dot{n}_{s,\mathrm{gen}}
+    -
+    \dot{n}_{s,\mathrm{vent}}.
+    \label{eq:vented_species_balance}
+\end{equation}
+
+
+\subsection{Pressure state}
+
+The current reduced-order formulation evaluates internal gas pressure
+using the ideal-gas equation,
+
+\begin{equation}
+    P
+    =
+    \frac{
+        n_{\mathrm{tot}} R T
+    }{
+        V_{\mathrm{free}}
+    },
+    \label{eq:ideal_pressure_framework}
+\end{equation}
+
+where
+
+\begin{equation}
+    n_{\mathrm{tot}}
+    =
+    \sum_{s=1}^{M}
+    n_s.
+\end{equation}
+
+The current formulation assumes that the gas temperature is equal to the
+lumped cell temperature.
+
+
+\subsection{Model coupling}
+
+The principal physical couplings represented in LiionTR are
+
+\begin{enumerate}
+    \item temperature controls thermal runaway reaction rates;
+    \item thermal runaway reactions release heat;
+    \item heat generation modifies the cell temperature;
+    \item reaction progress can generate gas;
+    \item the gas inventory and temperature determine internal pressure;
+    \item internal pressure can trigger vent opening;
+    \item vent flow removes gas from the internal inventory.
+\end{enumerate}
+
+The reaction-thermal coupling forms the fundamental positive feedback
+mechanism responsible for thermal runaway.
+
+A conceptual representation of the current LiionTR architecture is shown
+in Figure~\ref{fig:framework_architecture}.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[
+        node distance=1.8cm and 2.4cm,
+        block/.style={
+            rectangle,
+            rounded corners,
+            draw,
+            align=center,
+            minimum width=3.0cm,
+            minimum height=1.0cm
+        },
+        line/.style={
+            -{Latex[length=3mm]},
+            thick
+        }
+    ]
+
+    \node[block] (kinetics) {Reaction\\kinetics};
+    \node[block, below=of kinetics] (progress) {Reaction\\progress};
+    \node[block, below=of progress] (heat) {Heat\\generation};
+    \node[block, below=of heat] (thermal) {Thermal\\model};
+
+    \node[block, right=of progress] (gasgen) {Gas\\generation};
+    \node[block, below=of gasgen] (inventory) {Gas\\inventory};
+    \node[block, below=of inventory] (pressure) {Pressure};
+    \node[block, below=of pressure] (venting) {Venting};
+
+    \draw[line] (kinetics) -- (progress);
+    \draw[line] (progress) -- (heat);
+    \draw[line] (heat) -- (thermal);
+
+    \draw[line] (progress) -- (gasgen);
+    \draw[line] (gasgen) -- (inventory);
+    \draw[line] (inventory) -- (pressure);
+    \draw[line] (pressure) -- (venting);
+
+    \draw[line] (thermal.east) -- ++(1.2,0) |- (pressure.west);
+    \draw[line] (pressure.west) -- ++(-1.2,0) |- (thermal.east);
+
+    \end{tikzpicture}
+    \caption{
+        Conceptual architecture of the current LiionTR framework.
+        Reaction kinetics determine reaction progress, which drives both
+        heat generation and gas generation. Heat generation affects the
+        thermal model, while gas generation affects the gas inventory and
+        therefore the internal pressure. Pressure may eventually trigger
+        venting.
+    }
+    \label{fig:framework_architecture}
+\end{figure}
+
+
+\subsection{Separation of physical models and state integration}
+
+A central design principle of LiionTR is that physical model objects do
+not advance their own numerical state.
+
+Instead, the numerical solver owns the complete state vector and passes
+the current state to the physical models whenever the right-hand side is
+evaluated.
+
+This design provides several advantages:
+
+\begin{itemize}
+    \item deterministic evaluation of the governing equations;
+    \item compatibility with standard ordinary differential equation
+          solvers;
+    \item reduced hidden coupling between physical components;
+    \item independent verification of individual physical models;
+    \item easier implementation of event handling and future alternative
+          numerical solvers.
+\end{itemize}
+
+
+\subsection{Scope of the present framework}
+
+The current implementation focuses on reduced-order, zero-dimensional
+thermal runaway modeling.
+
+The framework is intended to evolve toward more comprehensive physical
+descriptions, including thermochemical equilibrium, detailed
+electrochemical state information, spatially resolved heat transfer,
+cell-to-cell propagation, structural failure, and external vent-jet or
+combustion models.
+
+Cantera is considered as a future thermochemical backend, while PyBaMM
+may provide electrochemical states and normal-operation battery physics.
+LiionTR is intended to remain the orchestration layer responsible for
+thermal runaway and battery-safety-specific coupling.
