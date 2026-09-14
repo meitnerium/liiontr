@@ -1,9 +1,9 @@
 from liiontr import (
+    NMC811,
+    ConstantProperty,
     CylindricalCell,
     CylindricalGeometry,
-    ConstantProperty,
     Material,
-    NMC811,
 )
 
 

@@ -7,7 +7,6 @@ from dataclasses import dataclass
 
 from .model import KineticModel
 
-
 R = 8.314462618
 
 

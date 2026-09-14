@@ -7,9 +7,9 @@ from .nmc import NMC811
 from .reaction_backend import ReactionNetworkBackend
 
 __all__ = [
-    "Chemistry",
-    "ChemistryBackend",
     "NMC811",
     "CanteraBackend",
+    "Chemistry",
+    "ChemistryBackend",
     "ReactionNetworkBackend",
 ]

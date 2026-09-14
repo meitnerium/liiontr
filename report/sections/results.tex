@@ -108,6 +108,175 @@ The individual reaction contributions to heat generation are shown in
     \label{fig:hu_heat_result}
 \end{figure}
 
+\subsection{Reaction-wise energy release}
+
+Integration of the individual heat-generation rates provides the
+specific energy released by each reaction during the reference
+simulation.
+
+The resulting energy balance is summarized in
+\cref{tab:hu_reaction_summary}.
+
+\input{generated/hu2020_reaction_summary}
+
+\subsection{Energy distribution}
+
+The energy distribution in
+\cref{tab:hu_reaction_summary}
+shows that the anode--electrolyte reaction is the dominant energetic
+contribution in the present reference simulation.
+
+It releases approximately
+
+\begin{equation}
+    q_{\mathrm{an}}
+    =
+    \SI{\HuAnodeEnergy}{\kilo\joule\per\kilogram},
+\end{equation}
+
+corresponding to approximately
+
+\begin{equation}
+    \HuAnodeFraction\%
+\end{equation}
+
+of the total reaction energy.
+
+The cathode decomposition represents the second-largest contribution,
+
+\begin{equation}
+    q_{\mathrm{cat}}
+    =
+    \SI{\HuCathodeEnergy}{\kilo\joule\per\kilogram},
+\end{equation}
+
+or approximately
+
+\begin{equation}
+    \HuCathodeFraction\%
+\end{equation}
+
+of the total.
+
+The electrolyte decomposition contributes
+
+\begin{equation}
+    q_{\mathrm{el}}
+    =
+    \SI{\HuElectrolyteEnergy}{\kilo\joule\per\kilogram},
+\end{equation}
+
+while SEI decomposition contributes only
+
+\begin{equation}
+    q_{\mathrm{SEI}}
+    =
+    \SI{\HuSeiEnergy}{\kilo\joule\per\kilogram}.
+\end{equation}
+
+The relatively small integrated SEI contribution is partly explained
+by its initial reaction state. The SEI conversion is initialized at
+
+\begin{equation}
+    \alpha_{\mathrm{SEI},0}
+    =
+    0.85,
+\end{equation}
+
+so only a relatively small remaining fraction is available for further
+decomposition during the simulated interval.
+
+In contrast, the anode--electrolyte reaction begins at
+
+\begin{equation}
+    \alpha_{\mathrm{an},0}
+    =
+    0.25,
+\end{equation}
+
+leaving a substantially larger available reaction extent together with
+a high specific reaction enthalpy.
+
+
+\subsection{Reaction completion}
+
+All four reaction states approach complete conversion during the
+reference simulation,
+
+\begin{equation}
+    \alpha_i
+    \rightarrow
+    1.
+\end{equation}
+
+Consequently, the differences in integrated energy release are governed
+primarily by the available reaction extent, reacting-material content,
+reaction enthalpy, and, for the cathode, the relative contributions of
+the two kinetic channels.
+
+The cathode reaction deserves particular attention because its two
+parallel kinetic channels share one conversion variable. Its integrated
+energy therefore depends on the temperature-dependent partitioning of
+reaction progress between the two channels and cannot generally be
+represented by a single constant reaction enthalpy.
+
+
+\subsection{Thermal response}
+
+The combined reaction network releases
+
+\begin{equation}
+    q_{\mathrm{reaction}}
+    =
+    \SI{\HuIntegratedEnergy}{\kilo\joule\per\kilogram}
+\end{equation}
+
+during the simulated interval.
+
+This heat release increases the lumped cell temperature from
+
+\begin{equation}
+    T_0
+    =
+    \SI{480}{\kelvin}
+\end{equation}
+
+to
+
+\begin{equation}
+    T_f
+    =
+    \SI{\HuFinalTemperature}{\kelvin}.
+\end{equation}
+
+The temperature evolution in
+\cref{fig:hu_temperature_result}
+reflects the positive feedback between Arrhenius reaction kinetics and
+thermal energy release: increasing temperature accelerates the
+exothermic reactions, which in turn generates additional heat.
+
+The result should be interpreted as the response of the implemented
+reduced-order model under the selected initial and boundary conditions,
+rather than as a universal thermal runaway temperature for lithium-ion
+cells.
+
+The instantaneous thermal-power balance is shown in
+\cref{fig:hu_thermal_power_balance}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[
+        width=0.82\textwidth
+    ]{hu2020_thermal_power_balance.pdf}
+
+    \caption{
+        Instantaneous mass-specific thermal-power balance for the
+        Hu et al.\ reference simulation. Reaction heat generation is
+        partitioned between sensible heating of the cell and convective
+        heat transfer to the surroundings.
+    }
+    \label{fig:hu_thermal_power_balance}
+\end{figure}
 
 \subsection{Integrated reaction energy}
 

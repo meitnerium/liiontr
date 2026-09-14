@@ -1,8 +1,8 @@
 from liiontr.cells.cylindrical import CylindricalCell
+from liiontr.chemistry.nmc import NMC811
 from liiontr.geometry.cylindrical import CylindricalGeometry
 from liiontr.materials.material import Material
 from liiontr.materials.properties import ConstantProperty
-from liiontr.chemistry.nmc import NMC811
 
 
 def test_cell():

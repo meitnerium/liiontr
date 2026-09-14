@@ -13,7 +13,6 @@ from dataclasses import dataclass
 from math import sqrt
 
 from .ideal import GAS_CONSTANT
-
 from .inventory import GasInventory
 
 

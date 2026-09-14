@@ -74,10 +74,19 @@ class LumpedThermalModel(ThermalModel):
         float
             Cell temperature rate in K/s.
         """
-        heat_loss = (
+        heat_loss = self.heat_loss(
+            temperature=temperature,
+            )
+
+        return (heat_generation - heat_loss) / self.cell.thermal_capacity
+
+    def heat_loss(
+        self,
+        temperature: float,
+    ) -> float:
+        """Return the signed convective heat-loss rate in W."""
+        return (
             self.convection_coefficient
             * self.cell.surface_area
             * (temperature - self.ambient_temperature)
         )
-
-        return (heat_generation - heat_loss) / self.cell.thermal_capacity

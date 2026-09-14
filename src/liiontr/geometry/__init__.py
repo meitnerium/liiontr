@@ -1,9 +1,9 @@
 """Battery geometry models provided by LiionTR."""
 
-from .geometry import Geometry
 from .cylindrical import CylindricalGeometry
+from .geometry import Geometry
 
 __all__ = [
-    "Geometry",
     "CylindricalGeometry",
+    "Geometry",
 ]

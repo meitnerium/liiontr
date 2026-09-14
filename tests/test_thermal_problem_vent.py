@@ -1,7 +1,5 @@
 import pytest
 
-from liiontr.solver import ScipySolver
-
 from liiontr.gases import (
     CompressibleVentFlowModel,
     GasInventory,
@@ -11,6 +9,7 @@ from liiontr.gases import (
 )
 from liiontr.library import cell_21700_generic
 from liiontr.problems import ThermalProblem
+from liiontr.solver import ScipySolver
 
 
 def test_thermal_problem_accepts_vent_configuration():

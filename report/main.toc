@@ -93,62 +93,72 @@
 \contentsline {subsection}{\numberline {8.11}Unchoked mass flow}{39}{subsection.8.11}%
 \contentsline {subsection}{\numberline {8.12}Reverse flow}{40}{subsection.8.12}%
 \contentsline {subsection}{\numberline {8.13}Molar vent flow}{40}{subsection.8.13}%
-\contentsline {subsection}{\numberline {8.14}Species vent rates}{40}{subsection.8.14}%
-\contentsline {subsection}{\numberline {8.15}Closed and open governing equations}{40}{subsection.8.15}%
-\contentsline {subsection}{\numberline {8.16}Irreversible vent transition}{40}{subsection.8.16}%
-\contentsline {subsection}{\numberline {8.17}Coupled pressure-vent feedback}{41}{subsection.8.17}%
-\contentsline {subsection}{\numberline {8.18}Current assumptions}{41}{subsection.8.18}%
-\contentsline {subsection}{\numberline {8.19}Limitations}{42}{subsection.8.19}%
-\contentsline {subsection}{\numberline {8.20}Future extensions}{42}{subsection.8.20}%
+\contentsline {subsection}{\numberline {8.14}Transition between choked and unchoked flow}{40}{subsection.8.14}%
+\contentsline {subsection}{\numberline {8.15}Species vent rates}{40}{subsection.8.15}%
+\contentsline {subsection}{\numberline {8.16}Closed and open governing equations}{41}{subsection.8.16}%
+\contentsline {subsection}{\numberline {8.17}Irreversible vent transition}{41}{subsection.8.17}%
+\contentsline {subsection}{\numberline {8.18}Coupled pressure-vent feedback}{41}{subsection.8.18}%
+\contentsline {subsection}{\numberline {8.19}Current assumptions}{42}{subsection.8.19}%
+\contentsline {subsection}{\numberline {8.20}Limitations}{42}{subsection.8.20}%
+\contentsline {subsection}{\numberline {8.21}Future extensions}{43}{subsection.8.21}%
 \contentsline {section}{\numberline {9}Numerical Method}{43}{section.9}%
 \contentsline {subsection}{\numberline {9.1}State vector}{43}{subsection.9.1}%
-\contentsline {subsection}{\numberline {9.2}Initial conditions}{43}{subsection.9.2}%
-\contentsline {subsection}{\numberline {9.3}Right-hand-side evaluation}{43}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.2}Initial conditions}{44}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Right-hand-side evaluation}{44}{subsection.9.3}%
 \contentsline {subsection}{\numberline {9.4}Gas-generation contribution}{44}{subsection.9.4}%
-\contentsline {subsection}{\numberline {9.5}Pressure reconstruction}{44}{subsection.9.5}%
-\contentsline {subsection}{\numberline {9.6}Vent-opening event}{44}{subsection.9.6}%
+\contentsline {subsection}{\numberline {9.5}Pressure reconstruction}{45}{subsection.9.5}%
+\contentsline {subsection}{\numberline {9.6}Vent-opening event}{45}{subsection.9.6}%
 \contentsline {subsection}{\numberline {9.7}Two-phase integration}{45}{subsection.9.7}%
-\contentsline {subsection}{\numberline {9.8}Solver flow}{45}{subsection.9.8}%
-\contentsline {subsection}{\numberline {9.9}Maximum-temperature event}{45}{subsection.9.9}%
-\contentsline {subsection}{\numberline {9.10}Maximum-pressure event}{45}{subsection.9.10}%
-\contentsline {subsection}{\numberline {9.11}Stiff numerical integration}{46}{subsection.9.11}%
-\contentsline {subsection}{\numberline {9.12}Adaptive time stepping}{46}{subsection.9.12}%
+\contentsline {subsection}{\numberline {9.8}Solver flow}{46}{subsection.9.8}%
+\contentsline {subsection}{\numberline {9.9}Maximum-temperature event}{46}{subsection.9.9}%
+\contentsline {subsection}{\numberline {9.10}Maximum-pressure event}{46}{subsection.9.10}%
+\contentsline {subsection}{\numberline {9.11}Stiff numerical integration}{47}{subsection.9.11}%
+\contentsline {subsection}{\numberline {9.12}Adaptive time stepping}{47}{subsection.9.12}%
 \contentsline {subsection}{\numberline {9.13}State reconstruction}{47}{subsection.9.13}%
-\contentsline {subsection}{\numberline {9.14}Numerical architecture}{47}{subsection.9.14}%
+\contentsline {subsection}{\numberline {9.14}Numerical architecture}{48}{subsection.9.14}%
 \contentsline {subsection}{\numberline {9.15}Current limitations}{48}{subsection.9.15}%
 \contentsline {subsection}{\numberline {9.16}Future numerical extensions}{48}{subsection.9.16}%
-\contentsline {section}{\numberline {10}Verification}{48}{section.10}%
+\contentsline {section}{\numberline {10}Verification}{49}{section.10}%
 \contentsline {subsection}{\numberline {10.1}Unit-level verification}{49}{subsection.10.1}%
-\contentsline {subsection}{\numberline {10.2}Dimensional consistency}{49}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.2}Dimensional consistency}{50}{subsection.10.2}%
 \contentsline {subsection}{\numberline {10.3}Reaction-energy consistency}{50}{subsection.10.3}%
-\contentsline {subsection}{\numberline {10.4}Hu model energy check}{50}{subsection.10.4}%
-\contentsline {subsection}{\numberline {10.5}Thermal-response consistency}{50}{subsection.10.5}%
-\contentsline {subsection}{\numberline {10.6}Gas-generation conservation}{51}{subsection.10.6}%
-\contentsline {subsection}{\numberline {10.7}Pressure verification}{51}{subsection.10.7}%
-\contentsline {subsection}{\numberline {10.8}Vent-flow verification}{51}{subsection.10.8}%
-\contentsline {subsection}{\numberline {10.9}Vented coupled simulation}{51}{subsection.10.9}%
-\contentsline {subsection}{\numberline {10.10}Regression testing}{52}{subsection.10.10}%
-\contentsline {subsection}{\numberline {10.11}Verification hierarchy}{52}{subsection.10.11}%
-\contentsline {subsection}{\numberline {10.12}Experimental validation}{52}{subsection.10.12}%
-\contentsline {section}{\numberline {11}Reference Simulation Results}{53}{section.11}%
-\contentsline {subsection}{\numberline {11.1}Reference simulation conditions}{54}{subsection.11.1}%
-\contentsline {subsection}{\numberline {11.2}Temperature evolution}{54}{subsection.11.2}%
-\contentsline {subsection}{\numberline {11.3}Reaction progression}{54}{subsection.11.3}%
-\contentsline {subsection}{\numberline {11.4}Reaction heat generation}{54}{subsection.11.4}%
-\contentsline {subsection}{\numberline {11.5}Integrated reaction energy}{54}{subsection.11.5}%
-\contentsline {section}{\numberline {12}Future Development}{56}{section.12}%
-\contentsline {subsection}{\numberline {12.1}Thermochemical gas modeling}{56}{subsection.12.1}%
-\contentsline {subsection}{\numberline {12.2}Cantera integration}{56}{subsection.12.2}%
-\contentsline {subsection}{\numberline {12.3}Energy-consistent thermochemistry}{57}{subsection.12.3}%
-\contentsline {subsection}{\numberline {12.4}Electrochemical coupling}{57}{subsection.12.4}%
-\contentsline {subsection}{\numberline {12.5}Calorimetric parameter estimation}{58}{subsection.12.5}%
-\contentsline {subsection}{\numberline {12.6}Sensitivity and uncertainty analysis}{58}{subsection.12.6}%
-\contentsline {subsection}{\numberline {12.7}Temperature-dependent material properties}{59}{subsection.12.7}%
-\contentsline {subsection}{\numberline {12.8}Spatial thermal models}{59}{subsection.12.8}%
-\contentsline {subsection}{\numberline {12.9}Cell-to-cell propagation}{59}{subsection.12.9}%
-\contentsline {subsection}{\numberline {12.10}Mechanical venting and rupture}{59}{subsection.12.10}%
-\contentsline {subsection}{\numberline {12.11}Multiphase venting}{60}{subsection.12.11}%
-\contentsline {subsection}{\numberline {12.12}External vent-jet and combustion models}{60}{subsection.12.12}%
-\contentsline {subsection}{\numberline {12.13}Validation database}{61}{subsection.12.13}%
-\contentsline {subsection}{\numberline {12.14}Software development}{61}{subsection.12.14}%
-\contentsline {subsection}{\numberline {12.15}Long-term architecture}{62}{subsection.12.15}%
+\contentsline {subsection}{\numberline {10.4}Thermal energy-balance closure}{50}{subsection.10.4}%
+\contentsline {subsection}{\numberline {10.5}Hu model energy check}{52}{subsection.10.5}%
+\contentsline {subsection}{\numberline {10.6}Thermal-response consistency}{52}{subsection.10.6}%
+\contentsline {subsection}{\numberline {10.7}Gas-generation conservation}{52}{subsection.10.7}%
+\contentsline {subsection}{\numberline {10.8}Pressure verification}{52}{subsection.10.8}%
+\contentsline {subsection}{\numberline {10.9}Vent-flow verification}{52}{subsection.10.9}%
+\contentsline {subsection}{\numberline {10.10}Vented coupled simulation}{53}{subsection.10.10}%
+\contentsline {subsection}{\numberline {10.11}Regression testing}{53}{subsection.10.11}%
+\contentsline {subsection}{\numberline {10.12}Verification hierarchy}{54}{subsection.10.12}%
+\contentsline {subsection}{\numberline {10.13}Experimental validation}{54}{subsection.10.13}%
+\contentsline {subsection}{\numberline {10.14}Coupled gas-pressure-venting verification}{55}{subsection.10.14}%
+\contentsline {subsubsection}{\numberline {10.14.1}Compressible-flow regime transition}{56}{subsubsection.10.14.1}%
+\contentsline {subsubsection}{\numberline {10.14.2}Gas-composition evolution}{58}{subsubsection.10.14.2}%
+\contentsline {subsubsection}{\numberline {10.14.3}Molar conservation}{58}{subsubsection.10.14.3}%
+\contentsline {section}{\numberline {11}Reference Simulation Results}{60}{section.11}%
+\contentsline {subsection}{\numberline {11.1}Reference simulation conditions}{60}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}Temperature evolution}{60}{subsection.11.2}%
+\contentsline {subsection}{\numberline {11.3}Reaction progression}{61}{subsection.11.3}%
+\contentsline {subsection}{\numberline {11.4}Reaction heat generation}{61}{subsection.11.4}%
+\contentsline {subsection}{\numberline {11.5}Reaction-wise energy release}{61}{subsection.11.5}%
+\contentsline {subsection}{\numberline {11.6}Energy distribution}{61}{subsection.11.6}%
+\contentsline {subsection}{\numberline {11.7}Reaction completion}{63}{subsection.11.7}%
+\contentsline {subsection}{\numberline {11.8}Thermal response}{63}{subsection.11.8}%
+\contentsline {subsection}{\numberline {11.9}Integrated reaction energy}{64}{subsection.11.9}%
+\contentsline {section}{\numberline {12}Future Development}{64}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Thermochemical gas modeling}{65}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Cantera integration}{65}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Energy-consistent thermochemistry}{66}{subsection.12.3}%
+\contentsline {subsection}{\numberline {12.4}Electrochemical coupling}{66}{subsection.12.4}%
+\contentsline {subsection}{\numberline {12.5}Calorimetric parameter estimation}{66}{subsection.12.5}%
+\contentsline {subsection}{\numberline {12.6}Sensitivity and uncertainty analysis}{67}{subsection.12.6}%
+\contentsline {subsection}{\numberline {12.7}Temperature-dependent material properties}{67}{subsection.12.7}%
+\contentsline {subsection}{\numberline {12.8}Spatial thermal models}{67}{subsection.12.8}%
+\contentsline {subsection}{\numberline {12.9}Cell-to-cell propagation}{68}{subsection.12.9}%
+\contentsline {subsection}{\numberline {12.10}Mechanical venting and rupture}{68}{subsection.12.10}%
+\contentsline {subsection}{\numberline {12.11}Multiphase venting}{68}{subsection.12.11}%
+\contentsline {subsection}{\numberline {12.12}External vent-jet and combustion models}{69}{subsection.12.12}%
+\contentsline {subsection}{\numberline {12.13}Validation database}{69}{subsection.12.13}%
+\contentsline {subsection}{\numberline {12.14}Software development}{70}{subsection.12.14}%
+\contentsline {subsection}{\numberline {12.15}Long-term architecture}{70}{subsection.12.15}%

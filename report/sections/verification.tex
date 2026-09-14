@@ -120,6 +120,64 @@ Agreement between
 provides an important consistency check between reaction progress and
 heat generation.
 
+\subsection{Thermal energy-balance closure}
+
+A global energy-balance check was performed for the Hu et al.\
+reference simulation.
+
+For the lumped thermal formulation, integration over the simulation
+interval gives
+
+\begin{equation}
+    q_{\mathrm{reaction}}
+    =
+    \Delta u_{\mathrm{sensible}}
+    +
+    q_{\mathrm{conv}}
+    +
+    \varepsilon_E,
+\end{equation}
+
+where $\varepsilon_E$ represents the numerical energy-balance residual.
+
+The resulting balance is given in
+\cref{tab:hu_energy_balance}.
+
+\input{generated/hu2020_energy_balance}
+
+
+
+A small residual demonstrates consistency between the integrated
+reaction heat generation, the temperature evolution, and the
+convective heat transfer computed by the lumped thermal model.
+
+Because the reaction and convective energies are reconstructed by
+numerical quadrature from the adaptive solver output, the residual
+reflects both integration error and post-processing quadrature error.
+It should therefore be interpreted as a numerical consistency metric
+rather than as an independent physical validation.
+
+The cumulative energy balance is shown in
+\cref{fig:hu_cumulative_energy_balance}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[
+        width=0.82\textwidth
+    ]{hu2020_energy_balance_cumulative.pdf}
+
+    \caption{
+        Cumulative energy-balance closure for the Hu et al.\
+        reference simulation. The cumulative reaction energy is
+        compared with the sum of the sensible-energy increase and
+        convective heat loss.
+    }
+    \label{fig:hu_cumulative_energy_balance}
+\end{figure}
+
+The near-superposition of the cumulative reaction energy and the
+accounted thermal energy provides a direct visual verification of the
+implemented lumped thermal balance.
 
 \subsection{Hu model energy check}
 
@@ -387,3 +445,312 @@ Relevant validation data may include:
 The modular structure of LiionTR is intended to allow kinetic,
 thermochemical, pressure, and venting submodels to be calibrated and
 validated independently before complete-cell validation is attempted.
+
+\subsection{Coupled gas-pressure-venting verification}
+
+The coupled gas-generation, pressure, and venting implementation was
+evaluated using a deliberately simplified synthetic problem.
+
+The purpose of this calculation is not to represent a physically
+realistic lithium-ion cell, but to exercise the complete numerical
+coupling
+
+\begin{equation}
+    \text{reaction}
+    \rightarrow
+    \text{gas generation}
+    \rightarrow
+    \text{pressure increase}
+    \rightarrow
+    \text{vent opening}
+    \rightarrow
+    \text{depressurization}.
+\end{equation}
+
+The model contains a single synthetic exothermic reaction producing
+\ce{CO2}. The initial gas inventory consists primarily of \ce{N2} at
+atmospheric pressure. The free gas volume is
+\SI{1.0e-6}{\meter\cubed}, and the vent-opening pressure is prescribed as
+
+\begin{equation}
+    P_{\mathrm{vent}}
+    =
+    \SI{200}{\kilo\pascal}.
+\end{equation}
+
+The vent model uses an effective opening area of
+\SI{1.0e-5}{\meter\squared}, a discharge coefficient of 0.8, and a
+heat-capacity ratio of 1.30.
+
+\input{generated/synthetic_vent_results}
+
+The simulated vent opens at
+
+\begin{equation}
+    t_{\mathrm{vent}}
+    =
+    \SI{\SyntheticVentOpenTime}{\second},
+\end{equation}
+
+when the internal pressure reaches approximately
+
+\begin{equation}
+    P_{\max}
+    =
+    \SI{\SyntheticVentPeakPressure}{\kilo\pascal}.
+\end{equation}
+
+The pressure evolution is shown in
+\cref{fig:synthetic_vent_pressure}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[
+        width=0.82\textwidth
+    ]{synthetic_vent_pressure.pdf}
+
+    \caption{
+        Internal pressure during the synthetic venting verification
+        problem. The vent opens when the prescribed pressure threshold
+        is reached, after which the internal pressure rapidly approaches
+        the downstream ambient pressure.
+    }
+    \label{fig:synthetic_vent_pressure}
+\end{figure}
+
+At the end of the simulation, the vented system reaches
+
+\begin{equation}
+    P_f
+    =
+    \SI{\SyntheticVentFinalPressure}{\kilo\pascal},
+\end{equation}
+
+which is close to the prescribed downstream pressure of
+\SI{101.325}{\kilo\pascal}.
+
+For comparison, suppressing the vent while leaving the remaining model
+unchanged produces a final pressure of
+
+\begin{equation}
+    P_{f,\mathrm{closed}}
+    =
+    \SI{\SyntheticClosedFinalPressure}{\kilo\pascal}.
+\end{equation}
+
+The very large closed-system pressure is a consequence of the
+intentionally aggressive synthetic gas-generation rate and small free
+volume. It should not be interpreted as a prediction for a physical
+lithium-ion cell.
+
+The internal gas inventory is shown in
+\cref{fig:synthetic_vent_inventory}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[
+        width=0.82\textwidth
+    ]{synthetic_vent_gas_inventory.pdf}
+
+    \caption{
+        Internal \ce{N2}, \ce{CO2}, and total gas inventories during
+        the synthetic venting verification problem.
+    }
+    \label{fig:synthetic_vent_inventory}
+\end{figure}
+
+Following vent opening, the internal gas inventory decreases as gas is
+discharged through the vent. The corresponding reconstructed mass-flow
+rate is shown in
+\cref{fig:synthetic_vent_flow}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[
+        width=0.82\textwidth
+    ]{synthetic_vent_flow.pdf}
+
+    \caption{
+        Reconstructed vent mass-flow rate during the synthetic
+        gas-pressure-venting verification problem.
+    }
+    \label{fig:synthetic_vent_flow}
+\end{figure}
+
+The maximum reconstructed vent mass-flow rate is
+
+\begin{equation}
+    \dot{m}_{\mathrm{vent,max}}
+    =
+    \SI{\SyntheticVentPeakMassFlow}{\milli\gram\per\second}.
+\end{equation}
+
+The irreversible vent-state implementation is additionally verified by
+the automated test suite, which requires the vent-state variable to
+transition from zero to one after reaching the opening pressure and
+prevents any subsequent closing transition.
+
+\subsubsection{Compressible-flow regime transition}
+
+The synthetic verification case also exercises both compressible-flow
+regimes implemented by the vent model.
+
+For the prescribed heat-capacity ratio of $\gamma=1.30$, the critical
+pressure ratio is
+
+\begin{equation}
+    r_{\mathrm{crit}}
+    =
+    \SyntheticCriticalPressureRatio.
+\end{equation}
+
+With a downstream pressure of
+\SI{101.325}{\kilo\pascal}, the corresponding critical upstream
+pressure is
+
+\begin{equation}
+    P_{\mathrm{up,crit}}
+    =
+    \SI{\SyntheticCriticalUpstreamPressure}{\kilo\pascal}.
+\end{equation}
+
+At vent opening, the upstream pressure is approximately
+\SI{200}{\kilo\pascal}, such that
+
+\begin{equation}
+    \frac{P_{\mathrm{down}}}{P_{\mathrm{up}}}
+    =
+    \frac{101.325}{200}
+    \approx
+    0.507
+    <
+    r_{\mathrm{crit}}.
+\end{equation}
+
+The discharge therefore begins in the choked-flow regime.
+
+The choked phase begins at approximately
+
+\begin{equation}
+    t_{\mathrm{choked,start}}
+    =
+    \SI{\SyntheticChokedFlowStart}{\milli\second}
+\end{equation}
+
+and ends at
+
+\begin{equation}
+    t_{\mathrm{choked,end}}
+    =
+    \SI{\SyntheticChokedFlowEnd}{\milli\second},
+\end{equation}
+
+corresponding to a duration of only
+
+\begin{equation}
+    \Delta t_{\mathrm{choked}}
+    =
+    \SI{\SyntheticChokedFlowDuration}{\micro\second}.
+\end{equation}
+
+The transition occurs when the interpolated upstream pressure reaches
+
+\begin{equation}
+    P_{\mathrm{up}}
+    =
+    \SI{\SyntheticFlowTransitionPressure}{\kilo\pascal},
+\end{equation}
+
+in agreement with the theoretical critical pressure obtained from
+\cref{eq:critical_upstream_pressure}.
+
+The very short choked-flow interval explains the sharp initial vent-flow
+peak observed in \cref{fig:synthetic_vent_flow}. Once the internal
+pressure falls below the critical upstream pressure, the discharge
+switches to the unchoked formulation and decreases progressively as the
+cell pressure approaches the downstream pressure.
+
+\subsubsection{Gas-composition evolution}
+
+The evolution of the internal gas composition is shown in
+\cref{fig:synthetic_vent_composition}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[
+        width=0.82\textwidth
+    ]{synthetic_vent_composition.pdf}
+
+    \caption{
+        Evolution of the internal gas mole fractions during the
+        synthetic venting verification problem. The initial inventory
+        contains nitrogen, whereas the synthetic reaction generates
+        only carbon dioxide.
+    }
+    \label{fig:synthetic_vent_composition}
+\end{figure}
+
+The synthetic reaction produces only \ce{CO2}, whereas the initial gas
+inventory contains \ce{N2}. Consequently, the gas mixture becomes
+progressively enriched in \ce{CO2}, ultimately approaching
+
+\begin{equation}
+    x_{\ce{CO2}}
+    \rightarrow
+    1.
+\end{equation}
+
+This compositional evolution should not be interpreted as preferential
+venting of carbon dioxide. In the present mixture model, each species is
+discharged according to the instantaneous gas composition. The
+enrichment in \ce{CO2} results from the imposed reaction source term,
+which continuously generates \ce{CO2} while no corresponding
+\ce{N2} source is present.
+
+\subsubsection{Molar conservation}
+
+The coupled gas-generation and venting calculation was also evaluated
+through a global molar balance.
+
+Over the complete simulation interval, conservation requires
+
+\begin{equation}
+    n_0
+    +
+    n_{\mathrm{generated}}
+    -
+    n_{\mathrm{vented}}
+    -
+    n_f
+    =
+    \varepsilon_n,
+\end{equation}
+
+where $n_0$ is the initial gas inventory,
+$n_{\mathrm{generated}}$ is the cumulative amount of gas generated by
+the reaction model,
+$n_{\mathrm{vented}}$ is the cumulative amount discharged through the
+vent, $n_f$ is the final internal gas inventory, and
+$\varepsilon_n$ is the numerical molar-balance residual.
+
+\input{generated/synthetic_gas_balance}
+
+The resulting relative residual is approximately
+
+\begin{equation}
+    \frac{\varepsilon_n}
+    {n_0+n_{\mathrm{generated}}}
+    \times 100
+    =
+    \SyntheticGasRelativeResidual\%
+\end{equation}
+
+This small residual demonstrates numerical consistency between the gas
+generation model, the internal gas inventory, and the compressible vent
+flow calculation.
+
+As with the thermal energy-balance verification, the residual includes
+post-processing quadrature error. In particular, the vent-flow
+integration is performed only after the discrete transition to the open
+vent state in order to avoid introducing a spurious trapezoidal
+contribution across the vent-opening discontinuity.

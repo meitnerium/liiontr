@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from liiontr.cells.cell import Cell
 from liiontr.chemistry import ChemistryBackend
 from liiontr.core.problem import Problem
-
 from liiontr.gases import (
     GasGenerationModel,
     GasInventory,

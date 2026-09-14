@@ -331,6 +331,56 @@ The total mass discharge rate is converted to a molar flow rate using
     \label{eq:total_molar_vent_flow}
 \end{equation}
 
+\subsection{Transition between choked and unchoked flow}
+
+For compressible discharge through the vent, the flow becomes choked
+when the downstream-to-upstream pressure ratio satisfies
+
+\begin{equation}
+    \frac{P_{\mathrm{down}}}{P_{\mathrm{up}}}
+    \leq
+    \left(
+        \frac{2}{\gamma+1}
+    \right)^{
+        \gamma/(\gamma-1)
+    }.
+    \label{eq:critical_pressure_ratio}
+\end{equation}
+
+Defining the critical pressure ratio as
+
+\begin{equation}
+    r_{\mathrm{crit}}
+    =
+    \left(
+        \frac{2}{\gamma+1}
+    \right)^{
+        \gamma/(\gamma-1)
+    },
+\end{equation}
+
+the corresponding minimum upstream pressure for choked discharge is
+
+\begin{equation}
+    P_{\mathrm{up,crit}}
+    =
+    \frac{
+        P_{\mathrm{down}}
+    }{
+        r_{\mathrm{crit}}
+    }.
+    \label{eq:critical_upstream_pressure}
+\end{equation}
+
+Immediately after vent opening, the internal pressure may therefore be
+sufficiently high for the discharge to be choked. As the cell
+depressurizes, the upstream pressure eventually falls below
+$P_{\mathrm{up,crit}}$, after which the model transitions to the
+unchoked-flow expression.
+
+No separate state variable is required for this transition. The flow
+regime is determined directly from the instantaneous upstream and
+downstream pressures.
 
 \subsection{Species vent rates}
 

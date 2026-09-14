@@ -22,6 +22,6 @@ __all__ = [
     "GasInventory",
     "GasSpecies",
     "IdealGasPressureModel",
-    "ReactionGasYield",
     "MixtureVentFlowModel",
+    "ReactionGasYield",
 ]

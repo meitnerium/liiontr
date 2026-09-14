@@ -1,5 +1,5 @@
-from liiontr.core.variable import Variable
 from liiontr.core.scalar_field import ScalarField
+from liiontr.core.variable import Variable
 
 
 def test_variable():

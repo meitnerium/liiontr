@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-
 GAS_CONSTANT = 8.314462618
 
 

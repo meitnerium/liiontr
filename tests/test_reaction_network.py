@@ -1,9 +1,10 @@
+import pytest
+
 from liiontr.kinetics import Arrhenius
 from liiontr.reactions import (
     Reaction,
     ReactionNetwork,
 )
-import pytest
 
 
 def test_single_reaction():
