@@ -2,7 +2,6 @@ from liiontr.library import cell_21700_generic
 from liiontr.problems import ThermalProblem
 from liiontr.solver.scipy_solver import ScipySolver
 
-
 cell = cell_21700_generic()
 
 
