@@ -13,7 +13,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
@@ -42,15 +42,28 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="project_status.html">Project Status</a></li>
+</ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#minimal-thermal-simulation">Minimal Thermal Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hu-et-al-2020-reaction-network">Hu et al. (2020) Reaction Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gas-pressure-and-venting">Gas Pressure and Venting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#elemental-thermochemistry">Elemental Thermochemistry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results">Results</a></li>
+</ul>
+</li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="theory/index.html">Physical and Mathematical Theory</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="verification/index.html">Verification</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
@@ -85,11 +98,120 @@
              
   <section id="quick-start">
 <h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h1>
-<p>LiionTR simulations are constructed by combining a battery cell,
-reaction model, thermal model, physical problem definition, and
-numerical solver.</p>
-<p>A complete example will be added as the public simulation interface is
-stabilized.</p>
+<p>LiionTR simulations are assembled from a cell, physical models, a problem
+definition, and a numerical solver.</p>
+<section id="minimal-thermal-simulation">
+<h2>Minimal Thermal Simulation<a class="headerlink" href="#minimal-thermal-simulation" title="Link to this heading"></a></h2>
+<p>The bundled <code class="docutils literal notranslate"><span class="pre">examples/first_simulation.py</span></code> demonstrates the smallest thermal
+problem:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.library</span><span class="w"> </span><span class="kn">import</span> <span class="n">cell_21700_generic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.problems</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThermalProblem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScipySolver</span>
+
+<span class="n">cell</span> <span class="o">=</span> <span class="n">cell_21700_generic</span><span class="p">()</span>
+
+<span class="n">problem</span> <span class="o">=</span> <span class="n">ThermalProblem</span><span class="p">(</span>
+    <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">,</span>
+    <span class="n">initial_temperature</span><span class="o">=</span><span class="mf">350.0</span><span class="p">,</span>
+    <span class="n">duration</span><span class="o">=</span><span class="mf">3600.0</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">ScipySolver</span><span class="p">()</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">temperature</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Run it from the repository root:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/first_simulation.py
+</pre></div>
+</div>
+</section>
+<section id="hu-et-al-2020-reaction-network">
+<h2>Hu et al. (2020) Reaction Network<a class="headerlink" href="#hu-et-al-2020-reaction-network" title="Link to this heading"></a></h2>
+<p>A literature-based thermal-runaway calculation combines the generic 21700 cell
+with the Hu et al. reaction network:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.chemistry</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReactionNetworkBackend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.library</span><span class="w"> </span><span class="kn">import</span> <span class="n">cell_21700_generic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.library.hu2020</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">hu2020_initial_conversions</span><span class="p">,</span>
+    <span class="n">hu2020_reaction_network</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.problems</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThermalProblem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScipySolver</span>
+
+<span class="n">cell</span> <span class="o">=</span> <span class="n">cell_21700_generic</span><span class="p">()</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">hu2020_reaction_network</span><span class="p">(</span><span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">)</span>
+
+<span class="n">backend</span> <span class="o">=</span> <span class="n">ReactionNetworkBackend</span><span class="p">(</span>
+    <span class="n">reaction_network</span><span class="o">=</span><span class="n">network</span><span class="p">,</span>
+    <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">problem</span> <span class="o">=</span> <span class="n">ThermalProblem</span><span class="p">(</span>
+    <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">,</span>
+    <span class="n">chemistry_backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
+    <span class="n">initial_temperature</span><span class="o">=</span><span class="mf">480.0</span><span class="p">,</span>
+    <span class="n">initial_conversions</span><span class="o">=</span><span class="n">hu2020_initial_conversions</span><span class="p">(),</span>
+    <span class="n">ambient_temperature</span><span class="o">=</span><span class="mf">298.15</span><span class="p">,</span>
+    <span class="n">convection_coefficient</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">duration</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span>
+    <span class="n">maximum_temperature</span><span class="o">=</span><span class="mf">1200.0</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">ScipySolver</span><span class="p">()</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">temperature</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The complete example, including reaction-energy post-processing, is available
+in <code class="docutils literal notranslate"><span class="pre">examples/hu2020_simulation.py</span></code>.</p>
+</section>
+<section id="gas-pressure-and-venting">
+<h2>Gas Pressure and Venting<a class="headerlink" href="#gas-pressure-and-venting" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">examples/vented_thermal_runaway.py</span></code> demonstrates the empirical gas path:
+reaction progress generates species, the gas inventory determines pressure,
+and an irreversible vent-opening event switches to compressible discharge.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/vented_thermal_runaway.py
+</pre></div>
+</div>
+</section>
+<section id="elemental-thermochemistry">
+<h2>Elemental Thermochemistry<a class="headerlink" href="#elemental-thermochemistry" title="Link to this heading"></a></h2>
+<p>The elemental thermochemistry path is more advanced and currently assembled
+through the lower-level model interfaces. Its conceptual workflow is</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>reaction or reaction-energy release
+           |
+           v
+   elemental generation
+           |
+           v
+   elemental inventory
+           |
+   optional release delay
+           |
+           v
+     Cantera equilibrium
+           |
+    +------+------+
+    |             |
+    v             v
+ pressure     gas energy
+    |             |
+    +------&gt; venting
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="theory/thermochemistry.html"><span class="doc">Elemental Thermochemistry</span></a> and the Cantera-related tests for the current
+interfaces.</p>
+</section>
+<section id="results">
+<h2>Results<a class="headerlink" href="#results" title="Link to this heading"></a></h2>
+<p>Simulation outputs are stored in <a class="reference internal" href="api/core.html#liiontr.core.results.Results" title="liiontr.core.results.Results"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.core.results.Results</span></code></a>.
+Depending on the configured problem, they may include temperature, reaction
+conversions, gas inventories, pressure, vent state, elemental inventories,
+thermal energy, and cumulative vented quantities.</p>
+</section>
 </section>
 
 

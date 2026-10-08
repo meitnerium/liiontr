@@ -68,11 +68,6 @@ def main() -> None:
     element_generation_model = (
         hu2020_howard2025_element_generation_model()
     )
-
-    FirstOrderElementReleaseModel(
-        time_constant=(RELEASE_TIME_CONSTANT),
-    )
-    
     equilibrium_backend = (
         CanteraEquilibriumBackend()
     )
@@ -199,6 +194,8 @@ def main() -> None:
 
     final_reaction_energy = float(reaction_energy[-1])
 
+    reaction_energy_fraction = reaction_energy / final_reaction_energy
+
     reaction_energy_per_cell_mass = final_reaction_energy / cell.mass
 
     reaction_energies = {
@@ -210,6 +207,49 @@ def main() -> None:
         )
         for reaction_name in reaction_names
     }
+
+    def crossing_time(
+        fraction: float,
+    ) -> float:
+        index = int(
+            np.searchsorted(
+                reaction_energy_fraction,
+                fraction,
+            )
+        )
+
+        if index <= 0:
+            return float(time[0])
+
+        if index >= time.size:
+            return float(time[-1])
+
+        fraction_0 = float(reaction_energy_fraction[index - 1])
+
+        fraction_1 = float(reaction_energy_fraction[index])
+
+        time_0 = float(time[index - 1])
+
+        time_1 = float(time[index])
+
+        if fraction_1 <= fraction_0:
+            return time_1
+
+        interpolation_fraction = (fraction - fraction_0) / (fraction_1 - fraction_0)
+
+        return time_0 + interpolation_fraction * (time_1 - time_0)
+
+    reaction_energy_t10 = crossing_time(0.10)
+
+    reaction_energy_t50 = crossing_time(0.50)
+
+    reaction_energy_t90 = crossing_time(0.90)
+
+    reaction_energy_rise_time = reaction_energy_t90 - reaction_energy_t10
+
+    release_to_source_timescale_ratio = (
+        RELEASE_TIME_CONSTANT / reaction_energy_rise_time
+    )
 
     postprocessed_reaction_energy = sum(reaction_energies.values())
 
@@ -238,6 +278,10 @@ def main() -> None:
         results.get_variable("reaction_energy"),
         dtype=float,
     )
+
+    final_reaction_energy = float(reaction_energy[-1])
+
+    reaction_energy_fraction = reaction_energy / final_reaction_energy
 
     maximum_generation_energy = (
         element_generation_model.reference_reaction_energy_per_cell_mass * cell.mass
@@ -628,6 +672,22 @@ def main() -> None:
                 f"{species_name:<5} "
                 f"{values[-1]:.8f} mol"
             )
+
+    print()
+    print("Internal-release timescale")
+    print("--------------------------")
+
+    print(f"Reaction energy t10:      {reaction_energy_t10:.9f} s")
+
+    print(f"Reaction energy t50:      {reaction_energy_t50:.9f} s")
+
+    print(f"Reaction energy t90:      {reaction_energy_t90:.9f} s")
+
+    print(f"Reaction-energy 10-90:    {reaction_energy_rise_time:.9f} s")
+
+    print(f"Release time constant:    {RELEASE_TIME_CONSTANT:.9f} s")
+
+    print(f"Tau / source rise time:   {release_to_source_timescale_ratio:.6f}")
 
 
 if __name__ == "__main__":

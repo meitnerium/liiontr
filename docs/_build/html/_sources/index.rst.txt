@@ -1,26 +1,29 @@
 LiionTR Documentation
 =====================
 
-LiionTR is a scientific Python framework for modeling lithium-ion
-battery thermal runaway.
+LiionTR is a scientific Python framework for reduced-order modeling of
+lithium-ion battery thermal runaway.
 
-The project is designed to couple thermal runaway reaction kinetics,
-heat generation, gas generation, internal pressure, venting, and
-eventually thermochemical equilibrium and electrochemical models.
-
-The documentation is organized into four main sections:
-
-* installation and basic usage;
-* physical and mathematical theory;
-* software architecture;
-* Python API reference.
+The framework couples reaction kinetics, heat release, gas generation,
+thermochemistry, pressure evolution, and venting through explicit and testable
+interfaces. Optional external tools complement LiionTR: Cantera provides an
+implemented equilibrium-thermochemistry backend, while OpenFOAM is being used
+as a spatial thermal/CFD backend through a verified tabulated heat-source
+interface.
 
 .. note::
 
-   LiionTR is currently under active development. Model interfaces,
-   physical assumptions, and numerical implementations may evolve as
-   additional thermal runaway models and validation data are added.
+   LiionTR is under active development. Numerical verification is relatively
+   mature for the implemented reduced-order subsystems, but experimental
+   validation and calibration remain ongoing work.
 
+Project Status
+--------------
+
+.. toctree::
+   :maxdepth: 2
+
+   project_status
 
 Getting Started
 ---------------
@@ -31,7 +34,6 @@ Getting Started
    installation
    quickstart
 
-
 Theory
 ------
 
@@ -39,7 +41,6 @@ Theory
    :maxdepth: 2
 
    theory/index
-
 
 Architecture
 ------------
@@ -49,6 +50,13 @@ Architecture
 
    architecture/index
 
+Verification
+------------
+
+.. toctree::
+   :maxdepth: 2
+
+   verification/index
 
 API Reference
 -------------
@@ -57,7 +65,6 @@ API Reference
    :maxdepth: 2
 
    api/index
-
 
 References
 ----------

@@ -385,10 +385,10 @@ A fixed species-yield model cannot generally predict these composition
 changes from first principles.
 
 
-\subsection{Future thermochemical formulation}
+\subsection{Elemental thermochemical formulation}
 
-The intended long-term thermochemical architecture is to replace or
-complement direct species yields with elemental source inventories.
+LiionTR now includes an elemental thermochemistry pathway that complements
+direct species yields with elemental source inventories.
 
 Conceptually,
 
@@ -416,9 +416,10 @@ Relevant elemental inventories may include
     }.
 \end{equation}
 
-A thermochemical backend such as Cantera could then provide equilibrium
-composition and mixture properties.
-
-The present empirical implementation is retained because it provides a
-simple, deterministic, and independently testable formulation while the
-thermochemical architecture is developed.
+The optional Cantera backend provides equilibrium composition and mixture
+properties using constant-\(T,V\) and constant-\(U,V\) formulations.
+The empirical implementation is retained because it remains useful for
+calibrated reduced-order models and independent verification. The default
+thermochemical mechanism does not yet represent the complete set of
+battery-relevant F/P/Li species, so mechanism development and experimental
+validation remain ongoing work.

@@ -5,8 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from math import isfinite
 
-import pytest
-
 from liiontr.chemistry.elements import (
     ElementInventory,
 )
@@ -25,7 +23,6 @@ class VentGasDataset:
     gas_volume: float
     species_fractions: dict[str, float]
     reference: str
-
 
     def species_moles(
         self,
@@ -69,31 +66,9 @@ class VentGasDataset:
             for element_name, amount in inventory.moles.items()
         }
 
-    def test_howard2025_element_yields_per_cell_mass():
-        """Convert Howard gas data to elemental yield per cell mass."""
-        dataset = howard2025_nmc811_21700_100soc_inert()
-
-        yields = dataset.element_yields_per_cell_mass(
-            temperature=298.15,
-            pressure=101325.0,
-        )
-
-        assert yields["C"] == pytest.approx(
-            4.4108875,
-            rel=1.0e-6,
-        )
-
-        assert yields["H"] == pytest.approx(
-            5.2830969,
-            rel=1.0e-6,
-        )
-
-        assert yields["O"] == pytest.approx(
-            4.6551062,
-            rel=1.0e-6,
-        )
 
 IDEAL_GAS_CONSTANT = 8.31446261815324
+
 
 def howard2025_nmc811_21700_100soc_inert() -> VentGasDataset:
     """Return the Howard 2025 NMC811 21700 inert-atmosphere dataset."""
@@ -120,5 +95,3 @@ def howard2025_nmc811_21700_100soc_inert() -> VentGasDataset:
             "doi:10.3390/batteries11090320"
         ),
     )
-
-    

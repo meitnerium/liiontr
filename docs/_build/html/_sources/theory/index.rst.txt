@@ -11,6 +11,7 @@ in LiionTR.
    kinetics
    reactions
    gases
+   thermochemistry
    pressure
    venting
    hu2020

@@ -12,7 +12,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -40,6 +40,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../project_status.html">Project Status</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
 </ul>
@@ -48,6 +51,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../verification/index.html">Verification</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
@@ -86,14 +92,31 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.cells.cell</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cell</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.chemistry</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChemistryBackend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.chemistry</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChemistryBackend</span><span class="p">,</span> <span class="n">ReactionNetworkBackend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.chemistry.element_generation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ElementGenerationModel</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.chemistry.element_release</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ElementReleaseModel</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.chemistry.elements</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ElementInventory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.chemistry.energy_scaled_generation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">EnergyScaledElementGenerationModel</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.chemistry.equilibrium</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GasEquilibriumBackend</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.core.problem</span><span class="w"> </span><span class="kn">import</span> <span class="n">Problem</span>
-
 <span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.gases</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">GasGenerationModel</span><span class="p">,</span>
     <span class="n">GasInventory</span><span class="p">,</span>
     <span class="n">IdealGasPressureModel</span><span class="p">,</span>
     <span class="n">MixtureVentFlowModel</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.gases.element_vent</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ElementVentFlowModel</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -128,7 +151,161 @@
     <span class="n">initial_gas_inventory</span><span class="p">:</span> <span class="n">GasInventory</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">vent_model</span><span class="p">:</span> <span class="n">MixtureVentFlowModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">vent_open_pressure</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+    <span class="n">vent_open_pressure</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">element_generation_model</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">ElementGenerationModel</span> <span class="o">|</span> <span class="n">EnergyScaledElementGenerationModel</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">element_release_model</span><span class="p">:</span> <span class="n">ElementReleaseModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">gas_equilibrium_backend</span><span class="p">:</span> <span class="n">GasEquilibriumBackend</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">initial_element_inventory</span><span class="p">:</span> <span class="n">ElementInventory</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">gas_volume</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">element_vent_model</span><span class="p">:</span> <span class="n">ElementVentFlowModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ThermalProblem.__post_init__">
+<a class="viewcode-back" href="../../../api/problems.html#liiontr.problems.thermal.ThermalProblem.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate elemental thermochemistry configuration.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">uses_elemental_thermochemistry</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">legacy_models</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gas_generation_model</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pressure_model</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initial_gas_inventory</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vent_model</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">legacy_models</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Elemental thermochemistry cannot be combined &quot;</span>
+                <span class="s2">&quot;with legacy gas models.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_generation_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Elemental thermochemistry requires an &quot;</span>
+                <span class="s2">&quot;element generation model.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">element_generation_model</span><span class="p">,</span>
+                <span class="n">ElementGenerationModel</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">chemistry_backend</span><span class="p">,</span>
+                <span class="n">ReactionNetworkBackend</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_generation_model</span><span class="o">.</span><span class="n">reaction_network</span>
+            <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">chemistry_backend</span><span class="o">.</span><span class="n">reaction_network</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Element generation model must use the &quot;</span>
+                <span class="s2">&quot;same reaction network as the chemistry backend.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_vent_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_equilibrium_backend</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Element venting requires a gas equilibrium backend.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">element_vent_model</span><span class="o">.</span><span class="n">equilibrium_backend</span>
+                <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_equilibrium_backend</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Element vent model must use the same gas equilibrium backend.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_element_inventory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Elemental thermochemistry requires an initial &quot;</span>
+                <span class="s2">&quot;element inventory.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initial_element_inventory</span><span class="o">.</span><span class="n">total_atom_moles</span>
+            <span class="o">&lt;=</span> <span class="mf">0.0</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Initial element inventory must contain a &quot;</span>
+                <span class="s2">&quot;positive amount of atoms.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_volume</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Elemental thermochemistry requires a gas volume.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_volume</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Gas volume must be greater than zero.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">element_vent_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">vent_open_pressure</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Element vent model requires a vent opening &quot;</span>
+                <span class="s2">&quot;pressure.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vent_open_pressure</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_vent_model</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Vent opening pressure requires an element &quot;</span>
+                <span class="s2">&quot;vent model in elemental thermochemistry mode.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">element_generation_model</span><span class="p">,</span>
+                <span class="n">ElementGenerationModel</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">chemistry_backend</span><span class="p">,</span>
+                <span class="n">ReactionNetworkBackend</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_generation_model</span><span class="o">.</span><span class="n">reaction_network</span>
+            <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">chemistry_backend</span><span class="o">.</span><span class="n">reaction_network</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Element generation model must use the &quot;</span>
+                <span class="s2">&quot;same reaction network as the chemistry backend.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">element_release_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_generation_model</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Element release model requires an element generation model.&quot;</span>
+            <span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">uses_elemental_thermochemistry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether elemental thermochemistry is configured.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">element_generation_model</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gas_equilibrium_backend</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">initial_element_inventory</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gas_volume</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">element_vent_model</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
 
 </pre></div>
 

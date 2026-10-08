@@ -24,7 +24,8 @@ class NMC811(Chemistry):
 
     def __init__(self) -> None:
         """Initialize the default NMC811 chemistry."""
-        super().__init__(
+        Chemistry.__init__(
+            self,
             name="NMC811",
             nominal_voltage=3.65,
             specific_capacity=200.0,

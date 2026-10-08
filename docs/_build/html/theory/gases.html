@@ -13,14 +13,14 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Gas Pressure Model" href="pressure.html" />
+    <link rel="next" title="Elemental Thermochemistry" href="thermochemistry.html" />
     <link rel="prev" title="Reaction Models" href="reactions.html" /> 
 </head>
 
@@ -44,6 +44,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../project_status.html">Project Status</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
 </ul>
@@ -71,11 +74,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#units">Units</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#current-assumptions">Current Assumptions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#limitations-of-direct-species-yields">Limitations of Direct Species Yields</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#future-thermochemical-architecture">Future Thermochemical Architecture</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#relationship-to-cantera">Relationship to Cantera</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#elemental-thermochemistry-path">Elemental Thermochemistry Path</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="thermochemistry.html">Elemental Thermochemistry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pressure.html">Gas Pressure Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="venting.html">Vent Flow Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hu2020.html">Hu et al. (2020) Thermal Runaway Model</a></li>
@@ -84,6 +87,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../verification/index.html">Verification</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
@@ -122,14 +128,15 @@
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
 <p>Thermal runaway reactions can generate substantial quantities of gas.</p>
-<p>LiionTR currently represents gas generation using an empirical
-reaction-yield framework in which individual thermal runaway reactions
-are associated with prescribed gas-species yields.</p>
-<p>The gas subsystem converts reaction progress into molar generation
-rates and cumulative gas inventories. These inventories may then be
-used by pressure and venting models.</p>
-<p>The current gas-generation framework is intentionally reduced-order.
-It does not yet calculate gas composition from chemical equilibrium.</p>
+<p>LiionTR supports two reduced-order gas-modeling paths.</p>
+<p>The empirical path associates individual thermal runaway reactions with
+prescribed gas-species yields. Reaction progress is converted directly into
+molar generation rates and species inventories used by pressure and venting
+models.</p>
+<p>The elemental thermochemistry path instead generates elemental inventories and
+uses an optional equilibrium backend to obtain gas composition and
+thermodynamic properties. See <a class="reference internal" href="thermochemistry.html"><span class="doc">Elemental Thermochemistry</span></a> for the implemented
+architecture.</p>
 </section>
 <section id="gas-species">
 <h2>Gas Species<a class="headerlink" href="#gas-species" title="Link to this heading"></a></h2>
@@ -407,39 +414,23 @@ electrode chemistry, electrolyte composition, pressure, secondary
 gas-phase chemistry, and material decomposition pathways.</p>
 <p>A fixed yield model cannot generally capture these dependencies.</p>
 </section>
-<section id="future-thermochemical-architecture">
-<h2>Future Thermochemical Architecture<a class="headerlink" href="#future-thermochemical-architecture" title="Link to this heading"></a></h2>
-<p>A more physically general gas model may represent reaction progress in
-terms of elemental source inventories rather than fixed gas-species
-yields.</p>
-<p>Conceptually, the future architecture may use</p>
+<section id="elemental-thermochemistry-path">
+<h2>Elemental Thermochemistry Path<a class="headerlink" href="#elemental-thermochemistry-path" title="Link to this heading"></a></h2>
+<p>The empirical species-yield formulation remains available, but it is no longer
+the only gas architecture in LiionTR. The implemented elemental pathway uses</p>
 <div class="math notranslate nohighlight">
-\[\text{reaction progress}
+\[\text{reaction/energy release}
 \rightarrow
 \text{element inventory}
 \rightarrow
-\text{chemical equilibrium}
-\rightarrow
-\text{gas composition}.\]</div>
-<p>The elemental inventory could include elements such as</p>
-<div class="math notranslate nohighlight">
-\[\mathrm{C,\ H,\ O,\ N,\ F,\ P,\ Li},\]</div>
-<p>depending on the modeled battery chemistry.</p>
-<p>A thermochemical backend could then determine equilibrium species,
-pressure, mixture molar mass, heat capacities, and other gas properties.</p>
-<p>Cantera is a candidate backend for this functionality.</p>
-</section>
-<section id="relationship-to-cantera">
-<h2>Relationship to Cantera<a class="headerlink" href="#relationship-to-cantera" title="Link to this heading"></a></h2>
-<p>The current <a class="reference internal" href="../api/chemistry.html#liiontr.chemistry.cantera.CanteraBackend" title="liiontr.chemistry.cantera.CanteraBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.chemistry.cantera.CanteraBackend</span></code></a> is only a
-software interface skeleton.</p>
-<p>It does not yet replace the empirical gas-yield model.</p>
-<p>A future Cantera-based implementation may calculate gas-phase
-thermodynamic and chemical-equilibrium states from reaction-derived
-element inventories.</p>
-<p>This separation is intentional: the existing empirical framework
-provides a simple and testable gas model while the thermochemical
-architecture is developed independently.</p>
+\text{equilibrium gas state}.\]</div>
+<p>The optional <a class="reference internal" href="../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend" title="liiontr.chemistry.cantera.CanteraEquilibriumBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">liiontr.chemistry.cantera.CanteraEquilibriumBackend</span></code></a>
+provides constant-<code class="docutils literal notranslate"><span class="pre">T,V</span></code> and constant-<code class="docutils literal notranslate"><span class="pre">U,V</span></code> equilibrium calculations.
+Element-consistent venting and gas-energy accounting are implemented in the
+<code class="docutils literal notranslate"><span class="pre">gases</span></code> and <code class="docutils literal notranslate"><span class="pre">thermal</span></code> packages.</p>
+<p>The default Cantera configuration uses GRI-3.0 carrier species for C/H/O/N; it
+is therefore a thermochemical framework rather than a complete mechanism for
+all battery-relevant F/P/Li chemistry. See <a class="reference internal" href="thermochemistry.html"><span class="doc">Elemental Thermochemistry</span></a>.</p>
 </section>
 <section id="implementation">
 <h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
@@ -461,7 +452,7 @@ architecture is developed independently.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="reactions.html" class="btn btn-neutral float-left" title="Reaction Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="pressure.html" class="btn btn-neutral float-right" title="Gas Pressure Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="thermochemistry.html" class="btn btn-neutral float-right" title="Elemental Thermochemistry" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

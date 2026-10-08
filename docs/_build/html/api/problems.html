@@ -13,7 +13,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
@@ -43,6 +43,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../project_status.html">Project Status</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
 </ul>
@@ -52,6 +55,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../verification/index.html">Verification</a></li>
+</ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="cells.html">Cells</a></li>
@@ -60,7 +66,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gases.html">Gases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinetics.html">Kinetics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="library.html">Model Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="library.html">Reference Library</a></li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Problems</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-liiontr.problems.thermal">Thermal Problems</a><ul>
@@ -115,8 +121,25 @@
 <dd><p>Bases: <a class="reference internal" href="core.html#liiontr.core.problem.Problem" title="liiontr.core.problem.Problem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Problem</span></code></a></p>
 <p>Lumped thermal problem definition.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="liiontr.problems.thermal.ThermalProblem.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/problems/thermal.html#ThermalProblem.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.problems.thermal.ThermalProblem.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate elemental thermochemistry configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.problems.thermal.ThermalProblem.uses_elemental_thermochemistry">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">uses_elemental_thermochemistry</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><a class="headerlink" href="#liiontr.problems.thermal.ThermalProblem.uses_elemental_thermochemistry" title="Link to this definition"></a></dt>
+<dd><p>Return whether elemental thermochemistry is configured.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="liiontr.problems.thermal.ThermalProblem.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chemistry_backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_conversions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ambient_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convection_coefficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3600.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gas_generation_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_gas_inventory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vent_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vent_open_pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.problems.thermal.ThermalProblem.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chemistry_backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_conversions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ambient_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convection_coefficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3600.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gas_generation_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_gas_inventory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vent_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vent_open_pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_generation_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_release_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gas_equilibrium_backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_element_inventory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gas_volume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_vent_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.problems.thermal.ThermalProblem.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initialize a physical problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -127,18 +150,24 @@
 <li><p><strong>initial_state</strong> (<em>Any</em><em>, </em><em>optional</em>) – Initial state of the physical system.</p></li>
 <li><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>)</p></li>
 <li><p><strong>chemistry_backend</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.backend.ChemistryBackend" title="liiontr.chemistry.backend.ChemistryBackend"><em>ChemistryBackend</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>initial_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>initial_conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>ambient_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>convection_coefficient</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>maximum_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>initial_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>initial_conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>ambient_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>convection_coefficient</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>maximum_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>gas_generation_model</strong> (<a class="reference internal" href="gases.html#liiontr.gases.generation.GasGenerationModel" title="liiontr.gases.generation.GasGenerationModel"><em>GasGenerationModel</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>pressure_model</strong> (<a class="reference internal" href="gases.html#liiontr.gases.ideal.IdealGasPressureModel" title="liiontr.gases.ideal.IdealGasPressureModel"><em>IdealGasPressureModel</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>maximum_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>maximum_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>initial_gas_inventory</strong> (<a class="reference internal" href="gases.html#liiontr.gases.inventory.GasInventory" title="liiontr.gases.inventory.GasInventory"><em>GasInventory</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>vent_model</strong> (<a class="reference internal" href="gases.html#liiontr.gases.vent.MixtureVentFlowModel" title="liiontr.gases.vent.MixtureVentFlowModel"><em>MixtureVentFlowModel</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>vent_open_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>vent_open_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>element_generation_model</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.element_generation.ElementGenerationModel" title="liiontr.chemistry.element_generation.ElementGenerationModel"><em>ElementGenerationModel</em></a><em> | </em><a class="reference internal" href="chemistry.html#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel" title="liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel"><em>EnergyScaledElementGenerationModel</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>element_release_model</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.element_release.ElementReleaseModel" title="liiontr.chemistry.element_release.ElementReleaseModel"><em>ElementReleaseModel</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>gas_equilibrium_backend</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumBackend" title="liiontr.chemistry.equilibrium.GasEquilibriumBackend"><em>GasEquilibriumBackend</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>initial_element_inventory</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>gas_volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>element_vent_model</strong> (<a class="reference internal" href="gases.html#liiontr.gases.element_vent.ElementVentFlowModel" title="liiontr.gases.element_vent.ElementVentFlowModel"><em>ElementVentFlowModel</em></a><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>

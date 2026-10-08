@@ -13,14 +13,14 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Cells" href="cells.html" />
-    <link rel="prev" title="Solver and State Flow" href="../architecture/solver_flow.html" /> 
+    <link rel="prev" title="OpenFOAM Thermal-Coupling Verification" href="../verification/openfoam.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,6 +43,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../project_status.html">Project Status</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
 </ul>
@@ -52,6 +55,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../verification/index.html">Verification</a></li>
+</ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cells.html">Cells</a></li>
@@ -60,7 +66,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gases.html">Gases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinetics.html">Kinetics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="library.html">Model Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="library.html">Reference Library</a></li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="problems.html">Problems</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reactions.html">Reactions</a></li>
@@ -112,7 +118,13 @@ NumPy-style docstrings.</p>
 <li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.backend">Chemistry Backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.chemistry">Chemistry Definitions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.reaction_backend">Reaction Network Backend</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.cantera">Cantera Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.elements">Element Inventories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.element_generation">Element Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.energy_scaled_generation">Energy-Scaled Element Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.element_release">Element Release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.release_calibration">Release Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.equilibrium">Equilibrium Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.cantera">Cantera Equilibrium Backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chemistry.html#module-liiontr.chemistry.nmc">NMC Chemistry</a></li>
 </ul>
 </li>
@@ -134,7 +146,8 @@ NumPy-style docstrings.</p>
 <li class="toctree-l2"><a class="reference internal" href="gases.html#module-liiontr.gases.ideal">Ideal-Gas Pressure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gases.html#module-liiontr.gases.inventory">Gas Inventory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gases.html#module-liiontr.gases.yield_model">Reaction Gas Yields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gases.html#module-liiontr.gases.vent">Venting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#module-liiontr.gases.vent">Species-Based Venting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gases.html#module-liiontr.gases.element_vent">Element-Based Venting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="geometry.html">Geometry</a><ul>
@@ -149,10 +162,12 @@ NumPy-style docstrings.</p>
 <li class="toctree-l2"><a class="reference internal" href="kinetics.html#module-liiontr.kinetics.threshold">Temperature Thresholds</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="library.html">Model Library</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="library.html">Reference Library</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="library.html#module-liiontr.library.cells">Reference Cells</a></li>
-<li class="toctree-l2"><a class="reference internal" href="library.html#module-liiontr.library.reactions">Reaction Parameter Helpers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="library.html#module-liiontr.library.hu2020">Hu et al. (2020)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="library.html#module-liiontr.library.howard2025">Howard et al. (2025)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="library.html#module-liiontr.library.hu2020_howard2025">Hu–Howard Coupling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="library.html#module-liiontr.library.reactions">Reaction Parameter Helpers</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="materials.html">Materials</a><ul>
@@ -180,6 +195,9 @@ NumPy-style docstrings.</p>
 <li class="toctree-l1"><a class="reference internal" href="thermal.html">Thermal Models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="thermal.html#module-liiontr.thermal.model">Thermal Model Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="thermal.html#module-liiontr.thermal.lumped">Lumped Thermal Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#module-liiontr.thermal.equilibrium_energy">Equilibrium Gas Energy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#module-liiontr.thermal.coupled_energy">Coupled Cell/Gas Energy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html#module-liiontr.thermal.vent_energy">Vented Gas Energy</a></li>
 </ul>
 </li>
 </ul>
@@ -190,7 +208,7 @@ NumPy-style docstrings.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../architecture/solver_flow.html" class="btn btn-neutral float-left" title="Solver and State Flow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../verification/openfoam.html" class="btn btn-neutral float-left" title="OpenFOAM Thermal-Coupling Verification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="cells.html" class="btn btn-neutral float-right" title="Cells" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

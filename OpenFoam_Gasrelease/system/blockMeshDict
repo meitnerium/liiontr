@@ -1,0 +1,144 @@
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+
+scale 1;
+
+// ------------------------------------------------------------
+// LiionTR 21700 reduced axisymmetric geometry
+//
+// Cell radius:        10.5 mm
+// Cell height:        70.0 mm
+// Vent area:           1.0 mm2
+// Equivalent radius:   0.5641896 mm
+// Wedge angle:         5 deg total (+/- 2.5 deg)
+//
+// z = cell axial direction
+// x = radial direction at wedge mid-plane
+// ------------------------------------------------------------
+
+vertices
+(
+    // Axis
+    (0                  0                   0)       // 0
+    (0                  0                   0.070)   // 1
+
+    // Vent radius, +2.5 deg
+    (0.000563652600     0.000024609604      0)       // 2
+    (0.000563652600     0.000024609604      0.070)   // 3
+
+    // Vent radius, -2.5 deg
+    (0.000563652600    -0.000024609604      0)       // 4
+    (0.000563652600    -0.000024609604      0.070)   // 5
+
+    // Cell radius, +2.5 deg
+    (0.010490006327     0.000458003567      0)       // 6
+    (0.010490006327     0.000458003567      0.070)   // 7
+
+    // Cell radius, -2.5 deg
+    (0.010490006327    -0.000458003567      0)       // 8
+    (0.010490006327    -0.000458003567      0.070)   // 9
+);
+
+blocks
+(
+    // Central block under the vent.
+    // The word porousZone creates the cellZone directly.
+    hex (0 4 2 0 1 5 3 1)
+        porousZone
+        (6 1 140)
+        simpleGrading (1 1 1)
+
+    // Outer jelly-roll region.
+    hex (4 8 6 2 5 9 7 3)
+        porousZone
+        (40 1 140)
+        simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    vent
+    {
+        type patch;
+
+        faces
+        (
+            (1 3 5 1)
+        );
+    }
+
+    topCap
+    {
+        type wall;
+
+        faces
+        (
+            (5 9 7 3)
+        );
+    }
+
+    bottom
+    {
+        type wall;
+
+        faces
+        (
+            (0 4 2 0)
+            (4 8 6 2)
+        );
+    }
+
+    outerWall
+    {
+        type wall;
+
+        faces
+        (
+            (6 8 9 7)
+        );
+    }
+
+    wedgePlus
+    {
+        type wedge;
+
+        faces
+        (
+            (0 2 3 1)
+            (2 6 7 3)
+        );
+    }
+
+    wedgeMinus
+    {
+        type wedge;
+
+        faces
+        (
+            (0 1 5 4)
+            (4 5 9 8)
+        );
+    }
+
+    axis
+    {
+        type empty;
+
+        faces
+        (
+            (0 1 1 0)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);

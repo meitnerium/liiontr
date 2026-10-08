@@ -1,0 +1,49 @@
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    object      p;
+}
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform 500000;
+
+boundaryField
+{
+    vent
+    {
+        type            fixedValue;
+        value           uniform 101325;
+    }
+
+    topCap
+    {
+        type            zeroGradient;
+    }
+
+    bottom
+    {
+        type            zeroGradient;
+    }
+
+    outerWall
+    {
+        type            zeroGradient;
+    }
+
+    wedgePlus
+    {
+        type            wedge;
+    }
+
+    wedgeMinus
+    {
+        type            wedge;
+    }
+
+    axis
+    {
+        type            empty;
+    }
+}

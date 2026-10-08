@@ -2,22 +2,23 @@ LiionTR is currently a reduced-order thermal runaway framework with
 explicit models for reaction kinetics, heat generation, gas generation,
 pressure, and venting.
 
-Several extensions are required before the framework can represent the
+The framework now contains both empirical gas models and an initial elemental
+thermochemistry implementation, including optional Cantera equilibrium,
+coupled thermal-energy accounting, and elemental venting. Several extensions
+and validation steps are still required before the framework can represent the
 full range of physical processes relevant to lithium-ion battery failure.
 
 Development priorities are described below.
 
 
-\subsection{Thermochemical gas modeling}
+\subsection{Thermochemical gas modeling and validation}
 
-The current gas-generation formulation uses prescribed species yields.
-
-This approach is useful for empirical models and verification but cannot
-predict gas composition from the chemical state of the reacting battery
-materials.
-
-A future thermochemical formulation will represent reaction products in
-terms of elemental inventories.
+LiionTR retains prescribed species yields for empirical models and
+verification, but now also contains an elemental thermochemistry path.
+Reaction products can be represented as elemental inventories and passed to an
+equilibrium backend. The remaining priority is to calibrate these source terms,
+extend the supported chemistry, and validate predicted composition and energy
+feedback against experiments.
 
 Conceptually,
 
@@ -49,17 +50,10 @@ A thermochemical equilibrium backend can then determine gas composition
 subject to specified thermodynamic constraints.
 
 
-\subsection{Cantera integration}
+\subsection{Cantera mechanism development}
 
-Cantera is a strong candidate for the thermochemical backend.
-
-A future LiionTR interface may provide a generic abstraction such as
-
-\begin{equation}
-    \texttt{GasEquilibriumBackend},
-\end{equation}
-
-with a Cantera implementation responsible for
+Cantera is implemented behind the generic
+\texttt{GasEquilibriumBackend} abstraction. The current backend provides
 
 \begin{itemize}
     \item equilibrium gas composition;
@@ -70,22 +64,20 @@ with a Cantera implementation responsible for
     \item other thermodynamic properties required by venting.
 \end{itemize}
 
-The initial implementation may use constant-volume, constant-temperature
-equilibrium calculations.
-
-More advanced formulations may require coupled energy-conserving
-equilibrium calculations.
+Both constant-volume, constant-temperature and constant-energy,
+constant-volume equilibrium calculations are implemented. Future work should
+focus on battery-relevant mechanisms, condensed/multiphase chemistry, numerical
+robustness over the full runaway state range, and experimental validation.
 
 
 \subsection{Energy-consistent thermochemistry}
 
-The current thermal state is temperature.
-
-This is convenient for reduced-order calculations but may become
-insufficient when significant energy is redistributed through chemical
-equilibrium, vaporization, gas discharge, or phase change.
-
-A future formulation may therefore evolve internal energy,
+The legacy reduced-order thermal state is temperature. The elemental
+thermochemistry solver path now introduces coupled thermal-energy accounting so
+that gas equilibrium and vent-energy removal can be treated consistently.
+Further work is still required before this formulation covers vaporization,
+phase change, and fully multiphase chemistry. The generalized energetic state
+is written as
 
 \begin{equation}
     U,
@@ -222,6 +214,20 @@ and potentially
 Phase transitions and latent-heat effects may also be relevant at severe
 thermal runaway temperatures.
 
+
+\subsection{OpenFOAM coupling}
+
+A companion verification campaign has established a one-way thermal-source
+interface between LiionTR source physics and OpenFOAM spatial heat transport.
+The verified interface communicates volumetric heat generation in physical
+units of W/m$^3$, while OpenFOAM applies the corresponding thermal source using
+its material density and heat capacity.
+
+Manufactured-solution cases have verified source normalization, diffusion,
+first-order temporal convergence, second-order spatial convergence, and an
+external tabulated-source interface. The next software step is to package a
+LiionTR exporter that produces the actual reaction heat history and to version
+the OpenFOAM verification cases with the main repository.
 
 \subsection{Spatial thermal models}
 

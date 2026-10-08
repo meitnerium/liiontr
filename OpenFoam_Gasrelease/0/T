@@ -1,0 +1,50 @@
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 850;
+
+boundaryField
+{
+    vent
+    {
+        type            inletOutlet;
+        inletValue      uniform 850;
+        value           uniform 850;
+    }
+
+    topCap
+    {
+        type            zeroGradient;
+    }
+
+    bottom
+    {
+        type            zeroGradient;
+    }
+
+    outerWall
+    {
+        type            zeroGradient;
+    }
+
+    wedgePlus
+    {
+        type            wedge;
+    }
+
+    wedgeMinus
+    {
+        type            wedge;
+    }
+
+    axis
+    {
+        type            empty;
+    }
+}

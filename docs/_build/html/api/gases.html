@@ -13,7 +13,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -44,6 +44,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../project_status.html">Project Status</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
 </ul>
@@ -52,6 +55,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../verification/index.html">Verification</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
@@ -76,16 +82,20 @@
 <li class="toctree-l4"><a class="reference internal" href="#liiontr.gases.yield_model.ReactionGasYield"><code class="docutils literal notranslate"><span class="pre">ReactionGasYield</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.gases.vent">Venting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.gases.vent">Species-Based Venting</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#liiontr.gases.vent.CompressibleVentFlowModel"><code class="docutils literal notranslate"><span class="pre">CompressibleVentFlowModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#liiontr.gases.vent.MixtureVentFlowModel"><code class="docutils literal notranslate"><span class="pre">MixtureVentFlowModel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.gases.element_vent">Element-Based Venting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.gases.element_vent.ElementVentFlowModel"><code class="docutils literal notranslate"><span class="pre">ElementVentFlowModel</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinetics.html">Kinetics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="library.html">Model Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="library.html">Reference Library</a></li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="problems.html">Problems</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reactions.html">Reactions</a></li>
@@ -131,12 +141,12 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="liiontr.gases.generation.GasGenerationModel">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.gases.generation.</span></span><span class="sig-name descname"><span class="pre">GasGenerationModel</span></span><a class="reference internal" href="../_modules/liiontr/gases/generation.html#GasGenerationModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.generation.GasGenerationModel" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Compute gas generation rates from a reaction network.</p>
 <p>Gas generation rates are returned in mol/s.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="liiontr.gases.generation.GasGenerationModel.species_names">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">species_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#liiontr.gases.generation.GasGenerationModel.species_names" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">species_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#liiontr.gases.generation.GasGenerationModel.species_names" title="Link to this definition"></a></dt>
 <dd><p>Return gas species names in deterministic state-vector order.</p>
 <p>Species are ordered by first appearance in the configured
 reaction gas yields.</p>
@@ -160,13 +170,13 @@ reaction gas yields.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cell temperature in K.</p></li>
-<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Reaction conversions in network order.</p></li>
-<li><p><strong>cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Total cell mass in kg.</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cell temperature in K.</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Reaction conversions in network order.</p></li>
+<li><p><strong>cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Total cell mass in kg.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -189,13 +199,13 @@ conversion change:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>initial_conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
-<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
-<li><p><strong>cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>initial_conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -207,7 +217,7 @@ conversion change:</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reaction_network</strong> (<a class="reference internal" href="reactions.html#liiontr.reactions.network.ReactionNetwork" title="liiontr.reactions.network.ReactionNetwork"><em>ReactionNetwork</em></a>)</p></li>
-<li><p><strong>gas_yields</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#liiontr.gases.yield_model.ReactionGasYield" title="liiontr.gases.yield_model.ReactionGasYield"><em>ReactionGasYield</em></a><em>]</em>)</p></li>
+<li><p><strong>gas_yields</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#liiontr.gases.yield_model.ReactionGasYield" title="liiontr.gases.yield_model.ReactionGasYield"><em>ReactionGasYield</em></a><em>]</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -225,7 +235,7 @@ conversion change:</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="liiontr.gases.ideal.IdealGasPressureModel">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.gases.ideal.</span></span><span class="sig-name descname"><span class="pre">IdealGasPressureModel</span></span><a class="reference internal" href="../_modules/liiontr/gases/ideal.html#IdealGasPressureModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.ideal.IdealGasPressureModel" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Ideal-gas pressure model for the free internal volume of a cell.</p>
 <p>The model accounts for:
 - gas initially present in the free volume;
@@ -234,9 +244,9 @@ conversion change:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>free_volume</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Internal free gas volume in m3.</p></li>
-<li><p><strong>initial_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Initial absolute pressure in Pa.</p></li>
-<li><p><strong>initial_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Initial gas temperature in K.</p></li>
+<li><p><strong>free_volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Internal free gas volume in m3.</p></li>
+<li><p><strong>initial_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Initial absolute pressure in Pa.</p></li>
+<li><p><strong>initial_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Initial gas temperature in K.</p></li>
 </ul>
 </dd>
 </dl>
@@ -253,7 +263,7 @@ conversion change:</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="liiontr.gases.ideal.IdealGasPressureModel.initial_moles">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">initial_moles</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.gases.ideal.IdealGasPressureModel.initial_moles" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">initial_moles</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.gases.ideal.IdealGasPressureModel.initial_moles" title="Link to this definition"></a></dt>
 <dd><p>Return the initial amount of gas in the free volume.</p>
 <p>The initial gas amount follows the ideal-gas relation</p>
 <div class="math notranslate nohighlight">
@@ -269,12 +279,12 @@ of gas generated since the initial state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Gas temperature in K.</p></li>
-<li><p><strong>generated_moles</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Additional gas generated since the initial state, in mol.</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Gas temperature in K.</p></li>
+<li><p><strong>generated_moles</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Additional gas generated since the initial state, in mol.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -286,13 +296,13 @@ of gas generated since the initial state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Gas temperature in K.</p></li>
-<li><p><strong>total_moles</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Total amount of gas currently contained in the
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Gas temperature in K.</p></li>
+<li><p><strong>total_moles</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Total amount of gas currently contained in the
 free volume, in mol.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -303,9 +313,9 @@ free volume, in mol.</p></li>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>free_volume</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>initial_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>initial_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>free_volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>initial_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>initial_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -323,13 +333,13 @@ free volume, in mol.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="liiontr.gases.inventory.GasSpecies">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.gases.inventory.</span></span><span class="sig-name descname"><span class="pre">GasSpecies</span></span><a class="reference internal" href="../_modules/liiontr/gases/inventory.html#GasSpecies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.inventory.GasSpecies" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Definition of a gas species.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Species name.</p></li>
-<li><p><strong>molar_mass</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Molar mass in kg/mol.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Species name.</p></li>
+<li><p><strong>molar_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Molar mass in kg/mol.</p></li>
 </ul>
 </dd>
 </dl>
@@ -350,8 +360,8 @@ free volume, in mol.</p></li>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
-<li><p><strong>molar_mass</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>molar_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -365,7 +375,7 @@ free volume, in mol.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="liiontr.gases.inventory.GasInventory">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.gases.inventory.</span></span><span class="sig-name descname"><span class="pre">GasInventory</span></span><a class="reference internal" href="../_modules/liiontr/gases/inventory.html#GasInventory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.inventory.GasInventory" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Gas composition represented by species mole amounts.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="liiontr.gases.inventory.GasInventory.__post_init__">
@@ -384,23 +394,23 @@ free volume, in mol.</p></li>
 <dd><p>Return the mole amount of one species.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="liiontr.gases.inventory.GasInventory.total_moles">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">total_moles</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.gases.inventory.GasInventory.total_moles" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">total_moles</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.gases.inventory.GasInventory.total_moles" title="Link to this definition"></a></dt>
 <dd><p>Return the total gas amount in mol.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="liiontr.gases.inventory.GasInventory.total_mass">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">total_mass</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.gases.inventory.GasInventory.total_mass" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">total_mass</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.gases.inventory.GasInventory.total_mass" title="Link to this definition"></a></dt>
 <dd><p>Return total gas mass in kg.</p>
 </dd></dl>
 
@@ -410,17 +420,17 @@ free volume, in mol.</p></li>
 <dd><p>Return the mole fraction of one gas species.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="liiontr.gases.inventory.GasInventory.mean_molar_mass">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">mean_molar_mass</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.gases.inventory.GasInventory.mean_molar_mass" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">mean_molar_mass</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.gases.inventory.GasInventory.mean_molar_mass" title="Link to this definition"></a></dt>
 <dd><p>Return the mole-weighted mean molar mass in kg/mol.</p>
 </dd></dl>
 
@@ -430,8 +440,8 @@ free volume, in mol.</p></li>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#liiontr.gases.inventory.GasSpecies" title="liiontr.gases.inventory.GasSpecies"><em>GasSpecies</em></a><em>]</em>)</p></li>
-<li><p><strong>moles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>species</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#liiontr.gases.inventory.GasSpecies" title="liiontr.gases.inventory.GasSpecies"><em>GasSpecies</em></a><em>]</em>)</p></li>
+<li><p><strong>moles</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -449,13 +459,13 @@ free volume, in mol.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="liiontr.gases.yield_model.ReactionGasYield">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.gases.yield_model.</span></span><span class="sig-name descname"><span class="pre">ReactionGasYield</span></span><a class="reference internal" href="../_modules/liiontr/gases/yield_model.html#ReactionGasYield"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.yield_model.ReactionGasYield" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Gas yields associated with a reaction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>reaction_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the associated reaction.</p></li>
-<li><p><strong>species_yields</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Gas yield for each species in mol/kg of reacted material.</p></li>
+<li><p><strong>reaction_name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Name of the associated reaction.</p></li>
+<li><p><strong>species_yields</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Gas yield for each species in mol/kg of reacted material.</p></li>
 </ul>
 </dd>
 </dl>
@@ -476,10 +486,10 @@ free volume, in mol.</p></li>
 <dd><p>Return a species yield in mol/kg reacted material.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>species_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+<dd class="field-odd"><p><strong>species_name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -498,13 +508,13 @@ free volume, in mol.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>reaction_mass_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>progress_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>reaction_mass_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>progress_rate</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -515,8 +525,8 @@ free volume, in mol.</p></li>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>reaction_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
-<li><p><strong>species_yields</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>reaction_name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>species_yields</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -529,7 +539,7 @@ free volume, in mol.</p></li>
 
 </section>
 <section id="module-liiontr.gases.vent">
-<span id="venting"></span><h2>Venting<a class="headerlink" href="#module-liiontr.gases.vent" title="Link to this heading"></a></h2>
+<span id="species-based-venting"></span><h2>Species-Based Venting<a class="headerlink" href="#module-liiontr.gases.vent" title="Link to this heading"></a></h2>
 <p>Compressible gas venting models for battery thermal runaway.</p>
 <p>This module provides models for gas discharge through a battery
 safety vent. Both choked and subsonic compressible flow regimes are
@@ -538,7 +548,7 @@ supported for ideal-gas mixtures.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="liiontr.gases.vent.CompressibleVentFlowModel">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.gases.vent.</span></span><span class="sig-name descname"><span class="pre">CompressibleVentFlowModel</span></span><a class="reference internal" href="../_modules/liiontr/gases/vent.html#CompressibleVentFlowModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.vent.CompressibleVentFlowModel" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Compressible ideal-gas flow through a vent or orifice.</p>
 <p>The model automatically distinguishes between choked and
 unchoked flow according to the downstream-to-upstream
@@ -546,9 +556,9 @@ pressure ratio.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vent_area</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Effective geometric vent area in m2.</p></li>
-<li><p><strong>discharge_coefficient</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Dimensionless discharge coefficient.</p></li>
-<li><p><strong>heat_capacity_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Gas heat capacity ratio gamma = Cp / Cv.</p></li>
+<li><p><strong>vent_area</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Effective geometric vent area in m2.</p></li>
+<li><p><strong>discharge_coefficient</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Dimensionless discharge coefficient.</p></li>
+<li><p><strong>heat_capacity_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Gas heat capacity ratio gamma = Cp / Cv.</p></li>
 </ul>
 </dd>
 </dl>
@@ -565,7 +575,7 @@ pressure ratio.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="liiontr.gases.vent.CompressibleVentFlowModel.critical_pressure_ratio">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">critical_pressure_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.gases.vent.CompressibleVentFlowModel.critical_pressure_ratio" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">critical_pressure_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.gases.vent.CompressibleVentFlowModel.critical_pressure_ratio" title="Link to this definition"></a></dt>
 <dd><p>Return the critical downstream-to-upstream pressure ratio.</p>
 <p>Flow becomes choked when:</p>
 <blockquote>
@@ -580,17 +590,17 @@ pressure ratio.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>upstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Absolute cell internal pressure in Pa.</p></li>
-<li><p><strong>downstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Absolute ambient pressure in Pa.</p></li>
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Upstream gas temperature in K.</p></li>
-<li><p><strong>molar_mass</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Mean gas molar mass in kg/mol.</p></li>
+<li><p><strong>upstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Absolute cell internal pressure in Pa.</p></li>
+<li><p><strong>downstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Absolute ambient pressure in Pa.</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Upstream gas temperature in K.</p></li>
+<li><p><strong>molar_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Mean gas molar mass in kg/mol.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Vent mass flow rate in kg/s.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -606,14 +616,14 @@ pressure ratio is below the critical pressure ratio.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>upstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>downstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>molar_mass</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>upstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>downstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>molar_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -624,9 +634,9 @@ pressure ratio is below the critical pressure ratio.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vent_area</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>discharge_coefficient</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>heat_capacity_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>vent_area</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>discharge_coefficient</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>heat_capacity_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -640,7 +650,7 @@ pressure ratio is below the critical pressure ratio.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="liiontr.gases.vent.MixtureVentFlowModel">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.gases.vent.</span></span><span class="sig-name descname"><span class="pre">MixtureVentFlowModel</span></span><a class="reference internal" href="../_modules/liiontr/gases/vent.html#MixtureVentFlowModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.vent.MixtureVentFlowModel" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Vent flow model for a gas mixture.</p>
 <p>Total compressible flow is calculated using the
 mole-weighted mean molar mass of the mixture.</p>
@@ -665,12 +675,12 @@ species according to their mole fractions.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>inventory</strong> (<a class="reference internal" href="#liiontr.gases.inventory.GasInventory" title="liiontr.gases.inventory.GasInventory"><em>GasInventory</em></a>)</p></li>
-<li><p><strong>upstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>upstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -683,12 +693,12 @@ species according to their mole fractions.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>inventory</strong> (<a class="reference internal" href="#liiontr.gases.inventory.GasInventory" title="liiontr.gases.inventory.GasInventory"><em>GasInventory</em></a>)</p></li>
-<li><p><strong>upstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>upstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -700,7 +710,103 @@ species according to their mole fractions.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>flow_model</strong> (<a class="reference internal" href="#liiontr.gases.vent.CompressibleVentFlowModel" title="liiontr.gases.vent.CompressibleVentFlowModel"><em>CompressibleVentFlowModel</em></a>)</p></li>
-<li><p><strong>downstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>downstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.gases.element_vent">
+<span id="element-based-venting"></span><h2>Element-Based Venting<a class="headerlink" href="#module-liiontr.gases.element_vent" title="Link to this heading"></a></h2>
+<p>Element-conserving vent flow from equilibrium gas states.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.gases.element_vent.ElementVentFlowModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.gases.element_vent.</span></span><span class="sig-name descname"><span class="pre">ElementVentFlowModel</span></span><a class="reference internal" href="../_modules/liiontr/gases/element_vent.html#ElementVentFlowModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.element_vent.ElementVentFlowModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Convert equilibrium-gas vent flow to elemental flow.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.gases.element_vent.ElementVentFlowModel.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/gases/element_vent.html#ElementVentFlowModel.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.element_vent.ElementVentFlowModel.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate vent-flow configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.gases.element_vent.ElementVentFlowModel.gas_inventory">
+<span class="sig-name descname"><span class="pre">gas_inventory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/gases/element_vent.html#ElementVentFlowModel.gas_inventory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.element_vent.ElementVentFlowModel.gas_inventory" title="Link to this definition"></a></dt>
+<dd><p>Build a gas inventory from an equilibrium state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#liiontr.gases.inventory.GasInventory" title="liiontr.gases.inventory.GasInventory"><em>GasInventory</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.gases.element_vent.ElementVentFlowModel.species_molar_flow_rates">
+<span class="sig-name descname"><span class="pre">species_molar_flow_rates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/gases/element_vent.html#ElementVentFlowModel.species_molar_flow_rates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.element_vent.ElementVentFlowModel.species_molar_flow_rates" title="Link to this definition"></a></dt>
+<dd><p>Return outward species molar vent rates in mol/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.gases.element_vent.ElementVentFlowModel.element_molar_flow_rates">
+<span class="sig-name descname"><span class="pre">element_molar_flow_rates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/gases/element_vent.html#ElementVentFlowModel.element_molar_flow_rates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.element_vent.ElementVentFlowModel.element_molar_flow_rates" title="Link to this definition"></a></dt>
+<dd><p>Return outward elemental vent rates in mol-atoms/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.gases.element_vent.ElementVentFlowModel.total_mass_flow_rate">
+<span class="sig-name descname"><span class="pre">total_mass_flow_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/gases/element_vent.html#ElementVentFlowModel.total_mass_flow_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.gases.element_vent.ElementVentFlowModel.total_mass_flow_rate" title="Link to this definition"></a></dt>
+<dd><p>Return total vent mass flow rate in kg/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.gases.element_vent.ElementVentFlowModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">equilibrium_backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vent_area</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discharge_coefficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downstream_pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">101325.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.gases.element_vent.ElementVentFlowModel.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>equilibrium_backend</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumBackend" title="liiontr.chemistry.equilibrium.GasEquilibriumBackend"><em>GasEquilibriumBackend</em></a>)</p></li>
+<li><p><strong>vent_area</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>discharge_coefficient</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>downstream_pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>

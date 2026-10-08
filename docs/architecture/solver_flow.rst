@@ -357,7 +357,7 @@ Potential solver extensions include:
 * dynamic vent geometry;
 * spatial thermal states;
 * propagation between cells;
-* thermochemical equilibrium states;
+* additional thermochemical mechanisms and state formulations;
 * coupling to PyBaMM electrochemical variables;
 * restart and checkpoint support;
 * sensitivity analysis and parameter estimation.

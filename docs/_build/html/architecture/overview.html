@@ -13,7 +13,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -44,6 +44,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../project_status.html">Project Status</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
 </ul>
@@ -73,6 +76,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#separation-of-state-and-physics">Separation of State and Physics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#optional-scientific-backends">Optional Scientific Backends</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#cantera">Cantera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#openfoam">OpenFOAM</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pybamm">PyBaMM</a></li>
 </ul>
 </li>
@@ -83,6 +87,9 @@
 <li class="toctree-l2"><a class="reference internal" href="solver_flow.html">Solver and State Flow</a></li>
 </ul>
 </li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../verification/index.html">Verification</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
@@ -405,14 +412,28 @@ properties.</p>
 making them mandatory dependencies.</p>
 <section id="cantera">
 <h3>Cantera<a class="headerlink" href="#cantera" title="Link to this heading"></a></h3>
-<p>Cantera is intended for future thermochemical calculations such as:</p>
+<p>Cantera is implemented as an optional equilibrium thermochemistry backend.
+The current interface supports:</p>
 <ul class="simple">
 <li><p>equilibrium gas composition;</p></li>
 <li><p>mixture thermodynamic properties;</p></li>
-<li><p>heat capacities;</p></li>
-<li><p>chemical equilibrium;</p></li>
-<li><p>possibly energy-consistent gas chemistry.</p></li>
+<li><p>heat capacities and heat-capacity ratio;</p></li>
+<li><p>constant-<code class="docutils literal notranslate"><span class="pre">T,V</span></code> equilibrium;</p></li>
+<li><p>constant-<code class="docutils literal notranslate"><span class="pre">U,V</span></code> equilibrium;</p></li>
+<li><p>element-consistent conversion between inventories and vent flows.</p></li>
 </ul>
+<p>The default mechanism/carrier mapping does not represent every battery-relevant
+element, so mechanism development and experimental validation remain future
+work.</p>
+</section>
+<section id="openfoam">
+<h3>OpenFOAM<a class="headerlink" href="#openfoam" title="Link to this heading"></a></h3>
+<p>OpenFOAM is being used as a complementary spatial thermal/CFD backend. A
+companion V0–V4 verification sequence has established a one-way tabulated
+volumetric heat-source interface. LiionTR supplies volumetric heat generation
+in W/m³, while OpenFOAM resolves spatial transport. The adapter is verified
+conceptually but is not yet packaged as a LiionTR Python backend in this
+repository snapshot.</p>
 </section>
 <section id="pybamm">
 <h3>PyBaMM<a class="headerlink" href="#pybamm" title="Link to this heading"></a></h3>

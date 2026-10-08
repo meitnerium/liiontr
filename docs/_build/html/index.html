@@ -13,13 +13,13 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="installation.html" /> 
+    <link rel="next" title="Project Status" href="project_status.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,6 +42,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="project_status.html">Project Status</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
 </ul>
@@ -50,6 +53,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="verification/index.html">Verification</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
@@ -84,34 +90,56 @@
              
   <section id="liiontr-documentation">
 <h1>LiionTR Documentation<a class="headerlink" href="#liiontr-documentation" title="Link to this heading"></a></h1>
-<p>LiionTR is a scientific Python framework for modeling lithium-ion
-battery thermal runaway.</p>
-<p>The project is designed to couple thermal runaway reaction kinetics,
-heat generation, gas generation, internal pressure, venting, and
-eventually thermochemical equilibrium and electrochemical models.</p>
-<p>The documentation is organized into four main sections:</p>
-<ul class="simple">
-<li><p>installation and basic usage;</p></li>
-<li><p>physical and mathematical theory;</p></li>
-<li><p>software architecture;</p></li>
-<li><p>Python API reference.</p></li>
-</ul>
+<p>LiionTR is a scientific Python framework for reduced-order modeling of
+lithium-ion battery thermal runaway.</p>
+<p>The framework couples reaction kinetics, heat release, gas generation,
+thermochemistry, pressure evolution, and venting through explicit and testable
+interfaces. Optional external tools complement LiionTR: Cantera provides an
+implemented equilibrium-thermochemistry backend, while OpenFOAM is being used
+as a spatial thermal/CFD backend through a verified tabulated heat-source
+interface.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>LiionTR is currently under active development. Model interfaces,
-physical assumptions, and numerical implementations may evolve as
-additional thermal runaway models and validation data are added.</p>
+<p>LiionTR is under active development. Numerical verification is relatively
+mature for the implemented reduced-order subsystems, but experimental
+validation and calibration remain ongoing work.</p>
 </div>
+<section id="project-status">
+<h2>Project Status<a class="headerlink" href="#project-status" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project_status.html">Project Status</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_status.html#implemented-physics">Implemented Physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_status.html#reference-models-and-data">Reference Models and Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_status.html#numerical-integration">Numerical Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_status.html#openfoam-coupling-status">OpenFOAM Coupling Status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_status.html#not-yet-complete">Not Yet Complete</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_status.html#verification-versus-validation">Verification Versus Validation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="getting-started">
 <h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#python-version">Python Version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#development-tools">Development Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#documentation-tools">Documentation Tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#optional-dependencies">Optional Dependencies</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#minimal-thermal-simulation">Minimal Thermal Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#hu-et-al-2020-reaction-network">Hu et al. (2020) Reaction Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#gas-pressure-and-venting">Gas Pressure and Venting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#elemental-thermochemistry">Elemental Thermochemistry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#results">Results</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -125,6 +153,7 @@ additional thermal runaway models and validation data are added.</p>
 <li class="toctree-l2"><a class="reference internal" href="theory/kinetics.html#progress-models">Progress Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="theory/reactions.html">Reaction Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="theory/gases.html">Gas Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/thermochemistry.html">Elemental Thermochemistry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="theory/pressure.html">Gas Pressure Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="theory/venting.html">Vent Flow Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="theory/hu2020.html">Hu et al. (2020) Thermal Runaway Model</a></li>
@@ -145,6 +174,18 @@ additional thermal runaway models and validation data are added.</p>
 </ul>
 </div>
 </section>
+<section id="verification">
+<h2>Verification<a class="headerlink" href="#verification" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="verification/index.html">Verification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="verification/core.html">Reduced-Order Model Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verification/openfoam.html">OpenFOAM Thermal-Coupling Verification</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="api-reference">
 <h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
@@ -156,7 +197,7 @@ additional thermal runaway models and validation data are added.</p>
 <li class="toctree-l2"><a class="reference internal" href="api/gases.html">Gases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/geometry.html">Geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/kinetics.html">Kinetics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/library.html">Model Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/library.html">Reference Library</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/problems.html">Problems</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/reactions.html">Reactions</a></li>
@@ -189,7 +230,7 @@ additional thermal runaway models and validation data are added.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="project_status.html" class="btn btn-neutral float-right" title="Project Status" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

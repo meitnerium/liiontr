@@ -6,16 +6,17 @@ Overview
 
 Thermal runaway reactions can generate substantial quantities of gas.
 
-LiionTR currently represents gas generation using an empirical
-reaction-yield framework in which individual thermal runaway reactions
-are associated with prescribed gas-species yields.
+LiionTR supports two reduced-order gas-modeling paths.
 
-The gas subsystem converts reaction progress into molar generation
-rates and cumulative gas inventories. These inventories may then be
-used by pressure and venting models.
+The empirical path associates individual thermal runaway reactions with
+prescribed gas-species yields. Reaction progress is converted directly into
+molar generation rates and species inventories used by pressure and venting
+models.
 
-The current gas-generation framework is intentionally reduced-order.
-It does not yet calculate gas composition from chemical equilibrium.
+The elemental thermochemistry path instead generates elemental inventories and
+uses an optional equilibrium backend to obtain gas composition and
+thermodynamic properties. See :doc:`thermochemistry` for the implemented
+architecture.
 
 
 Gas Species
@@ -399,54 +400,28 @@ gas-phase chemistry, and material decomposition pathways.
 A fixed yield model cannot generally capture these dependencies.
 
 
-Future Thermochemical Architecture
-----------------------------------
+Elemental Thermochemistry Path
+------------------------------
 
-A more physically general gas model may represent reaction progress in
-terms of elemental source inventories rather than fixed gas-species
-yields.
-
-Conceptually, the future architecture may use
+The empirical species-yield formulation remains available, but it is no longer
+the only gas architecture in LiionTR. The implemented elemental pathway uses
 
 .. math::
 
-   \text{reaction progress}
+   \text{reaction/energy release}
    \rightarrow
    \text{element inventory}
    \rightarrow
-   \text{chemical equilibrium}
-   \rightarrow
-   \text{gas composition}.
+   \text{equilibrium gas state}.
 
-The elemental inventory could include elements such as
+The optional :class:`liiontr.chemistry.cantera.CanteraEquilibriumBackend`
+provides constant-``T,V`` and constant-``U,V`` equilibrium calculations.
+Element-consistent venting and gas-energy accounting are implemented in the
+``gases`` and ``thermal`` packages.
 
-.. math::
-
-   \mathrm{C,\ H,\ O,\ N,\ F,\ P,\ Li},
-
-depending on the modeled battery chemistry.
-
-A thermochemical backend could then determine equilibrium species,
-pressure, mixture molar mass, heat capacities, and other gas properties.
-
-Cantera is a candidate backend for this functionality.
-
-
-Relationship to Cantera
------------------------
-
-The current :class:`liiontr.chemistry.cantera.CanteraBackend` is only a
-software interface skeleton.
-
-It does not yet replace the empirical gas-yield model.
-
-A future Cantera-based implementation may calculate gas-phase
-thermodynamic and chemical-equilibrium states from reaction-derived
-element inventories.
-
-This separation is intentional: the existing empirical framework
-provides a simple and testable gas model while the thermochemical
-architecture is developed independently.
+The default Cantera configuration uses GRI-3.0 carrier species for C/H/O/N; it
+is therefore a thermochemical framework rather than a complete mechanism for
+all battery-relevant F/P/Li chemistry. See :doc:`thermochemistry`.
 
 
 Implementation

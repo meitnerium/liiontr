@@ -91,6 +91,7 @@ def test_howard2025_species_moles():
         rel=1.0e-6,
     )
 
+
 def test_howard2025_species_moles_rejects_invalid_temperature():
     """Reject invalid gas conversion temperature."""
     dataset = (
@@ -121,3 +122,17 @@ def test_howard2025_species_moles_rejects_invalid_pressure():
             temperature=298.15,
             pressure=0.0,
         )
+
+
+def test_howard2025_element_yields_per_cell_mass():
+    """Convert Howard gas data to elemental yield per cell mass."""
+    dataset = howard2025_nmc811_21700_100soc_inert()
+
+    yields = dataset.element_yields_per_cell_mass(
+        temperature=298.15,
+        pressure=101325.0,
+    )
+
+    assert yields["C"] == pytest.approx(4.4108875, rel=1.0e-6)
+    assert yields["H"] == pytest.approx(5.2830969, rel=1.0e-6)
+    assert yields["O"] == pytest.approx(4.6551062, rel=1.0e-6)

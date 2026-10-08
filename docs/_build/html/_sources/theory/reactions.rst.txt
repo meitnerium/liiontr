@@ -483,9 +483,10 @@ reacted material.
 
 This direct-yield approach is intentionally simple.
 
-A future thermochemical architecture may instead convert reaction
-progress into elemental inventories and determine equilibrium gas
-composition using a backend such as Cantera.
+The implemented elemental thermochemistry architecture can instead convert
+reaction progress or aggregate reaction-energy release into elemental
+inventories and determine an equilibrium gas state using a backend such as
+Cantera. See :doc:`thermochemistry`.
 
 
 Implementation

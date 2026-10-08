@@ -13,7 +13,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -44,6 +44,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../project_status.html">Project Status</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
 </ul>
@@ -53,6 +56,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../verification/index.html">Verification</a></li>
+</ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="cells.html">Cells</a></li>
@@ -61,7 +67,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gases.html">Gases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinetics.html">Kinetics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="library.html">Model Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="library.html">Reference Library</a></li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="problems.html">Problems</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reactions.html">Reactions</a></li>
@@ -73,6 +79,18 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-liiontr.thermal.lumped">Lumped Thermal Model</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#liiontr.thermal.lumped.LumpedThermalModel"><code class="docutils literal notranslate"><span class="pre">LumpedThermalModel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.thermal.equilibrium_energy">Equilibrium Gas Energy</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel"><code class="docutils literal notranslate"><span class="pre">EquilibriumGasEnergyModel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.thermal.coupled_energy">Coupled Cell/Gas Energy</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel"><code class="docutils literal notranslate"><span class="pre">CoupledThermalEnergyModel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.thermal.vent_energy">Vented Gas Energy</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.thermal.vent_energy.ElementVentEnergyModel"><code class="docutils literal notranslate"><span class="pre">ElementVentEnergyModel</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -126,12 +144,12 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>heat_generation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>heat_generation</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -155,8 +173,8 @@ reactions is balanced by convective heat loss to the surroundings.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>) – Battery cell whose mass, surface area, and thermal capacity are
 used in the energy balance.</p></li>
-<li><p><strong>convection_coefficient</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Convective heat-transfer coefficient in W/(m²·K).</p></li>
-<li><p><strong>ambient_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Ambient temperature in K.</p></li>
+<li><p><strong>convection_coefficient</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Convective heat-transfer coefficient in W/(m²·K).</p></li>
+<li><p><strong>ambient_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Ambient temperature in K.</p></li>
 </ul>
 </dd>
 </dl>
@@ -182,15 +200,29 @@ transfer, and conductive heat transfer to neighbouring objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Uniform cell temperature in K.</p></li>
-<li><p><strong>heat_generation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Total internal cell heat-generation rate in W.</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Uniform cell temperature in K.</p></li>
+<li><p><strong>heat_generation</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Total internal cell heat-generation rate in W.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Cell temperature rate in K/s.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.lumped.LumpedThermalModel.heat_loss">
+<span class="sig-name descname"><span class="pre">heat_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/lumped.html#LumpedThermalModel.heat_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.lumped.LumpedThermalModel.heat_loss" title="Link to this definition"></a></dt>
+<dd><p>Return the signed convective heat-loss rate in W.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -202,8 +234,321 @@ transfer, and conductive heat transfer to neighbouring objects.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>)</p></li>
-<li><p><strong>convection_coefficient</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>ambient_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>convection_coefficient</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>ambient_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.thermal.equilibrium_energy">
+<span id="equilibrium-gas-energy"></span><h2>Equilibrium Gas Energy<a class="headerlink" href="#module-liiontr.thermal.equilibrium_energy" title="Link to this heading"></a></h2>
+<p>Thermochemical gas-energy models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.thermal.equilibrium_energy.</span></span><span class="sig-name descname"><span class="pre">EquilibriumGasEnergyModel</span></span><a class="reference internal" href="../_modules/liiontr/thermal/equilibrium_energy.html#EquilibriumGasEnergyModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Evaluate equilibrium gas energy relative to a reference state.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/equilibrium_energy.html#EquilibriumGasEnergyModel.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate the energy-reference configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.reference_state">
+<span class="sig-name descname"><span class="pre">reference_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/equilibrium_energy.html#EquilibriumGasEnergyModel.reference_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.reference_state" title="Link to this definition"></a></dt>
+<dd><p>Return the equilibrium reference state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.state">
+<span class="sig-name descname"><span class="pre">state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/equilibrium_energy.html#EquilibriumGasEnergyModel.state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.state" title="Link to this definition"></a></dt>
+<dd><p>Return the equilibrium state at the requested temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_internal_energy">
+<span class="sig-name descname"><span class="pre">relative_internal_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/equilibrium_energy.html#EquilibriumGasEnergyModel.relative_internal_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_internal_energy" title="Link to this definition"></a></dt>
+<dd><p>Return gas internal energy relative to the reference state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_enthalpy">
+<span class="sig-name descname"><span class="pre">relative_enthalpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/equilibrium_energy.html#EquilibriumGasEnergyModel.relative_enthalpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_enthalpy" title="Link to this definition"></a></dt>
+<dd><p>Return gas enthalpy relative to the reference state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_specific_enthalpy">
+<span class="sig-name descname"><span class="pre">relative_specific_enthalpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/equilibrium_energy.html#EquilibriumGasEnergyModel.relative_specific_enthalpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_specific_enthalpy" title="Link to this definition"></a></dt>
+<dd><p>Return relative gas enthalpy per unit mass in J/kg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_specific_enthalpy_from_state">
+<span class="sig-name descname"><span class="pre">relative_specific_enthalpy_from_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/equilibrium_energy.html#EquilibriumGasEnergyModel.relative_specific_enthalpy_from_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_specific_enthalpy_from_state" title="Link to this definition"></a></dt>
+<dd><p>Return relative specific enthalpy from an existing state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">equilibrium_backend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>equilibrium_backend</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumBackend" title="liiontr.chemistry.equilibrium.GasEquilibriumBackend"><em>GasEquilibriumBackend</em></a>)</p></li>
+<li><p><strong>reference_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.thermal.coupled_energy">
+<span id="coupled-cell-gas-energy"></span><h2>Coupled Cell/Gas Energy<a class="headerlink" href="#module-liiontr.thermal.coupled_energy" title="Link to this heading"></a></h2>
+<p>Coupled cell and equilibrium-gas thermal energy.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.thermal.coupled_energy.CoupledThermalEnergyModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.thermal.coupled_energy.</span></span><span class="sig-name descname"><span class="pre">CoupledThermalEnergyModel</span></span><a class="reference internal" href="../_modules/liiontr/thermal/coupled_energy.html#CoupledThermalEnergyModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Represent cell and equilibrium-gas sensible thermal energy.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/coupled_energy.html#CoupledThermalEnergyModel.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate temperature bounds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.reference_temperature">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">reference_temperature</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.reference_temperature" title="Link to this definition"></a></dt>
+<dd><p>Return the common thermal reference temperature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.cell_sensible_energy">
+<span class="sig-name descname"><span class="pre">cell_sensible_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/coupled_energy.html#CoupledThermalEnergyModel.cell_sensible_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.cell_sensible_energy" title="Link to this definition"></a></dt>
+<dd><p>Return cell sensible energy relative to the reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.total_energy">
+<span class="sig-name descname"><span class="pre">total_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/coupled_energy.html#CoupledThermalEnergyModel.total_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.total_energy" title="Link to this definition"></a></dt>
+<dd><p>Return coupled cell and gas thermal energy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.temperature_and_state_from_energy">
+<span class="sig-name descname"><span class="pre">temperature_and_state_from_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/coupled_energy.html#CoupledThermalEnergyModel.temperature_and_state_from_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.temperature_and_state_from_energy" title="Link to this definition"></a></dt>
+<dd><p>Recover temperature and equilibrium state from thermal energy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>energy</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>, <a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.temperature_from_energy">
+<span class="sig-name descname"><span class="pre">temperature_from_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/coupled_energy.html#CoupledThermalEnergyModel.temperature_from_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.temperature_from_energy" title="Link to this definition"></a></dt>
+<dd><p>Recover temperature from coupled thermal energy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>energy</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gas_energy_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4000.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell</strong> (<a class="reference internal" href="cells.html#liiontr.cells.cell.Cell" title="liiontr.cells.cell.Cell"><em>Cell</em></a>)</p></li>
+<li><p><strong>gas_energy_model</strong> (<a class="reference internal" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel" title="liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel"><em>EquilibriumGasEnergyModel</em></a>)</p></li>
+<li><p><strong>minimum_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>maximum_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.thermal.vent_energy">
+<span id="vented-gas-energy"></span><h2>Vented Gas Energy<a class="headerlink" href="#module-liiontr.thermal.vent_energy" title="Link to this heading"></a></h2>
+<p>Energy carried by vented equilibrium gas.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.thermal.vent_energy.ElementVentEnergyModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.thermal.vent_energy.</span></span><span class="sig-name descname"><span class="pre">ElementVentEnergyModel</span></span><a class="reference internal" href="../_modules/liiontr/thermal/vent_energy.html#ElementVentEnergyModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.vent_energy.ElementVentEnergyModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Evaluate thermal energy carried by vented gas.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.vent_energy.ElementVentEnergyModel.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/vent_energy.html#ElementVentEnergyModel.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.vent_energy.ElementVentEnergyModel.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate backend consistency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.vent_energy.ElementVentEnergyModel.energy_flow_rate">
+<span class="sig-name descname"><span class="pre">energy_flow_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/thermal/vent_energy.html#ElementVentEnergyModel.energy_flow_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.thermal.vent_energy.ElementVentEnergyModel.energy_flow_rate" title="Link to this definition"></a></dt>
+<dd><p>Return outward thermal-energy flow rate in W.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="chemistry.html#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.thermal.vent_energy.ElementVentEnergyModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_vent_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gas_energy_model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.thermal.vent_energy.ElementVentEnergyModel.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element_vent_model</strong> (<a class="reference internal" href="gases.html#liiontr.gases.element_vent.ElementVentFlowModel" title="liiontr.gases.element_vent.ElementVentFlowModel"><em>ElementVentFlowModel</em></a>)</p></li>
+<li><p><strong>gas_energy_model</strong> (<a class="reference internal" href="#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel" title="liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel"><em>EquilibriumGasEnergyModel</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>

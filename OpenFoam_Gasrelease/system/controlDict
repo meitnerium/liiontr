@@ -1,0 +1,91 @@
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+
+application     rhoPimpleFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.002;
+
+deltaT          1e-7;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.0002;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  8;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   8;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo           0.20;
+
+maxDeltaT       2e-6;
+
+functions
+{
+    ventMassFlow
+    {
+        type            surfaceFieldValue;
+        libs            (fieldFunctionObjects);
+
+        regionType      patch;
+        name            vent;
+
+        operation       sum;
+        fields          (phi);
+
+        writeFields     false;
+        writeToFile     true;
+        log             false;
+    }
+
+    domainMean
+    {
+        type            volFieldValue;
+        libs            (fieldFunctionObjects);
+
+        regionType      all;
+
+        operation       volAverage;
+        fields          (p T);
+
+        writeFields     false;
+        writeToFile     true;
+        log             false;
+    }
+
+    domainMass
+    {
+        type            volFieldValue;
+        libs            (fieldFunctionObjects);
+
+        regionType      all;
+
+        operation       volIntegrate;
+        fields          (rho);
+
+        writeFields     false;
+        writeToFile     true;
+        log             false;
+    }
+}

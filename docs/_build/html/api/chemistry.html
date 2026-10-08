@@ -13,7 +13,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -44,6 +44,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../project_status.html">Project Status</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
 </ul>
@@ -52,6 +55,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../verification/index.html">Verification</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
@@ -69,8 +75,37 @@
 <li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.reaction_backend.ReactionNetworkBackend"><code class="docutils literal notranslate"><span class="pre">ReactionNetworkBackend</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.cantera">Cantera Backend</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.cantera.CanteraBackend"><code class="docutils literal notranslate"><span class="pre">CanteraBackend</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.elements">Element Inventories</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.elements.element_counts_from_formula"><code class="docutils literal notranslate"><span class="pre">element_counts_from_formula()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory"><code class="docutils literal notranslate"><span class="pre">ElementInventory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.elements.ReactionElementYield"><code class="docutils literal notranslate"><span class="pre">ReactionElementYield</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.element_generation">Element Generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.element_generation.ElementGenerationModel"><code class="docutils literal notranslate"><span class="pre">ElementGenerationModel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.energy_scaled_generation">Energy-Scaled Element Generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel"><code class="docutils literal notranslate"><span class="pre">EnergyScaledElementGenerationModel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.element_release">Element Release</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.element_release.ElementReleaseModel"><code class="docutils literal notranslate"><span class="pre">ElementReleaseModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.element_release.FirstOrderElementReleaseModel"><code class="docutils literal notranslate"><span class="pre">FirstOrderElementReleaseModel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.release_calibration">Release Calibration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.release_calibration.FirstOrderReleaseFit"><code class="docutils literal notranslate"><span class="pre">FirstOrderReleaseFit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.release_calibration.fit_first_order_release_time"><code class="docutils literal notranslate"><span class="pre">fit_first_order_release_time()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.equilibrium">Equilibrium Interfaces</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.equilibrium.GasEquilibriumState"><code class="docutils literal notranslate"><span class="pre">GasEquilibriumState</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.equilibrium.GasEquilibriumBackend"><code class="docutils literal notranslate"><span class="pre">GasEquilibriumBackend</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.cantera">Cantera Equilibrium Backend</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend"><code class="docutils literal notranslate"><span class="pre">CanteraEquilibriumBackend</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-liiontr.chemistry.nmc">NMC Chemistry</a><ul>
@@ -83,7 +118,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gases.html">Gases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinetics.html">Kinetics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="library.html">Model Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="library.html">Reference Library</a></li>
 <li class="toctree-l2"><a class="reference internal" href="materials.html">Materials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="problems.html">Problems</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reactions.html">Reactions</a></li>
@@ -138,12 +173,12 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -165,10 +200,10 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
-<li><p><strong>nominal_voltage</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>specific_capacity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
-<li><p><strong>density</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>nominal_voltage</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>specific_capacity</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>density</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -213,15 +248,15 @@ and <span class="math notranslate nohighlight">\(m_{\mathrm{cell}}\)</span> is t
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cell temperature in K.</p></li>
-<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] or </em><em>None</em><em>, </em><em>optional</em>) – Reaction conversion values for the reaction network.</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cell temperature in K.</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] or </em><em>None</em><em>, </em><em>optional</em>) – Reaction conversion values for the reaction network.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Total cell heat generation rate in W.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -233,15 +268,15 @@ and <span class="math notranslate nohighlight">\(m_{\mathrm{cell}}\)</span> is t
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cell temperature in K.</p></li>
-<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Current dimensionless reaction conversion values.</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cell temperature in K.</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Current dimensionless reaction conversion values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Reaction conversion rates in s⁻¹.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -265,27 +300,678 @@ and <span class="math notranslate nohighlight">\(m_{\mathrm{cell}}\)</span> is t
 </dd></dl>
 
 </section>
-<section id="module-liiontr.chemistry.cantera">
-<span id="cantera-backend"></span><h2>Cantera Backend<a class="headerlink" href="#module-liiontr.chemistry.cantera" title="Link to this heading"></a></h2>
-<p>Cantera-based thermochemical backend for LiionTR.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraBackend">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.cantera.</span></span><span class="sig-name descname"><span class="pre">CanteraBackend</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraBackend" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#liiontr.chemistry.backend.ChemistryBackend" title="liiontr.chemistry.backend.ChemistryBackend"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChemistryBackend</span></code></a></p>
-<p>Provide the interface for Cantera-based thermochemistry.</p>
-<p class="rubric">Notes</p>
-<p>The backend currently stores the Cantera mechanism identifier but
-does not yet implement heat-generation calculations. Future
-versions are expected to use Cantera for gas-phase thermodynamics
-and chemical-equilibrium calculations.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraBackend.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mechanism</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraBackend.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraBackend.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize the Cantera backend.</p>
+<section id="module-liiontr.chemistry.elements">
+<span id="element-inventories"></span><h2>Element Inventories<a class="headerlink" href="#module-liiontr.chemistry.elements" title="Link to this heading"></a></h2>
+<p>Element inventories and reaction element yields.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.chemistry.elements.element_counts_from_formula">
+<span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.elements.</span></span><span class="sig-name descname"><span class="pre">element_counts_from_formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">formula</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/elements.html#element_counts_from_formula"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.elements.element_counts_from_formula" title="Link to this definition"></a></dt>
+<dd><p>Return elemental atom counts from a chemical formula.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mechanism</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Cantera mechanism file or mechanism identifier to use for
-thermochemical calculations.</p>
+<dd class="field-odd"><p><strong>formula</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.elements.ElementInventory">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.elements.</span></span><span class="sig-name descname"><span class="pre">ElementInventory</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/elements.html#ElementInventory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.elements.ElementInventory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Elemental inventory expressed as moles of atoms.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.elements.ElementInventory.from_species_formulas">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_species_formulas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species_moles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/elements.html#ElementInventory.from_species_formulas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.elements.ElementInventory.from_species_formulas" title="Link to this definition"></a></dt>
+<dd><p>Build an elemental inventory from molecular formulas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>species_moles</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.elements.ElementInventory.element_names">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">element_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#liiontr.chemistry.elements.ElementInventory.element_names" title="Link to this definition"></a></dt>
+<dd><p>Return element names in deterministic order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.elements.ElementInventory.moles_of">
+<span class="sig-name descname"><span class="pre">moles_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/elements.html#ElementInventory.moles_of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.elements.ElementInventory.moles_of" title="Link to this definition"></a></dt>
+<dd><p>Return the mole amount of one element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.elements.ElementInventory.total_atom_moles">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">total_atom_moles</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.chemistry.elements.ElementInventory.total_atom_moles" title="Link to this definition"></a></dt>
+<dd><p>Return the total amount of elemental atoms in mol.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.elements.ElementInventory.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">moles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.elements.ElementInventory.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>moles</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.elements.ReactionElementYield">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.elements.</span></span><span class="sig-name descname"><span class="pre">ReactionElementYield</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/elements.html#ReactionElementYield"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.elements.ReactionElementYield" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Element yields associated with one physical reaction.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.elements.ReactionElementYield.element_names">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">element_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#liiontr.chemistry.elements.ReactionElementYield.element_names" title="Link to this definition"></a></dt>
+<dd><p>Return elements produced by this reaction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.elements.ReactionElementYield.yield_of">
+<span class="sig-name descname"><span class="pre">yield_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/elements.html#ReactionElementYield.yield_of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.elements.ReactionElementYield.yield_of" title="Link to this definition"></a></dt>
+<dd><p>Return the yield of one element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.elements.ReactionElementYield.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_yields</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.elements.ReactionElementYield.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reaction_name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>element_yields</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.chemistry.element_generation">
+<span id="element-generation"></span><h2>Element Generation<a class="headerlink" href="#module-liiontr.chemistry.element_generation" title="Link to this heading"></a></h2>
+<p>Element generation from thermal runaway reactions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_generation.ElementGenerationModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.element_generation.</span></span><span class="sig-name descname"><span class="pre">ElementGenerationModel</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/element_generation.html#ElementGenerationModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.element_generation.ElementGenerationModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Generate elemental inventories from reaction progress.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_generation.ElementGenerationModel.element_names">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">element_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#liiontr.chemistry.element_generation.ElementGenerationModel.element_names" title="Link to this definition"></a></dt>
+<dd><p>Return element names in deterministic order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_generation.ElementGenerationModel.generation_rates">
+<span class="sig-name descname"><span class="pre">generation_rates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_mass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/element_generation.html#ElementGenerationModel.generation_rates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.element_generation.ElementGenerationModel.generation_rates" title="Link to this definition"></a></dt>
+<dd><p>Return elemental generation rates in mol-atoms/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_generation.ElementGenerationModel.generated_moles">
+<span class="sig-name descname"><span class="pre">generated_moles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_conversions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_mass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/element_generation.html#ElementGenerationModel.generated_moles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.element_generation.ElementGenerationModel.generated_moles" title="Link to this definition"></a></dt>
+<dd><p>Return cumulative generated element amounts in mol-atoms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_generation.ElementGenerationModel.generated_inventory">
+<span class="sig-name descname"><span class="pre">generated_inventory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_conversions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_mass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/element_generation.html#ElementGenerationModel.generated_inventory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.element_generation.ElementGenerationModel.generated_inventory" title="Link to this definition"></a></dt>
+<dd><p>Return cumulative generated elements as an inventory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_generation.ElementGenerationModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction_network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_yields</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.element_generation.ElementGenerationModel.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reaction_network</strong> (<a class="reference internal" href="reactions.html#liiontr.reactions.network.ReactionNetwork" title="liiontr.reactions.network.ReactionNetwork"><em>ReactionNetwork</em></a>)</p></li>
+<li><p><strong>element_yields</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#liiontr.chemistry.elements.ReactionElementYield" title="liiontr.chemistry.elements.ReactionElementYield"><em>ReactionElementYield</em></a><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.chemistry.energy_scaled_generation">
+<span id="energy-scaled-element-generation"></span><h2>Energy-Scaled Element Generation<a class="headerlink" href="#module-liiontr.chemistry.energy_scaled_generation" title="Link to this heading"></a></h2>
+<p>Element generation scaled by reaction heat release.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.energy_scaled_generation.</span></span><span class="sig-name descname"><span class="pre">EnergyScaledElementGenerationModel</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/energy_scaled_generation.html#EnergyScaledElementGenerationModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Scale total elemental gas production with reaction energy.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/energy_scaled_generation.html#EnergyScaledElementGenerationModel.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate the element-generation model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.element_names">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">element_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.element_names" title="Link to this definition"></a></dt>
+<dd><p>Return element names in deterministic order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.generation_progress">
+<span class="sig-name descname"><span class="pre">generation_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">released_reaction_energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_mass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/energy_scaled_generation.html#EnergyScaledElementGenerationModel.generation_progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.generation_progress" title="Link to this definition"></a></dt>
+<dd><p>Return the bounded aggregate gas-generation progress.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>released_reaction_energy</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.generation_rates">
+<span class="sig-name descname"><span class="pre">generation_rates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heat_generation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/energy_scaled_generation.html#EnergyScaledElementGenerationModel.generation_rates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.generation_rates" title="Link to this definition"></a></dt>
+<dd><p>Return elemental generation rates in mol/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>heat_generation</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.generated_inventory">
+<span class="sig-name descname"><span class="pre">generated_inventory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">released_reaction_energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_mass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/energy_scaled_generation.html#EnergyScaledElementGenerationModel.generated_inventory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.generated_inventory" title="Link to this definition"></a></dt>
+<dd><p>Return inventory generated by cumulative reaction energy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>released_reaction_energy</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_yields_per_cell_mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_reaction_energy_per_cell_mass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element_yields_per_cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>reference_reaction_energy_per_cell_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.chemistry.element_release">
+<span id="element-release"></span><h2>Element Release<a class="headerlink" href="#module-liiontr.chemistry.element_release" title="Link to this heading"></a></h2>
+<p>Models for delayed release of generated elements.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_release.ElementReleaseModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.element_release.</span></span><span class="sig-name descname"><span class="pre">ElementReleaseModel</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/element_release.html#ElementReleaseModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.element_release.ElementReleaseModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a></p>
+<p>Define the interface for elemental release models.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_release.ElementReleaseModel.release_rates">
+<span class="sig-name descname"><span class="pre">release_rates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stored_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/element_release.html#ElementReleaseModel.release_rates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.element_release.ElementReleaseModel.release_rates" title="Link to this definition"></a></dt>
+<dd><p>Return elemental release rates in mol/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stored_inventory</strong> (<a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_release.ElementReleaseModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.element_release.ElementReleaseModel.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_release.FirstOrderElementReleaseModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.element_release.</span></span><span class="sig-name descname"><span class="pre">FirstOrderElementReleaseModel</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/element_release.html#FirstOrderElementReleaseModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.element_release.FirstOrderElementReleaseModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Represent first-order internal element release.</p>
+<p>The model represents transport of reaction products from an
+internal condensed or porous reservoir to the gas volume used
+for pressure and venting calculations.</p>
+<p>For each element, the release rate is</p>
+<blockquote>
+<div><p>dn_release / dt = n_pending / tau</p>
+</div></blockquote>
+<p>where <code class="docutils literal notranslate"><span class="pre">n_pending</span></code> is the amount generated by reactions but not
+yet transferred to the gas volume, and <code class="docutils literal notranslate"><span class="pre">tau</span></code> is the
+characteristic internal release time.</p>
+<p>The time constant is an effective reduced-order transport
+parameter. It may represent combined effects of porous transport,
+pressure-driven flow, diffusion, permeation, vaporization,
+redistribution through the cell, and access to the vent path.</p>
+<p>It should therefore not be interpreted as a molecular-diffusion
+time constant unless such an interpretation is independently
+justified by a more detailed transport model or experimental
+calibration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>time_constant</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Characteristic internal release time in seconds.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_release.FirstOrderElementReleaseModel.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/element_release.html#FirstOrderElementReleaseModel.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.element_release.FirstOrderElementReleaseModel.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Validate the release model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_release.FirstOrderElementReleaseModel.release_rates">
+<span class="sig-name descname"><span class="pre">release_rates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stored_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/element_release.html#FirstOrderElementReleaseModel.release_rates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.element_release.FirstOrderElementReleaseModel.release_rates" title="Link to this definition"></a></dt>
+<dd><p>Return elemental release rates in mol/s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stored_inventory</strong> (<a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.element_release.FirstOrderElementReleaseModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_constant</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.element_release.FirstOrderElementReleaseModel.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>time_constant</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.chemistry.release_calibration">
+<span id="release-calibration"></span><h2>Release Calibration<a class="headerlink" href="#module-liiontr.chemistry.release_calibration" title="Link to this heading"></a></h2>
+<p>Calibration tools for reduced-order internal release models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.release_calibration.FirstOrderReleaseFit">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.release_calibration.</span></span><span class="sig-name descname"><span class="pre">FirstOrderReleaseFit</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/release_calibration.html#FirstOrderReleaseFit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.release_calibration.FirstOrderReleaseFit" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Result of a first-order internal-release fit.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.release_calibration.FirstOrderReleaseFit.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_constant</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_absolute_error</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.release_calibration.FirstOrderReleaseFit.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_constant</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>rmse</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>maximum_absolute_error</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.chemistry.release_calibration.fit_first_order_release_time">
+<span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.release_calibration.</span></span><span class="sig-name descname"><span class="pre">fit_first_order_release_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">released_fraction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/release_calibration.html#fit_first_order_release_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.release_calibration.fit_first_order_release_time" title="Link to this definition"></a></dt>
+<dd><p>Fit a first-order release time constant.</p>
+<p>The fitted reduced-order model is</p>
+<blockquote>
+<div><p>F(t) = 1 - exp(-t / tau)</p>
+</div></blockquote>
+<p>where F is the cumulative released fraction and tau is the
+characteristic internal release time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Time values in seconds.</p></li>
+<li><p><strong>released_fraction</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a>) – Cumulative released fraction, between zero and one.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Fitted time constant and residual diagnostics.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#liiontr.chemistry.release_calibration.FirstOrderReleaseFit" title="liiontr.chemistry.release_calibration.FirstOrderReleaseFit">FirstOrderReleaseFit</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-liiontr.chemistry.equilibrium">
+<span id="equilibrium-interfaces"></span><h2>Equilibrium Interfaces<a class="headerlink" href="#module-liiontr.chemistry.equilibrium" title="Link to this heading"></a></h2>
+<p>Thermochemical gas-equilibrium interfaces and states.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumState">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.equilibrium.</span></span><span class="sig-name descname"><span class="pre">GasEquilibriumState</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/equilibrium.html#GasEquilibriumState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumState" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Thermodynamic state of an equilibrated gas mixture.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumState.total_moles">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">total_moles</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumState.total_moles" title="Link to this definition"></a></dt>
+<dd><p>Return total gas amount in mol.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumState.total_mass">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">total_mass</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumState.total_mass" title="Link to this definition"></a></dt>
+<dd><p>Return total gas mass in kg.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumState.heat_capacity_ratio">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">heat_capacity_ratio</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumState.heat_capacity_ratio" title="Link to this definition"></a></dt>
+<dd><p>Return the heat-capacity ratio cp/cv.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumState.moles_of">
+<span class="sig-name descname"><span class="pre">moles_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/equilibrium.html#GasEquilibriumState.moles_of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumState.moles_of" title="Link to this definition"></a></dt>
+<dd><p>Return the mole amount of one species.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>species_name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumState.mole_fraction">
+<span class="sig-name descname"><span class="pre">mole_fraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/equilibrium.html#GasEquilibriumState.mole_fraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumState.mole_fraction" title="Link to this definition"></a></dt>
+<dd><p>Return the mole fraction of one species.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>species_name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumState.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species_moles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_molar_mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp_mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv_mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">internal_energy</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumState.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>pressure</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>species_moles</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>mean_molar_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>density</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>cp_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>cv_mass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>internal_energy</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumBackend">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.equilibrium.</span></span><span class="sig-name descname"><span class="pre">GasEquilibriumBackend</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/equilibrium.html#GasEquilibriumBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumBackend" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a></p>
+<p>Protocol for thermochemical gas-equilibrium backends.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumBackend.element_names">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">element_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumBackend.element_names" title="Link to this definition"></a></dt>
+<dd><p>Return elements supported by the backend.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumBackend.species_names">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">species_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumBackend.species_names" title="Link to this definition"></a></dt>
+<dd><p>Return species supported by the backend.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumBackend.species_molar_mass">
+<span class="sig-name descname"><span class="pre">species_molar_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/equilibrium.html#GasEquilibriumBackend.species_molar_mass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumBackend.species_molar_mass" title="Link to this definition"></a></dt>
+<dd><p>Return a species molar mass in kg/mol.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>species_name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumBackend.element_flow_rates">
+<span class="sig-name descname"><span class="pre">element_flow_rates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species_molar_flow_rates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/equilibrium.html#GasEquilibriumBackend.element_flow_rates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumBackend.element_flow_rates" title="Link to this definition"></a></dt>
+<dd><p>Convert species molar flow rates to elemental rates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>species_molar_flow_rates</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumBackend.equilibrate_tv">
+<span class="sig-name descname"><span class="pre">equilibrate_tv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/equilibrium.html#GasEquilibriumBackend.equilibrate_tv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumBackend.equilibrate_tv" title="Link to this definition"></a></dt>
+<dd><p>Equilibrate at constant temperature and volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumBackend.equilibrate_uv">
+<span class="sig-name descname"><span class="pre">equilibrate_uv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">internal_energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/equilibrium.html#GasEquilibriumBackend.equilibrate_uv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumBackend.equilibrate_uv" title="Link to this definition"></a></dt>
+<dd><p>Equilibrate at constant internal energy and volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>internal_energy</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.equilibrium.GasEquilibriumBackend.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.equilibrium.GasEquilibriumBackend.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-liiontr.chemistry.cantera">
+<span id="cantera-equilibrium-backend"></span><h2>Cantera Equilibrium Backend<a class="headerlink" href="#module-liiontr.chemistry.cantera" title="Link to this heading"></a></h2>
+<p>Cantera thermochemical equilibrium backend.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">liiontr.chemistry.cantera.</span></span><span class="sig-name descname"><span class="pre">CanteraEquilibriumBackend</span></span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraEquilibriumBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Prepare elemental inventories for Cantera equilibrium.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraEquilibriumBackend.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.__post_init__" title="Link to this definition"></a></dt>
+<dd><p>Load the Cantera phase and validate carrier species.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_names">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">element_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_names" title="Link to this definition"></a></dt>
+<dd><p>Return elements supported by the Cantera phase.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.species_names">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">species_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.species_names" title="Link to this definition"></a></dt>
+<dd><p>Return species supported by the Cantera phase.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.species_molar_mass">
+<span class="sig-name descname"><span class="pre">species_molar_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraEquilibriumBackend.species_molar_mass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.species_molar_mass" title="Link to this definition"></a></dt>
+<dd><p>Return a species molar mass in kg/mol.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>species_name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.validate_inventory">
+<span class="sig-name descname"><span class="pre">validate_inventory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraEquilibriumBackend.validate_inventory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.validate_inventory" title="Link to this definition"></a></dt>
+<dd><p>Validate an element inventory against the mechanism.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inventory</strong> (<a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -294,26 +980,125 @@ thermochemical calculations.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraBackend.heat_generation">
-<span class="sig-name descname"><span class="pre">heat_generation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraBackend.heat_generation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraBackend.heat_generation" title="Link to this definition"></a></dt>
-<dd><p>Return the total cell heat generation rate in W.</p>
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.carrier_moles">
+<span class="sig-name descname"><span class="pre">carrier_moles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraEquilibriumBackend.carrier_moles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.carrier_moles" title="Link to this definition"></a></dt>
+<dd><p>Convert an elemental inventory to carrier-species moles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inventory</strong> (<a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.inventory_mass">
+<span class="sig-name descname"><span class="pre">inventory_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraEquilibriumBackend.inventory_mass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.inventory_mass" title="Link to this definition"></a></dt>
+<dd><p>Return the mass represented by an element inventory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inventory</strong> (<a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.equilibrate_tv">
+<span class="sig-name descname"><span class="pre">equilibrate_tv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraEquilibriumBackend.equilibrate_tv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.equilibrate_tv" title="Link to this definition"></a></dt>
+<dd><p>Equilibrate an elemental inventory at constant T and V.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Cell temperature in K.</p></li>
-<li><p><strong>conversions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] or </em><em>None</em><em>, </em><em>optional</em>) – Reaction conversion values. This argument is reserved for
-compatibility with the chemistry backend interface.</p></li>
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Total cell heat generation rate in W.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a></p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.equilibrate_uv">
+<span class="sig-name descname"><span class="pre">equilibrate_uv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">internal_energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_inventory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraEquilibriumBackend.equilibrate_uv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.equilibrate_uv" title="Link to this definition"></a></dt>
+<dd><p>Equilibrate an elemental inventory at constant U and V.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>internal_energy</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>element_inventory</strong> (<a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a>)</p></li>
+</ul>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.14)"><strong>NotImplementedError</strong></a> – Always raised because Cantera heat generation is not yet
-    implemented.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_inventory_from_species_moles">
+<span class="sig-name descname"><span class="pre">element_inventory_from_species_moles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species_moles</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraEquilibriumBackend.element_inventory_from_species_moles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_inventory_from_species_moles" title="Link to this definition"></a></dt>
+<dd><p>Convert species mole amounts to an elemental inventory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>species_moles</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_inventory_from_state">
+<span class="sig-name descname"><span class="pre">element_inventory_from_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraEquilibriumBackend.element_inventory_from_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_inventory_from_state" title="Link to this definition"></a></dt>
+<dd><p>Return the elemental inventory represented by a gas state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference internal" href="#liiontr.chemistry.equilibrium.GasEquilibriumState" title="liiontr.chemistry.equilibrium.GasEquilibriumState"><em>GasEquilibriumState</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#liiontr.chemistry.elements.ElementInventory" title="liiontr.chemistry.elements.ElementInventory"><em>ElementInventory</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_flow_rates">
+<span class="sig-name descname"><span class="pre">element_flow_rates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">species_molar_flow_rates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/chemistry/cantera.html#CanteraEquilibriumBackend.element_flow_rates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_flow_rates" title="Link to this definition"></a></dt>
+<dd><p>Convert species molar flow rates to element flow rates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>species_molar_flow_rates</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="liiontr.chemistry.cantera.CanteraEquilibriumBackend.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mechanism</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gri30.yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uv_seed_temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carrier_species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#liiontr.chemistry.cantera.CanteraEquilibriumBackend.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mechanism</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>phase_name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>uv_seed_temperature</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>carrier_species</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>

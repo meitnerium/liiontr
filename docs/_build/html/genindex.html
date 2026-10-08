@@ -12,7 +12,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
@@ -40,6 +40,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="project_status.html">Project Status</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
 </ul>
@@ -48,6 +51,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="verification/index.html">Verification</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
@@ -101,6 +107,7 @@
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  | <a href="#Y"><strong>Y</strong></a>
  
@@ -121,13 +128,31 @@
       <ul>
         <li><a href="api/cells.html#liiontr.cells.cylindrical.CylindricalCell.__init__">(liiontr.cells.cylindrical.CylindricalCell method)</a>
 </li>
-        <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraBackend.__init__">(liiontr.chemistry.cantera.CanteraBackend method)</a>
+        <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.__init__">(liiontr.chemistry.cantera.CanteraEquilibriumBackend method)</a>
 </li>
         <li><a href="api/chemistry.html#liiontr.chemistry.chemistry.Chemistry.__init__">(liiontr.chemistry.chemistry.Chemistry method)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.element_generation.ElementGenerationModel.__init__">(liiontr.chemistry.element_generation.ElementGenerationModel method)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.element_release.ElementReleaseModel.__init__">(liiontr.chemistry.element_release.ElementReleaseModel method)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.element_release.FirstOrderElementReleaseModel.__init__">(liiontr.chemistry.element_release.FirstOrderElementReleaseModel method)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.elements.ElementInventory.__init__">(liiontr.chemistry.elements.ElementInventory method)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.elements.ReactionElementYield.__init__">(liiontr.chemistry.elements.ReactionElementYield method)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.__init__">(liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel method)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumBackend.__init__">(liiontr.chemistry.equilibrium.GasEquilibriumBackend method)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState.__init__">(liiontr.chemistry.equilibrium.GasEquilibriumState method)</a>
 </li>
         <li><a href="api/chemistry.html#liiontr.chemistry.nmc.NMC811.__init__">(liiontr.chemistry.nmc.NMC811 method)</a>
 </li>
         <li><a href="api/chemistry.html#liiontr.chemistry.reaction_backend.ReactionNetworkBackend.__init__">(liiontr.chemistry.reaction_backend.ReactionNetworkBackend method)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.release_calibration.FirstOrderReleaseFit.__init__">(liiontr.chemistry.release_calibration.FirstOrderReleaseFit method)</a>
 </li>
         <li><a href="api/core.html#liiontr.core.domain.Domain.__init__">(liiontr.core.domain.Domain method)</a>
 </li>
@@ -146,6 +171,8 @@
         <li><a href="api/core.html#liiontr.core.state.State.__init__">(liiontr.core.state.State method)</a>
 </li>
         <li><a href="api/core.html#liiontr.core.variable.Variable.__init__">(liiontr.core.variable.Variable method)</a>
+</li>
+        <li><a href="api/gases.html#liiontr.gases.element_vent.ElementVentFlowModel.__init__">(liiontr.gases.element_vent.ElementVentFlowModel method)</a>
 </li>
         <li><a href="api/gases.html#liiontr.gases.generation.GasGenerationModel.__init__">(liiontr.gases.generation.GasGenerationModel method)</a>
 </li>
@@ -174,6 +201,8 @@
         <li><a href="api/kinetics.html#liiontr.kinetics.progress.ThresholdProgress.__init__">(liiontr.kinetics.progress.ThresholdProgress method)</a>
 </li>
         <li><a href="api/kinetics.html#liiontr.kinetics.threshold.TemperatureThresholdKinetics.__init__">(liiontr.kinetics.threshold.TemperatureThresholdKinetics method)</a>
+</li>
+        <li><a href="api/library.html#liiontr.library.howard2025.VentGasDataset.__init__">(liiontr.library.howard2025.VentGasDataset method)</a>
 </li>
         <li><a href="api/library.html#liiontr.library.reactions.ReactionParameters.__init__">(liiontr.library.reactions.ReactionParameters method)</a>
 </li>
@@ -205,7 +234,13 @@
 </li>
         <li><a href="api/solver.html#liiontr.solver.scipy_solver.ScipySolver.__init__">(liiontr.solver.scipy_solver.ScipySolver method)</a>
 </li>
+        <li><a href="api/thermal.html#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.__init__">(liiontr.thermal.coupled_energy.CoupledThermalEnergyModel method)</a>
+</li>
+        <li><a href="api/thermal.html#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.__init__">(liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel method)</a>
+</li>
         <li><a href="api/thermal.html#liiontr.thermal.lumped.LumpedThermalModel.__init__">(liiontr.thermal.lumped.LumpedThermalModel method)</a>
+</li>
+        <li><a href="api/thermal.html#liiontr.thermal.vent_energy.ElementVentEnergyModel.__init__">(liiontr.thermal.vent_energy.ElementVentEnergyModel method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -216,9 +251,17 @@
         <li><a href="api/core.html#liiontr.core.state.State.__len__">(liiontr.core.state.State method)</a>
 </li>
       </ul></li>
-      <li><a href="api/gases.html#liiontr.gases.generation.GasGenerationModel.__post_init__">__post_init__() (liiontr.gases.generation.GasGenerationModel method)</a>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.__post_init__">__post_init__() (liiontr.chemistry.cantera.CanteraEquilibriumBackend method)</a>
 
       <ul>
+        <li><a href="api/chemistry.html#liiontr.chemistry.element_release.FirstOrderElementReleaseModel.__post_init__">(liiontr.chemistry.element_release.FirstOrderElementReleaseModel method)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.__post_init__">(liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel method)</a>
+</li>
+        <li><a href="api/gases.html#liiontr.gases.element_vent.ElementVentFlowModel.__post_init__">(liiontr.gases.element_vent.ElementVentFlowModel method)</a>
+</li>
+        <li><a href="api/gases.html#liiontr.gases.generation.GasGenerationModel.__post_init__">(liiontr.gases.generation.GasGenerationModel method)</a>
+</li>
         <li><a href="api/gases.html#liiontr.gases.ideal.IdealGasPressureModel.__post_init__">(liiontr.gases.ideal.IdealGasPressureModel method)</a>
 </li>
         <li><a href="api/gases.html#liiontr.gases.inventory.GasInventory.__post_init__">(liiontr.gases.inventory.GasInventory method)</a>
@@ -245,6 +288,8 @@
 </li>
         <li><a href="api/library.html#liiontr.library.reactions.VolumetricReactionParameters.__post_init__">(liiontr.library.reactions.VolumetricReactionParameters method)</a>
 </li>
+        <li><a href="api/problems.html#liiontr.problems.thermal.ThermalProblem.__post_init__">(liiontr.problems.thermal.ThermalProblem method)</a>
+</li>
         <li><a href="api/reactions.html#liiontr.reactions.context_variable.LinearConversionVariable.__post_init__">(liiontr.reactions.context_variable.LinearConversionVariable method)</a>
 </li>
         <li><a href="api/reactions.html#liiontr.reactions.context_variable.RemainingFractionRatioVariable.__post_init__">(liiontr.reactions.context_variable.RemainingFractionRatioVariable method)</a>
@@ -254,6 +299,12 @@
         <li><a href="api/reactions.html#liiontr.reactions.network.ReactionNetwork.__post_init__">(liiontr.reactions.network.ReactionNetwork method)</a>
 </li>
         <li><a href="api/reactions.html#liiontr.reactions.reaction.Reaction.__post_init__">(liiontr.reactions.reaction.Reaction method)</a>
+</li>
+        <li><a href="api/thermal.html#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.__post_init__">(liiontr.thermal.coupled_energy.CoupledThermalEnergyModel method)</a>
+</li>
+        <li><a href="api/thermal.html#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.__post_init__">(liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel method)</a>
+</li>
+        <li><a href="api/thermal.html#liiontr.thermal.vent_energy.ElementVentEnergyModel.__post_init__">(liiontr.thermal.vent_energy.ElementVentEnergyModel method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -304,11 +355,15 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraBackend">CanteraBackend (class in liiontr.chemistry.cantera)</a>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend">CanteraEquilibriumBackend (class in liiontr.chemistry.cantera)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.carrier_moles">carrier_moles() (liiontr.chemistry.cantera.CanteraEquilibriumBackend method)</a>
 </li>
       <li><a href="api/cells.html#liiontr.cells.cell.Cell">Cell (class in liiontr.cells.cell)</a>
 </li>
       <li><a href="api/library.html#liiontr.library.cells.cell_21700_generic">cell_21700_generic() (in module liiontr.library.cells)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.cell_sensible_energy">cell_sensible_energy() (liiontr.thermal.coupled_energy.CoupledThermalEnergyModel method)</a>
 </li>
       <li><a href="api/chemistry.html#liiontr.chemistry.chemistry.Chemistry">Chemistry (class in liiontr.chemistry.chemistry)</a>
 </li>
@@ -316,10 +371,10 @@
 </li>
       <li><a href="api/gases.html#liiontr.gases.vent.CompressibleVentFlowModel">CompressibleVentFlowModel (class in liiontr.gases.vent)</a>
 </li>
-      <li><a href="api/materials.html#liiontr.materials.properties.ConstantProperty">ConstantProperty (class in liiontr.materials.properties)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/materials.html#liiontr.materials.properties.ConstantProperty">ConstantProperty (class in liiontr.materials.properties)</a>
+</li>
       <li><a href="api/reactions.html#liiontr.reactions.network.ReactionNetwork.context">context() (liiontr.reactions.network.ReactionNetwork method)</a>
 </li>
       <li><a href="api/reactions.html#liiontr.reactions.context_variable.ContextVariable">ContextVariable (class in liiontr.reactions.context_variable)</a>
@@ -327,6 +382,8 @@
       <li><a href="api/reactions.html#liiontr.reactions.context.ReactionContext.conversion">conversion() (liiontr.reactions.context.ReactionContext method)</a>
 </li>
       <li><a href="api/core.html#liiontr.core.field.Field.copy">copy() (liiontr.core.field.Field method)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel">CoupledThermalEnergyModel (class in liiontr.thermal.coupled_energy)</a>
 </li>
       <li><a href="api/gases.html#liiontr.gases.vent.CompressibleVentFlowModel.critical_pressure_ratio">critical_pressure_ratio (liiontr.gases.vent.CompressibleVentFlowModel property)</a>
 </li>
@@ -352,6 +409,66 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/chemistry.html#liiontr.chemistry.elements.element_counts_from_formula">element_counts_from_formula() (in module liiontr.chemistry.elements)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_flow_rates">element_flow_rates() (liiontr.chemistry.cantera.CanteraEquilibriumBackend method)</a>
+
+      <ul>
+        <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumBackend.element_flow_rates">(liiontr.chemistry.equilibrium.GasEquilibriumBackend method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_inventory_from_species_moles">element_inventory_from_species_moles() (liiontr.chemistry.cantera.CanteraEquilibriumBackend method)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_inventory_from_state">element_inventory_from_state() (liiontr.chemistry.cantera.CanteraEquilibriumBackend method)</a>
+</li>
+      <li><a href="api/gases.html#liiontr.gases.element_vent.ElementVentFlowModel.element_molar_flow_rates">element_molar_flow_rates() (liiontr.gases.element_vent.ElementVentFlowModel method)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_names">element_names (liiontr.chemistry.cantera.CanteraEquilibriumBackend property)</a>
+
+      <ul>
+        <li><a href="api/chemistry.html#liiontr.chemistry.element_generation.ElementGenerationModel.element_names">(liiontr.chemistry.element_generation.ElementGenerationModel property)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.elements.ElementInventory.element_names">(liiontr.chemistry.elements.ElementInventory property)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.elements.ReactionElementYield.element_names">(liiontr.chemistry.elements.ReactionElementYield property)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.element_names">(liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel property)</a>
+</li>
+        <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumBackend.element_names">(liiontr.chemistry.equilibrium.GasEquilibriumBackend property)</a>
+</li>
+      </ul></li>
+      <li><a href="api/library.html#liiontr.library.howard2025.VentGasDataset.element_yields_per_cell_mass">element_yields_per_cell_mass() (liiontr.library.howard2025.VentGasDataset method)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.element_generation.ElementGenerationModel">ElementGenerationModel (class in liiontr.chemistry.element_generation)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/chemistry.html#liiontr.chemistry.elements.ElementInventory">ElementInventory (class in liiontr.chemistry.elements)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.element_release.ElementReleaseModel">ElementReleaseModel (class in liiontr.chemistry.element_release)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.vent_energy.ElementVentEnergyModel">ElementVentEnergyModel (class in liiontr.thermal.vent_energy)</a>
+</li>
+      <li><a href="api/gases.html#liiontr.gases.element_vent.ElementVentFlowModel">ElementVentFlowModel (class in liiontr.gases.element_vent)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.vent_energy.ElementVentEnergyModel.energy_flow_rate">energy_flow_rate() (liiontr.thermal.vent_energy.ElementVentEnergyModel method)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel">EnergyScaledElementGenerationModel (class in liiontr.chemistry.energy_scaled_generation)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.equilibrate_tv">equilibrate_tv() (liiontr.chemistry.cantera.CanteraEquilibriumBackend method)</a>
+
+      <ul>
+        <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumBackend.equilibrate_tv">(liiontr.chemistry.equilibrium.GasEquilibriumBackend method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.equilibrate_uv">equilibrate_uv() (liiontr.chemistry.cantera.CanteraEquilibriumBackend method)</a>
+
+      <ul>
+        <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumBackend.equilibrate_uv">(liiontr.chemistry.equilibrium.GasEquilibriumBackend method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/thermal.html#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel">EquilibriumGasEnergyModel (class in liiontr.thermal.equilibrium_energy)</a>
+</li>
       <li><a href="api/reactions.html#liiontr.reactions.context_variable.ContextVariable.evaluate">evaluate() (liiontr.reactions.context_variable.ContextVariable method)</a>
 
       <ul>
@@ -360,8 +477,6 @@
         <li><a href="api/reactions.html#liiontr.reactions.context_variable.RemainingFractionRatioVariable.evaluate">(liiontr.reactions.context_variable.RemainingFractionRatioVariable method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/kinetics.html#liiontr.kinetics.progress.ExponentialInhibitionProgress">ExponentialInhibitionProgress (class in liiontr.kinetics.progress)</a>
 </li>
   </ul></td>
@@ -386,28 +501,58 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/core.html#liiontr.core.field.Field">Field (class in liiontr.core.field)</a>
 </li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.element_release.FirstOrderElementReleaseModel">FirstOrderElementReleaseModel (class in liiontr.chemistry.element_release)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.release_calibration.FirstOrderReleaseFit">FirstOrderReleaseFit (class in liiontr.chemistry.release_calibration)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.release_calibration.fit_first_order_release_time">fit_first_order_release_time() (in module liiontr.chemistry.release_calibration)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.elements.ElementInventory.from_species_formulas">from_species_formulas() (liiontr.chemistry.elements.ElementInventory class method)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/gases.html#liiontr.gases.element_vent.ElementVentFlowModel.gas_inventory">gas_inventory() (liiontr.gases.element_vent.ElementVentFlowModel method)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumBackend">GasEquilibriumBackend (class in liiontr.chemistry.equilibrium)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState">GasEquilibriumState (class in liiontr.chemistry.equilibrium)</a>
+</li>
       <li><a href="api/gases.html#liiontr.gases.generation.GasGenerationModel">GasGenerationModel (class in liiontr.gases.generation)</a>
 </li>
       <li><a href="api/gases.html#liiontr.gases.inventory.GasInventory">GasInventory (class in liiontr.gases.inventory)</a>
 </li>
       <li><a href="api/gases.html#liiontr.gases.inventory.GasSpecies">GasSpecies (class in liiontr.gases.inventory)</a>
 </li>
-      <li><a href="api/gases.html#liiontr.gases.generation.GasGenerationModel.generated_moles">generated_moles() (liiontr.gases.generation.GasGenerationModel method)</a>
-</li>
-      <li><a href="api/gases.html#liiontr.gases.generation.GasGenerationModel.generation_rates">generation_rates() (liiontr.gases.generation.GasGenerationModel method)</a>
+      <li><a href="api/chemistry.html#liiontr.chemistry.element_generation.ElementGenerationModel.generated_inventory">generated_inventory() (liiontr.chemistry.element_generation.ElementGenerationModel method)</a>
 
       <ul>
-        <li><a href="api/gases.html#liiontr.gases.yield_model.ReactionGasYield.generation_rates">(liiontr.gases.yield_model.ReactionGasYield method)</a>
+        <li><a href="api/chemistry.html#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.generated_inventory">(liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.element_generation.ElementGenerationModel.generated_moles">generated_moles() (liiontr.chemistry.element_generation.ElementGenerationModel method)</a>
+
+      <ul>
+        <li><a href="api/gases.html#liiontr.gases.generation.GasGenerationModel.generated_moles">(liiontr.gases.generation.GasGenerationModel method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/chemistry.html#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.generation_progress">generation_progress() (liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel method)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.element_generation.ElementGenerationModel.generation_rates">generation_rates() (liiontr.chemistry.element_generation.ElementGenerationModel method)</a>
+
+      <ul>
+        <li><a href="api/chemistry.html#liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel.generation_rates">(liiontr.chemistry.energy_scaled_generation.EnergyScaledElementGenerationModel method)</a>
+</li>
+        <li><a href="api/gases.html#liiontr.gases.generation.GasGenerationModel.generation_rates">(liiontr.gases.generation.GasGenerationModel method)</a>
+</li>
+        <li><a href="api/gases.html#liiontr.gases.yield_model.ReactionGasYield.generation_rates">(liiontr.gases.yield_model.ReactionGasYield method)</a>
+</li>
+      </ul></li>
       <li><a href="api/geometry.html#liiontr.geometry.geometry.Geometry">Geometry (class in liiontr.geometry.geometry)</a>
 </li>
       <li><a href="api/core.html#liiontr.core.parameter_set.ParameterSet.get">get() (liiontr.core.parameter_set.ParameterSet method)</a>
@@ -426,11 +571,11 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState.heat_capacity_ratio">heat_capacity_ratio (liiontr.chemistry.equilibrium.GasEquilibriumState property)</a>
+</li>
       <li><a href="api/chemistry.html#liiontr.chemistry.backend.ChemistryBackend.heat_generation">heat_generation() (liiontr.chemistry.backend.ChemistryBackend method)</a>
 
       <ul>
-        <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraBackend.heat_generation">(liiontr.chemistry.cantera.CanteraBackend method)</a>
-</li>
         <li><a href="api/chemistry.html#liiontr.chemistry.reaction_backend.ReactionNetworkBackend.heat_generation">(liiontr.chemistry.reaction_backend.ReactionNetworkBackend method)</a>
 </li>
         <li><a href="api/reactions.html#liiontr.reactions.model.ReactionModel.heat_generation">(liiontr.reactions.model.ReactionModel method)</a>
@@ -443,6 +588,10 @@
 </li>
       </ul></li>
       <li><a href="api/reactions.html#liiontr.reactions.network.ReactionNetwork.heat_generation_by_reaction">heat_generation_by_reaction() (liiontr.reactions.network.ReactionNetwork method)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.lumped.LumpedThermalModel.heat_loss">heat_loss() (liiontr.thermal.lumped.LumpedThermalModel method)</a>
+</li>
+      <li><a href="api/library.html#liiontr.library.howard2025.howard2025_nmc811_21700_100soc_inert">howard2025_nmc811_21700_100soc_inert() (in module liiontr.library.howard2025)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -458,6 +607,8 @@
 </li>
       <li><a href="api/library.html#liiontr.library.hu2020.hu2020_electrolyte_reaction">hu2020_electrolyte_reaction() (in module liiontr.library.hu2020)</a>
 </li>
+      <li><a href="api/library.html#liiontr.library.hu2020_howard2025.hu2020_howard2025_element_generation_model">hu2020_howard2025_element_generation_model() (in module liiontr.library.hu2020_howard2025)</a>
+</li>
       <li><a href="api/library.html#liiontr.library.hu2020.hu2020_initial_conversions">hu2020_initial_conversions() (in module liiontr.library.hu2020)</a>
 </li>
       <li><a href="api/library.html#liiontr.library.hu2020.hu2020_reaction_network">hu2020_reaction_network() (in module liiontr.library.hu2020)</a>
@@ -472,11 +623,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gases.html#liiontr.gases.ideal.IdealGasPressureModel">IdealGasPressureModel (class in liiontr.gases.ideal)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/library.html#liiontr.library.reactions.VolumetricReactionParameters.initial_conversion">initial_conversion (liiontr.library.reactions.VolumetricReactionParameters property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gases.html#liiontr.gases.ideal.IdealGasPressureModel.initial_moles">initial_moles (liiontr.gases.ideal.IdealGasPressureModel property)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.inventory_mass">inventory_mass() (liiontr.chemistry.cantera.CanteraEquilibriumBackend method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -528,6 +681,41 @@
 </li>
       </ul></li>
       <li>
+    liiontr.chemistry.element_generation
+
+      <ul>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.element_generation">module</a>
+</li>
+      </ul></li>
+      <li>
+    liiontr.chemistry.element_release
+
+      <ul>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.element_release">module</a>
+</li>
+      </ul></li>
+      <li>
+    liiontr.chemistry.elements
+
+      <ul>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.elements">module</a>
+</li>
+      </ul></li>
+      <li>
+    liiontr.chemistry.energy_scaled_generation
+
+      <ul>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.energy_scaled_generation">module</a>
+</li>
+      </ul></li>
+      <li>
+    liiontr.chemistry.equilibrium
+
+      <ul>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.equilibrium">module</a>
+</li>
+      </ul></li>
+      <li>
     liiontr.chemistry.nmc
 
       <ul>
@@ -539,6 +727,13 @@
 
       <ul>
         <li><a href="api/chemistry.html#module-liiontr.chemistry.reaction_backend">module</a>
+</li>
+      </ul></li>
+      <li>
+    liiontr.chemistry.release_calibration
+
+      <ul>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.release_calibration">module</a>
 </li>
       </ul></li>
       <li>
@@ -633,6 +828,13 @@
 </li>
       </ul></li>
       <li>
+    liiontr.gases.element_vent
+
+      <ul>
+        <li><a href="api/gases.html#module-liiontr.gases.element_vent">module</a>
+</li>
+      </ul></li>
+      <li>
     liiontr.gases.generation
 
       <ul>
@@ -653,6 +855,8 @@
         <li><a href="api/gases.html#module-liiontr.gases.inventory">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     liiontr.gases.vent
 
@@ -660,8 +864,6 @@
         <li><a href="api/gases.html#module-liiontr.gases.vent">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     liiontr.gases.yield_model
 
@@ -719,10 +921,24 @@
 </li>
       </ul></li>
       <li>
+    liiontr.library.howard2025
+
+      <ul>
+        <li><a href="api/library.html#module-liiontr.library.howard2025">module</a>
+</li>
+      </ul></li>
+      <li>
     liiontr.library.hu2020
 
       <ul>
         <li><a href="api/library.html#module-liiontr.library.hu2020">module</a>
+</li>
+      </ul></li>
+      <li>
+    liiontr.library.hu2020_howard2025
+
+      <ul>
+        <li><a href="api/library.html#module-liiontr.library.hu2020_howard2025">module</a>
 </li>
       </ul></li>
       <li>
@@ -803,6 +1019,20 @@
 </li>
       </ul></li>
       <li>
+    liiontr.thermal.coupled_energy
+
+      <ul>
+        <li><a href="api/thermal.html#module-liiontr.thermal.coupled_energy">module</a>
+</li>
+      </ul></li>
+      <li>
+    liiontr.thermal.equilibrium_energy
+
+      <ul>
+        <li><a href="api/thermal.html#module-liiontr.thermal.equilibrium_energy">module</a>
+</li>
+      </ul></li>
+      <li>
     liiontr.thermal.lumped
 
       <ul>
@@ -814,6 +1044,13 @@
 
       <ul>
         <li><a href="api/thermal.html#module-liiontr.thermal.model">module</a>
+</li>
+      </ul></li>
+      <li>
+    liiontr.thermal.vent_energy
+
+      <ul>
+        <li><a href="api/thermal.html#module-liiontr.thermal.vent_energy">module</a>
 </li>
       </ul></li>
       <li><a href="api/reactions.html#liiontr.reactions.context_variable.LinearConversionVariable">LinearConversionVariable (class in liiontr.reactions.context_variable)</a>
@@ -856,9 +1093,21 @@
 </li>
         <li><a href="api/chemistry.html#module-liiontr.chemistry.chemistry">liiontr.chemistry.chemistry</a>
 </li>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.element_generation">liiontr.chemistry.element_generation</a>
+</li>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.element_release">liiontr.chemistry.element_release</a>
+</li>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.elements">liiontr.chemistry.elements</a>
+</li>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.energy_scaled_generation">liiontr.chemistry.energy_scaled_generation</a>
+</li>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.equilibrium">liiontr.chemistry.equilibrium</a>
+</li>
         <li><a href="api/chemistry.html#module-liiontr.chemistry.nmc">liiontr.chemistry.nmc</a>
 </li>
         <li><a href="api/chemistry.html#module-liiontr.chemistry.reaction_backend">liiontr.chemistry.reaction_backend</a>
+</li>
+        <li><a href="api/chemistry.html#module-liiontr.chemistry.release_calibration">liiontr.chemistry.release_calibration</a>
 </li>
         <li><a href="api/core.html#module-liiontr.core.battery">liiontr.core.battery</a>
 </li>
@@ -886,6 +1135,8 @@
 </li>
         <li><a href="api/core.html#module-liiontr.core.vector_field">liiontr.core.vector_field</a>
 </li>
+        <li><a href="api/gases.html#module-liiontr.gases.element_vent">liiontr.gases.element_vent</a>
+</li>
         <li><a href="api/gases.html#module-liiontr.gases.generation">liiontr.gases.generation</a>
 </li>
         <li><a href="api/gases.html#module-liiontr.gases.ideal">liiontr.gases.ideal</a>
@@ -910,7 +1161,11 @@
 </li>
         <li><a href="api/library.html#module-liiontr.library.cells">liiontr.library.cells</a>
 </li>
+        <li><a href="api/library.html#module-liiontr.library.howard2025">liiontr.library.howard2025</a>
+</li>
         <li><a href="api/library.html#module-liiontr.library.hu2020">liiontr.library.hu2020</a>
+</li>
+        <li><a href="api/library.html#module-liiontr.library.hu2020_howard2025">liiontr.library.hu2020_howard2025</a>
 </li>
         <li><a href="api/library.html#module-liiontr.library.reactions">liiontr.library.reactions</a>
 </li>
@@ -934,19 +1189,35 @@
 </li>
         <li><a href="api/solver.html#module-liiontr.solver.scipy_solver">liiontr.solver.scipy_solver</a>
 </li>
+        <li><a href="api/thermal.html#module-liiontr.thermal.coupled_energy">liiontr.thermal.coupled_energy</a>
+</li>
+        <li><a href="api/thermal.html#module-liiontr.thermal.equilibrium_energy">liiontr.thermal.equilibrium_energy</a>
+</li>
         <li><a href="api/thermal.html#module-liiontr.thermal.lumped">liiontr.thermal.lumped</a>
 </li>
         <li><a href="api/thermal.html#module-liiontr.thermal.model">liiontr.thermal.model</a>
+</li>
+        <li><a href="api/thermal.html#module-liiontr.thermal.vent_energy">liiontr.thermal.vent_energy</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/gases.html#liiontr.gases.vent.CompressibleVentFlowModel.molar_flow_rate">molar_flow_rate() (liiontr.gases.vent.CompressibleVentFlowModel method)</a>
 </li>
-      <li><a href="api/gases.html#liiontr.gases.inventory.GasInventory.mole_fraction">mole_fraction() (liiontr.gases.inventory.GasInventory method)</a>
+      <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState.mole_fraction">mole_fraction() (liiontr.chemistry.equilibrium.GasEquilibriumState method)</a>
+
+      <ul>
+        <li><a href="api/gases.html#liiontr.gases.inventory.GasInventory.mole_fraction">(liiontr.gases.inventory.GasInventory method)</a>
 </li>
-      <li><a href="api/gases.html#liiontr.gases.inventory.GasInventory.moles_of">moles_of() (liiontr.gases.inventory.GasInventory method)</a>
+      </ul></li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.elements.ElementInventory.moles_of">moles_of() (liiontr.chemistry.elements.ElementInventory method)</a>
+
+      <ul>
+        <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState.moles_of">(liiontr.chemistry.equilibrium.GasEquilibriumState method)</a>
 </li>
+        <li><a href="api/gases.html#liiontr.gases.inventory.GasInventory.moles_of">(liiontr.gases.inventory.GasInventory method)</a>
+</li>
+      </ul></li>
       <li><a href="api/reactions.html#liiontr.reactions.multichannel.MultiChannelReaction">MultiChannelReaction (class in liiontr.reactions.multichannel)</a>
 </li>
   </ul></td>
@@ -1015,18 +1286,38 @@
 </li>
       <li><a href="api/reactions.html#liiontr.reactions.context.ReactionContext">ReactionContext (class in liiontr.reactions.context)</a>
 </li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.elements.ReactionElementYield">ReactionElementYield (class in liiontr.chemistry.elements)</a>
+</li>
       <li><a href="api/gases.html#liiontr.gases.yield_model.ReactionGasYield">ReactionGasYield (class in liiontr.gases.yield_model)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/reactions.html#liiontr.reactions.model.ReactionModel">ReactionModel (class in liiontr.reactions.model)</a>
 </li>
       <li><a href="api/reactions.html#liiontr.reactions.network.ReactionNetwork">ReactionNetwork (class in liiontr.reactions.network)</a>
 </li>
       <li><a href="api/chemistry.html#liiontr.chemistry.reaction_backend.ReactionNetworkBackend">ReactionNetworkBackend (class in liiontr.chemistry.reaction_backend)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/library.html#liiontr.library.reactions.ReactionParameters">ReactionParameters (class in liiontr.library.reactions)</a>
 </li>
+      <li><a href="api/thermal.html#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.reference_state">reference_state() (liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel method)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.reference_temperature">reference_temperature (liiontr.thermal.coupled_energy.CoupledThermalEnergyModel property)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_enthalpy">relative_enthalpy() (liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel method)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_internal_energy">relative_internal_energy() (liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel method)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_specific_enthalpy">relative_specific_enthalpy() (liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel method)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.relative_specific_enthalpy_from_state">relative_specific_enthalpy_from_state() (liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel method)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.element_release.ElementReleaseModel.release_rates">release_rates() (liiontr.chemistry.element_release.ElementReleaseModel method)</a>
+
+      <ul>
+        <li><a href="api/chemistry.html#liiontr.chemistry.element_release.FirstOrderElementReleaseModel.release_rates">(liiontr.chemistry.element_release.FirstOrderElementReleaseModel method)</a>
+</li>
+      </ul></li>
       <li><a href="api/reactions.html#liiontr.reactions.context.ReactionContext.remaining_fraction">remaining_fraction() (liiontr.reactions.context.ReactionContext method)</a>
 </li>
       <li><a href="api/reactions.html#liiontr.reactions.context_variable.RemainingFractionRatioVariable">RemainingFractionRatioVariable (class in liiontr.reactions.context_variable)</a>
@@ -1055,13 +1346,33 @@
         <li><a href="api/solver.html#liiontr.solver.scipy_solver.ScipySolver.solve">(liiontr.solver.scipy_solver.ScipySolver method)</a>
 </li>
       </ul></li>
+      <li><a href="api/gases.html#liiontr.gases.element_vent.ElementVentFlowModel.species_molar_flow_rates">species_molar_flow_rates() (liiontr.gases.element_vent.ElementVentFlowModel method)</a>
+
+      <ul>
+        <li><a href="api/gases.html#liiontr.gases.vent.MixtureVentFlowModel.species_molar_flow_rates">(liiontr.gases.vent.MixtureVentFlowModel method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.species_molar_mass">species_molar_mass() (liiontr.chemistry.cantera.CanteraEquilibriumBackend method)</a>
+
+      <ul>
+        <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumBackend.species_molar_mass">(liiontr.chemistry.equilibrium.GasEquilibriumBackend method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/gases.html#liiontr.gases.vent.MixtureVentFlowModel.species_molar_flow_rates">species_molar_flow_rates() (liiontr.gases.vent.MixtureVentFlowModel method)</a>
+      <li><a href="api/library.html#liiontr.library.howard2025.VentGasDataset.species_moles">species_moles() (liiontr.library.howard2025.VentGasDataset method)</a>
 </li>
-      <li><a href="api/gases.html#liiontr.gases.generation.GasGenerationModel.species_names">species_names (liiontr.gases.generation.GasGenerationModel property)</a>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.species_names">species_names (liiontr.chemistry.cantera.CanteraEquilibriumBackend property)</a>
+
+      <ul>
+        <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumBackend.species_names">(liiontr.chemistry.equilibrium.GasEquilibriumBackend property)</a>
 </li>
+        <li><a href="api/gases.html#liiontr.gases.generation.GasGenerationModel.species_names">(liiontr.gases.generation.GasGenerationModel property)</a>
+</li>
+      </ul></li>
       <li><a href="api/core.html#liiontr.core.state.State">State (class in liiontr.core.state)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel.state">state() (liiontr.thermal.equilibrium_energy.EquilibriumGasEnergyModel method)</a>
 </li>
       <li><a href="api/cells.html#liiontr.cells.cell.Cell.surface_area">surface_area (liiontr.cells.cell.Cell property)</a>
 
@@ -1079,29 +1390,55 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/core.html#liiontr.core.results.Results.temperature">temperature (liiontr.core.results.Results property)</a>
 </li>
+      <li><a href="api/thermal.html#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.temperature_and_state_from_energy">temperature_and_state_from_energy() (liiontr.thermal.coupled_energy.CoupledThermalEnergyModel method)</a>
+</li>
       <li><a href="api/thermal.html#liiontr.thermal.lumped.LumpedThermalModel.temperature_derivative">temperature_derivative() (liiontr.thermal.lumped.LumpedThermalModel method)</a>
 
       <ul>
         <li><a href="api/thermal.html#liiontr.thermal.model.ThermalModel.temperature_derivative">(liiontr.thermal.model.ThermalModel method)</a>
 </li>
       </ul></li>
+      <li><a href="api/thermal.html#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.temperature_from_energy">temperature_from_energy() (liiontr.thermal.coupled_energy.CoupledThermalEnergyModel method)</a>
+</li>
       <li><a href="api/kinetics.html#liiontr.kinetics.threshold.TemperatureThresholdKinetics">TemperatureThresholdKinetics (class in liiontr.kinetics.threshold)</a>
 </li>
       <li><a href="api/cells.html#liiontr.cells.cell.Cell.thermal_capacity">thermal_capacity (liiontr.cells.cell.Cell property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/thermal.html#liiontr.thermal.model.ThermalModel">ThermalModel (class in liiontr.thermal.model)</a>
 </li>
       <li><a href="api/problems.html#liiontr.problems.thermal.ThermalProblem">ThermalProblem (class in liiontr.problems.thermal)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/kinetics.html#liiontr.kinetics.progress.ThresholdProgress">ThresholdProgress (class in liiontr.kinetics.progress)</a>
 </li>
-      <li><a href="api/gases.html#liiontr.gases.inventory.GasInventory.total_mass">total_mass (liiontr.gases.inventory.GasInventory property)</a>
+      <li><a href="api/chemistry.html#liiontr.chemistry.elements.ElementInventory.total_atom_moles">total_atom_moles (liiontr.chemistry.elements.ElementInventory property)</a>
+</li>
+      <li><a href="api/thermal.html#liiontr.thermal.coupled_energy.CoupledThermalEnergyModel.total_energy">total_energy() (liiontr.thermal.coupled_energy.CoupledThermalEnergyModel method)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState.total_mass">total_mass (liiontr.chemistry.equilibrium.GasEquilibriumState property)</a>
+
+      <ul>
+        <li><a href="api/gases.html#liiontr.gases.inventory.GasInventory.total_mass">(liiontr.gases.inventory.GasInventory property)</a>
+</li>
+      </ul></li>
+      <li><a href="api/gases.html#liiontr.gases.element_vent.ElementVentFlowModel.total_mass_flow_rate">total_mass_flow_rate() (liiontr.gases.element_vent.ElementVentFlowModel method)</a>
 </li>
       <li><a href="api/gases.html#liiontr.gases.vent.MixtureVentFlowModel.total_molar_flow_rate">total_molar_flow_rate() (liiontr.gases.vent.MixtureVentFlowModel method)</a>
 </li>
-      <li><a href="api/gases.html#liiontr.gases.inventory.GasInventory.total_moles">total_moles (liiontr.gases.inventory.GasInventory property)</a>
+      <li><a href="api/chemistry.html#liiontr.chemistry.equilibrium.GasEquilibriumState.total_moles">total_moles (liiontr.chemistry.equilibrium.GasEquilibriumState property)</a>
+
+      <ul>
+        <li><a href="api/gases.html#liiontr.gases.inventory.GasInventory.total_moles">(liiontr.gases.inventory.GasInventory property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/problems.html#liiontr.problems.thermal.ThermalProblem.uses_elemental_thermochemistry">uses_elemental_thermochemistry (liiontr.problems.thermal.ThermalProblem property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1110,6 +1447,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/core.html#liiontr.core.problem.Problem.validate">validate() (liiontr.core.problem.Problem method)</a>
+</li>
+      <li><a href="api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.validate_inventory">validate_inventory() (liiontr.chemistry.cantera.CanteraEquilibriumBackend method)</a>
 </li>
       <li><a href="api/core.html#liiontr.core.parameter_set.ParameterSet.value">value() (liiontr.core.parameter_set.ParameterSet method)</a>
 </li>
@@ -1122,6 +1461,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/core.html#liiontr.core.vector_field.VectorField">VectorField (class in liiontr.core.vector_field)</a>
+</li>
+      <li><a href="api/library.html#liiontr.library.howard2025.VentGasDataset">VentGasDataset (class in liiontr.library.howard2025)</a>
 </li>
       <li><a href="api/cells.html#liiontr.cells.cell.Cell.volume">volume (liiontr.cells.cell.Cell property)</a>
 
@@ -1145,8 +1486,12 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/gases.html#liiontr.gases.yield_model.ReactionGasYield.yield_of">yield_of() (liiontr.gases.yield_model.ReactionGasYield method)</a>
+      <li><a href="api/chemistry.html#liiontr.chemistry.elements.ReactionElementYield.yield_of">yield_of() (liiontr.chemistry.elements.ReactionElementYield method)</a>
+
+      <ul>
+        <li><a href="api/gases.html#liiontr.gases.yield_model.ReactionGasYield.yield_of">(liiontr.gases.yield_model.ReactionGasYield method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 

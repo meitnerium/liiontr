@@ -47,7 +47,7 @@ The framework is designed to support:
     \item reusable kinetic and reaction-progress laws;
     \item configurable battery-cell geometries and materials;
     \item thermal energy balances;
-    \item empirical and future thermochemical gas-generation models;
+    \item empirical and elemental thermochemical gas-generation models;
     \item internal gas-pressure calculations;
     \item compressible venting;
     \item numerical event handling;
@@ -140,6 +140,10 @@ The present framework includes:
     \item an ideal-gas pressure model;
     \item choked and unchoked compressible vent flow;
     \item irreversible vent-opening events;
+    \item elemental inventories and element-generation models;
+    \item optional Cantera TV/UV equilibrium thermochemistry;
+    \item coupled cell/gas thermal-energy accounting;
+    \item element-consistent venting and vent-energy removal;
     \item stiff numerical integration.
 \end{itemize}
 
@@ -159,8 +163,8 @@ backends.
 Two particularly relevant examples are Cantera and PyBaMM.
 
 Cantera provides thermodynamic, chemical-kinetic, and transport
-capabilities and is a candidate backend for equilibrium gas composition
-and temperature-dependent mixture properties
+capabilities and is used by the current optional equilibrium backend for
+gas composition and temperature-dependent mixture properties
 \parencite{cantera2025}.
 
 PyBaMM provides a framework for physics-based battery modeling and may

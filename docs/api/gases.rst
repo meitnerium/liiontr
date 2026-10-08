@@ -29,9 +29,16 @@ Reaction Gas Yields
    :members:
    :show-inheritance:
 
-Venting
--------
+Species-Based Venting
+---------------------
 
 .. automodule:: liiontr.gases.vent
+   :members:
+   :show-inheritance:
+
+Element-Based Venting
+---------------------
+
+.. automodule:: liiontr.gases.element_vent
    :members:
    :show-inheritance:

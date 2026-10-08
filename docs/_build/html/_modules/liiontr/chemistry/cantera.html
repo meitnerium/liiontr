@@ -12,7 +12,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -40,6 +40,9 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../project_status.html">Project Status</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
 </ul>
@@ -48,6 +51,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">Software Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../verification/index.html">Verification</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
@@ -81,72 +87,596 @@
            <div itemprop="articleBody">
              
   <h1>Source code for liiontr.chemistry.cantera</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Cantera-based thermochemical backend for LiionTR.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Cantera thermochemical equilibrium backend.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChemistryBackend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">isfinite</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">cantera</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ct</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.chemistry.elements</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementInventory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">liiontr.chemistry.equilibrium</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GasEquilibriumState</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">DEFAULT_GRI30_CARRIER_SPECIES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="s2">&quot;H2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;O&quot;</span><span class="p">:</span> <span class="s2">&quot;O2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;N2&quot;</span><span class="p">,</span>
+<span class="p">}</span>
 
 
-<div class="viewcode-block" id="CanteraBackend">
-<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraBackend">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">CanteraBackend</span><span class="p">(</span><span class="n">ChemistryBackend</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide the interface for Cantera-based thermochemistry.</span>
+<div class="viewcode-block" id="CanteraEquilibriumBackend">
+<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CanteraEquilibriumBackend</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare elemental inventories for Cantera equilibrium.&quot;&quot;&quot;</span>
 
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    The backend currently stores the Cantera mechanism identifier but</span>
-<span class="sd">    does not yet implement heat-generation calculations. Future</span>
-<span class="sd">    versions are expected to use Cantera for gas-phase thermodynamics</span>
-<span class="sd">    and chemical-equilibrium calculations.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mechanism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gri30.yaml&quot;</span>
+    <span class="n">phase_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">uv_seed_temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1000.0</span>
+    <span class="n">carrier_species</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">DEFAULT_GRI30_CARRIER_SPECIES</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
 
-<div class="viewcode-block" id="CanteraBackend.__init__">
-<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraBackend.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="n">_gas</span><span class="p">:</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="CanteraEquilibriumBackend.__post_init__">
+<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load the Cantera phase and validate carrier species.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mechanism</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mechanism</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">phase_name</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">carrier_species</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">element</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span> <span class="n">species</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">element</span><span class="p">,</span> <span class="n">species</span>
+            <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">carrier_species</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uv_seed_temperature</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;UV seed temperature must be greater than zero.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_carrier_species</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">element_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return elements supported by the Cantera phase.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">element_names</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">species_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return species supported by the Cantera phase.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">species_names</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="CanteraEquilibriumBackend.species_molar_mass">
+<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.species_molar_mass">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">species_molar_mass</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">mechanism</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">species_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a species molar mass in kg/mol.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">species_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">species_names</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Species </span><span class="si">{</span><span class="n">species_name</span><span class="si">!r}</span><span class="s2"> is not present &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;in mechanism </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanism</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">species_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">species_index</span><span class="p">(</span>
+            <span class="n">species_name</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">molecular_weights</span><span class="p">[</span>
+                    <span class="n">species_index</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="o">/</span> <span class="mf">1000.0</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_carrier_species</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Cantera backend.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the elemental carrier-species mapping.&quot;&quot;&quot;</span>
+        <span class="n">mechanism_elements</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">element_names</span>
+        <span class="p">)</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        mechanism : str</span>
-<span class="sd">            Cantera mechanism file or mechanism identifier to use for</span>
-<span class="sd">            thermochemical calculations.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mechanism</span> <span class="o">=</span> <span class="n">mechanism</span></div>
+        <span class="n">mechanism_species</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">species_names</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="p">(</span>
+            <span class="n">element</span><span class="p">,</span>
+            <span class="n">species_name</span><span class="p">,</span>
+        <span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">carrier_species</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">element</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Carrier element name must not be empty.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">species_name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Carrier species name must not be empty.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mechanism_elements</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Element </span><span class="si">{</span><span class="n">element</span><span class="si">!r}</span><span class="s2"> is not present &quot;</span>
+                    <span class="s2">&quot;in the Cantera mechanism.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">species_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mechanism_species</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Carrier species </span><span class="si">{</span><span class="n">species_name</span><span class="si">!r}</span><span class="s2"> &quot;</span>
+                    <span class="s2">&quot;is not present in the Cantera mechanism.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">target_atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span>
+                <span class="n">species_name</span><span class="p">,</span>
+                <span class="n">element</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">target_atoms</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Carrier species </span><span class="si">{</span><span class="n">species_name</span><span class="si">!r}</span><span class="s2"> &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;does not contain element </span><span class="si">{</span><span class="n">element</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">other_elements</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">other_element</span>
+                <span class="k">for</span> <span class="n">other_element</span>
+                <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">element_names</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">other_element</span> <span class="o">!=</span> <span class="n">element</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span>
+                        <span class="n">species_name</span><span class="p">,</span>
+                        <span class="n">other_element</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="o">&gt;</span> <span class="mf">0.0</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">other_elements</span><span class="p">:</span>
+                <span class="n">names</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">other_elements</span>
+                <span class="p">)</span>
+
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Carrier species </span><span class="si">{</span><span class="n">species_name</span><span class="si">!r}</span><span class="s2"> &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;for element </span><span class="si">{</span><span class="n">element</span><span class="si">!r}</span><span class="s2"> also contains &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;other elements: </span><span class="si">{</span><span class="n">names</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+<div class="viewcode-block" id="CanteraEquilibriumBackend.validate_inventory">
+<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.validate_inventory">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_inventory</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inventory</span><span class="p">:</span> <span class="n">ElementInventory</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate an element inventory against the mechanism.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">inventory</span><span class="o">.</span><span class="n">total_atom_moles</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Element inventory must contain a positive &quot;</span>
+                <span class="s2">&quot;amount of atoms.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">mechanism_elements</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">element_names</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="p">(</span>
+            <span class="n">element</span><span class="p">,</span>
+            <span class="n">amount</span><span class="p">,</span>
+        <span class="p">)</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">moles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">amount</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mechanism_elements</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Element </span><span class="si">{</span><span class="n">element</span><span class="si">!r}</span><span class="s2"> is not supported &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;by mechanism </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanism</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">carrier_species</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;No carrier species is configured &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;for element </span><span class="si">{</span><span class="n">element</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="CanteraBackend.heat_generation">
-<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraBackend.heat_generation">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">heat_generation</span><span class="p">(</span>
+<div class="viewcode-block" id="CanteraEquilibriumBackend.carrier_moles">
+<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.carrier_moles">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">carrier_moles</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inventory</span><span class="p">:</span> <span class="n">ElementInventory</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert an elemental inventory to carrier-species moles.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_inventory</span><span class="p">(</span>
+            <span class="n">inventory</span>
+        <span class="p">)</span>
+
+        <span class="n">species_moles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="p">(</span>
+            <span class="n">element</span><span class="p">,</span>
+            <span class="n">atom_moles</span><span class="p">,</span>
+        <span class="p">)</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">moles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">atom_moles</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">species_name</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">carrier_species</span><span class="p">[</span>
+                    <span class="n">element</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">atoms_per_species</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span>
+                    <span class="n">species_name</span><span class="p">,</span>
+                    <span class="n">element</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">amount</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">atom_moles</span>
+                <span class="o">/</span> <span class="n">atoms_per_species</span>
+            <span class="p">)</span>
+
+            <span class="n">species_moles</span><span class="p">[</span>
+                <span class="n">species_name</span>
+            <span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">species_moles</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">species_name</span><span class="p">,</span>
+                    <span class="mf">0.0</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="n">amount</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">species_moles</span></div>
+
+
+<div class="viewcode-block" id="CanteraEquilibriumBackend.inventory_mass">
+<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.inventory_mass">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inventory_mass</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inventory</span><span class="p">:</span> <span class="n">ElementInventory</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the mass represented by an element inventory.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_inventory</span><span class="p">(</span>
+            <span class="n">inventory</span>
+        <span class="p">)</span>
+
+        <span class="n">mass</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="k">for</span> <span class="p">(</span>
+            <span class="n">element</span><span class="p">,</span>
+            <span class="n">atom_moles</span><span class="p">,</span>
+        <span class="p">)</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">moles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">atom_moles</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">atomic_weight</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">atomic_weight</span><span class="p">(</span>
+                    <span class="n">element</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">mass</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="n">atom_moles</span>
+                <span class="o">*</span> <span class="n">atomic_weight</span>
+                <span class="o">/</span> <span class="mf">1000.0</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mass</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_state_from_current_gas</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">total_mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GasEquilibriumState</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build a LiionTR state from the current Cantera state.&quot;&quot;&quot;</span>
+        <span class="n">mean_molar_mass</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">mean_molecular_weight</span>
+            <span class="o">/</span> <span class="mf">1000.0</span>
+        <span class="p">)</span>
+
+        <span class="n">total_moles</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">total_mass</span>
+            <span class="o">/</span> <span class="n">mean_molar_mass</span>
+        <span class="p">)</span>
+
+        <span class="n">species_moles</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">species_name</span><span class="p">:</span> <span class="p">(</span>
+                <span class="nb">float</span><span class="p">(</span><span class="n">mole_fraction</span><span class="p">)</span>
+                <span class="o">*</span> <span class="n">total_moles</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">species_name</span><span class="p">,</span> <span class="n">mole_fraction</span>
+            <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">species_names</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">X</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">mole_fraction</span> <span class="o">&gt;</span> <span class="mf">0.0</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">GasEquilibriumState</span><span class="p">(</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">T</span>
+            <span class="p">),</span>
+            <span class="n">pressure</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">P</span>
+            <span class="p">),</span>
+            <span class="n">volume</span><span class="o">=</span><span class="n">volume</span><span class="p">,</span>
+            <span class="n">species_moles</span><span class="o">=</span><span class="n">species_moles</span><span class="p">,</span>
+            <span class="n">mean_molar_mass</span><span class="o">=</span><span class="n">mean_molar_mass</span><span class="p">,</span>
+            <span class="n">density</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">density_mass</span>
+            <span class="p">),</span>
+            <span class="n">cp_mass</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">cp_mass</span>
+            <span class="p">),</span>
+            <span class="n">cv_mass</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">cv_mass</span>
+            <span class="p">),</span>
+            <span class="n">internal_energy</span><span class="o">=</span><span class="p">(</span>
+                <span class="nb">float</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">int_energy_mass</span>
+                <span class="p">)</span>
+                <span class="o">*</span> <span class="n">total_mass</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="CanteraEquilibriumBackend.equilibrate_tv">
+<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.equilibrate_tv">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">equilibrate_tv</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">conversions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the total cell heat generation rate in W.</span>
+        <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">element_inventory</span><span class="p">:</span> <span class="n">ElementInventory</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GasEquilibriumState</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Equilibrate an elemental inventory at constant T and V.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">temperature</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Temperature must be greater than zero.&quot;</span>
+            <span class="p">)</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        temperature : float</span>
-<span class="sd">            Cell temperature in K.</span>
-<span class="sd">        conversions : list[float] or None, optional</span>
-<span class="sd">            Reaction conversion values. This argument is reserved for</span>
-<span class="sd">            compatibility with the chemistry backend interface.</span>
+        <span class="k">if</span> <span class="n">volume</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Volume must be greater than zero.&quot;</span>
+            <span class="p">)</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        float</span>
-<span class="sd">            Total cell heat generation rate in W.</span>
+        <span class="n">carrier_moles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">carrier_moles</span><span class="p">(</span>
+            <span class="n">element_inventory</span>
+        <span class="p">)</span>
 
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        NotImplementedError</span>
-<span class="sd">            Always raised because Cantera heat generation is not yet</span>
-<span class="sd">            implemented.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+        <span class="n">total_mass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inventory_mass</span><span class="p">(</span>
+            <span class="n">element_inventory</span>
+        <span class="p">)</span>
+
+        <span class="n">density</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">total_mass</span>
+            <span class="o">/</span> <span class="n">volume</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">TDX</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">temperature</span><span class="p">,</span>
+            <span class="n">density</span><span class="p">,</span>
+            <span class="n">carrier_moles</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">equilibrate</span><span class="p">(</span>
+            <span class="s2">&quot;TV&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_from_current_gas</span><span class="p">(</span>
+            <span class="n">volume</span><span class="o">=</span><span class="n">volume</span><span class="p">,</span>
+            <span class="n">total_mass</span><span class="o">=</span><span class="n">total_mass</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CanteraEquilibriumBackend.equilibrate_uv">
+<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.equilibrate_uv">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">equilibrate_uv</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">internal_energy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">element_inventory</span><span class="p">:</span> <span class="n">ElementInventory</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GasEquilibriumState</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Equilibrate an elemental inventory at constant U and V.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">isfinite</span><span class="p">(</span><span class="n">internal_energy</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Internal energy must be finite.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">volume</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Volume must be greater than zero.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">carrier_moles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">carrier_moles</span><span class="p">(</span>
+            <span class="n">element_inventory</span>
+        <span class="p">)</span>
+
+        <span class="n">total_mass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inventory_mass</span><span class="p">(</span>
+            <span class="n">element_inventory</span>
+        <span class="p">)</span>
+
+        <span class="n">density</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">total_mass</span>
+            <span class="o">/</span> <span class="n">volume</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">TDX</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uv_seed_temperature</span><span class="p">,</span>
+            <span class="n">density</span><span class="p">,</span>
+            <span class="n">carrier_moles</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># First obtain a chemically reasonable composition</span>
+        <span class="c1"># with the correct elemental inventory.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">equilibrate</span><span class="p">(</span>
+            <span class="s2">&quot;TV&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">specific_internal_energy</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">internal_energy</span>
+            <span class="o">/</span> <span class="n">total_mass</span>
+        <span class="p">)</span>
+
+        <span class="n">specific_volume</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">volume</span>
+            <span class="o">/</span> <span class="n">total_mass</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">UV</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">specific_internal_energy</span><span class="p">,</span>
+            <span class="n">specific_volume</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">equilibrate</span><span class="p">(</span>
+            <span class="s2">&quot;UV&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_from_current_gas</span><span class="p">(</span>
+            <span class="n">volume</span><span class="o">=</span><span class="n">volume</span><span class="p">,</span>
+            <span class="n">total_mass</span><span class="o">=</span><span class="n">total_mass</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CanteraEquilibriumBackend.element_inventory_from_species_moles">
+<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_inventory_from_species_moles">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">element_inventory_from_species_moles</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">species_moles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementInventory</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert species mole amounts to an elemental inventory.&quot;&quot;&quot;</span>
+        <span class="n">mechanism_species</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">species_names</span>
+        <span class="p">)</span>
+
+        <span class="n">element_moles</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">element_name</span><span class="p">:</span> <span class="mf">0.0</span>
+            <span class="k">for</span> <span class="n">element_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">element_names</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">species_name</span><span class="p">,</span> <span class="n">amount</span> <span class="ow">in</span> <span class="n">species_moles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">species_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mechanism_species</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Species </span><span class="si">{</span><span class="n">species_name</span><span class="si">!r}</span><span class="s2"> is not present &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;in mechanism </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanism</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">amount</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Species mole amount must not be negative.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">element_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">element_names</span><span class="p">:</span>
+                <span class="n">atom_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span>
+                    <span class="n">species_name</span><span class="p">,</span>
+                    <span class="n">element_name</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">element_moles</span><span class="p">[</span><span class="n">element_name</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="n">amount</span>
+                    <span class="o">*</span> <span class="n">atom_count</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ElementInventory</span><span class="p">(</span>
+            <span class="n">moles</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">element_name</span><span class="p">:</span> <span class="n">amount</span>
+                <span class="k">for</span> <span class="n">element_name</span><span class="p">,</span> <span class="n">amount</span>
+                <span class="ow">in</span> <span class="n">element_moles</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">amount</span> <span class="o">&gt;</span> <span class="mf">0.0</span>
+            <span class="p">}</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CanteraEquilibriumBackend.element_inventory_from_state">
+<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_inventory_from_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">element_inventory_from_state</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">state</span><span class="p">:</span> <span class="n">GasEquilibriumState</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementInventory</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the elemental inventory represented by a gas state.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_inventory_from_species_moles</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">species_moles</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CanteraEquilibriumBackend.element_flow_rates">
+<a class="viewcode-back" href="../../../api/chemistry.html#liiontr.chemistry.cantera.CanteraEquilibriumBackend.element_flow_rates">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">element_flow_rates</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">species_molar_flow_rates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert species molar flow rates to element flow rates.&quot;&quot;&quot;</span>
+        <span class="n">mechanism_species</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">species_names</span>
+        <span class="p">)</span>
+
+        <span class="n">element_rates</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">element_name</span><span class="p">:</span> <span class="mf">0.0</span>
+            <span class="k">for</span> <span class="n">element_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">element_names</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="p">(</span>
+            <span class="n">species_name</span><span class="p">,</span>
+            <span class="n">species_rate</span><span class="p">,</span>
+        <span class="p">)</span> <span class="ow">in</span> <span class="n">species_molar_flow_rates</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">species_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mechanism_species</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Species </span><span class="si">{</span><span class="n">species_name</span><span class="si">!r}</span><span class="s2"> is not present &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;in mechanism </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanism</span><span class="si">!r}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">species_rate</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Species molar flow rate must not be negative.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">element_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">element_names</span><span class="p">:</span>
+                <span class="n">atom_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gas</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">(</span>
+                    <span class="n">species_name</span><span class="p">,</span>
+                    <span class="n">element_name</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">element_rates</span><span class="p">[</span><span class="n">element_name</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="n">species_rate</span>
+                    <span class="o">*</span> <span class="n">atom_count</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">element_name</span><span class="p">:</span> <span class="n">rate</span>
+            <span class="k">for</span> <span class="n">element_name</span><span class="p">,</span> <span class="n">rate</span>
+            <span class="ow">in</span> <span class="n">element_rates</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">rate</span> <span class="o">&gt;</span> <span class="mf">0.0</span>
+        <span class="p">}</span></div>
 </div>
 
 </pre></div>

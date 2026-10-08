@@ -17,7 +17,7 @@ sys.path.insert(0, str(SOURCE_ROOT))
 project = "LiionTR"
 copyright = "2026, François Dion"
 author = "François Dion"
-release = "0.1.0"
+release = "0.0.1"
 
 
 # -- General configuration ---------------------------------------------------
@@ -50,6 +50,9 @@ autodoc_typehints = "description"
 autodoc_class_signature = "separated"
 
 autosummary_generate = True
+
+# Allow API documentation to build without optional Cantera installed.
+autodoc_mock_imports = ["cantera"]
 
 
 # -- Napoleon configuration --------------------------------------------------

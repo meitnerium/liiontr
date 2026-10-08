@@ -364,13 +364,29 @@ making them mandatory dependencies.
 Cantera
 ~~~~~~~
 
-Cantera is intended for future thermochemical calculations such as:
+Cantera is implemented as an optional equilibrium thermochemistry backend.
+The current interface supports:
 
 * equilibrium gas composition;
 * mixture thermodynamic properties;
-* heat capacities;
-* chemical equilibrium;
-* possibly energy-consistent gas chemistry.
+* heat capacities and heat-capacity ratio;
+* constant-``T,V`` equilibrium;
+* constant-``U,V`` equilibrium;
+* element-consistent conversion between inventories and vent flows.
+
+The default mechanism/carrier mapping does not represent every battery-relevant
+element, so mechanism development and experimental validation remain future
+work.
+
+OpenFOAM
+~~~~~~~~
+
+OpenFOAM is being used as a complementary spatial thermal/CFD backend. A
+companion V0--V4 verification sequence has established a one-way tabulated
+volumetric heat-source interface. LiionTR supplies volumetric heat generation
+in W/m³, while OpenFOAM resolves spatial transport. The adapter is verified
+conceptually but is not yet packaged as a LiionTR Python backend in this
+repository snapshot.
 
 PyBaMM
 ~~~~~~
