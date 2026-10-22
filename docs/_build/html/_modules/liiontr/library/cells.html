@@ -90,6 +90,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;Reference battery-cell definitions provided by LiionTR.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">liiontr</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">LCO</span><span class="p">,</span>
     <span class="n">NMC811</span><span class="p">,</span>
     <span class="n">ConstantProperty</span><span class="p">,</span>
     <span class="n">CylindricalCell</span><span class="p">,</span>
@@ -132,6 +133,54 @@
         <span class="n">geometry</span><span class="o">=</span><span class="n">geometry</span><span class="p">,</span>
         <span class="n">material</span><span class="o">=</span><span class="n">material</span><span class="p">,</span>
         <span class="n">chemistry</span><span class="o">=</span><span class="n">NMC811</span><span class="p">(),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="cell_18650_lco_hatchard2001">
+<a class="viewcode-back" href="../../../api/library.html#liiontr.library.cells.cell_18650_lco_hatchard2001">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cell_18650_lco_hatchard2001</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CylindricalCell</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the 18650 LiCoO2/graphite cell used by Hatchard et al. (2001).</span>
+
+<span class="sd">    The effective homogeneous properties follow the standard cylindrical</span>
+<span class="sd">    model parameters reported by Hatchard et al. for E-One/Moli Energy</span>
+<span class="sd">    18650 cells: 9 mm radius, 65 mm length, 2.58 g/cm3 average jelly-roll</span>
+<span class="sd">    density, 0.83 J/(g K) average specific heat, and 0.034 W/(cm K)</span>
+<span class="sd">    average radial thermal conductivity.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    LiionTR represents the cell as a homogeneous cylinder. The original</span>
+<span class="sd">    Hatchard model also treated the steel can separately in its outer</span>
+<span class="sd">    radial ring. The present cell definition is therefore intended for</span>
+<span class="sd">    the lumped/uniform-temperature version of the benchmark.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">geometry</span> <span class="o">=</span> <span class="n">CylindricalGeometry</span><span class="p">(</span>
+        <span class="n">radius</span><span class="o">=</span><span class="mf">0.009</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="mf">0.065</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">material</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Hatchard 2001 effective 18650 cell&quot;</span><span class="p">,</span>
+        <span class="n">density</span><span class="o">=</span><span class="n">ConstantProperty</span><span class="p">(</span>
+            <span class="mf">2580.0</span><span class="p">,</span>
+            <span class="s2">&quot;kg/m3&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">heat_capacity</span><span class="o">=</span><span class="n">ConstantProperty</span><span class="p">(</span>
+            <span class="mf">830.0</span><span class="p">,</span>
+            <span class="s2">&quot;J/kg/K&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">thermal_conductivity</span><span class="o">=</span><span class="n">ConstantProperty</span><span class="p">(</span>
+            <span class="mf">3.4</span><span class="p">,</span>
+            <span class="s2">&quot;W/m/K&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">CylindricalCell</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;18650-LCO-Hatchard2001&quot;</span><span class="p">,</span>
+        <span class="n">geometry</span><span class="o">=</span><span class="n">geometry</span><span class="p">,</span>
+        <span class="n">material</span><span class="o">=</span><span class="n">material</span><span class="p">,</span>
+        <span class="n">chemistry</span><span class="o">=</span><span class="n">LCO</span><span class="p">(),</span>
     <span class="p">)</span></div>
 
 </pre></div>

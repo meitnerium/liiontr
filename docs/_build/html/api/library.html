@@ -69,6 +69,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Reference Library</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-liiontr.library.cells">Reference Cells</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#liiontr.library.cells.cell_21700_generic"><code class="docutils literal notranslate"><span class="pre">cell_21700_generic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#liiontr.library.cells.cell_18650_lco_hatchard2001"><code class="docutils literal notranslate"><span class="pre">cell_18650_lco_hatchard2001()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-liiontr.library.hu2020">Hu et al. (2020)</a><ul>
@@ -148,6 +149,27 @@
 <dd><p>Return a generic 21700 NMC811 cell.</p>
 <p>Parameters are approximate and intended
 for software testing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="cells.html#liiontr.cells.cylindrical.CylindricalCell" title="liiontr.cells.cylindrical.CylindricalCell"><em>CylindricalCell</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="liiontr.library.cells.cell_18650_lco_hatchard2001">
+<span class="sig-prename descclassname"><span class="pre">liiontr.library.cells.</span></span><span class="sig-name descname"><span class="pre">cell_18650_lco_hatchard2001</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/liiontr/library/cells.html#cell_18650_lco_hatchard2001"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#liiontr.library.cells.cell_18650_lco_hatchard2001" title="Link to this definition"></a></dt>
+<dd><p>Return the 18650 LiCoO2/graphite cell used by Hatchard et al. (2001).</p>
+<p>The effective homogeneous properties follow the standard cylindrical
+model parameters reported by Hatchard et al. for E-One/Moli Energy
+18650 cells: 9 mm radius, 65 mm length, 2.58 g/cm3 average jelly-roll
+density, 0.83 J/(g K) average specific heat, and 0.034 W/(cm K)
+average radial thermal conductivity.</p>
+<p class="rubric">Notes</p>
+<p>LiionTR represents the cell as a homogeneous cylinder. The original
+Hatchard model also treated the steel can separately in its outer
+radial ring. The present cell definition is therefore intended for
+the lumped/uniform-temperature version of the benchmark.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="cells.html#liiontr.cells.cylindrical.CylindricalCell" title="liiontr.cells.cylindrical.CylindricalCell"><em>CylindricalCell</em></a></p>

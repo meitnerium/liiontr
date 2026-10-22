@@ -14,10 +14,12 @@ from liiontr.chemistry.equilibrium import (
 
 from .backend import ChemistryBackend
 from .chemistry import Chemistry
+from .lco import LCO
 from .nmc import NMC811
 from .reaction_backend import ReactionNetworkBackend
 
 __all__ = [
+    "LCO",
     "NMC811",
     "Chemistry",
     "ChemistryBackend",

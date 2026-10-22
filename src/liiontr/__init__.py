@@ -4,7 +4,7 @@ Research framework for lithium-ion battery thermal runaway.
 """
 
 from .cells import CylindricalCell
-from .chemistry import NMC811
+from .chemistry import LCO, NMC811
 from .core import (
     Problem,
     Results,
@@ -19,6 +19,7 @@ __version__ = "0.0.1"
 
 
 __all__ = [
+    "LCO",
     "NMC811",
     "ConstantProperty",
     "CylindricalCell",
